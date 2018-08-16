@@ -1,0 +1,249 @@
+<!-- HTML header for doxygen 1.8.10-->
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=9"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="author" content="SXS Collaboration">
+    <meta name="generator" content="Doxygen 1.8.13"/>
+    <style>
+        /*!
+         * IE10 viewport hack for Surface/desktop Windows 8 bug
+         * Copyright 2014-2015 Twitter, Inc.
+         * Licensed under MIT (https://github.com/twbs/bootstrap/blob/master/LICENSE)
+         */
+        @-webkit-viewport { width: device-width; }
+        @-moz-viewport    { width: device-width; }
+        @-ms-viewport     { width: device-width; }
+        @-o-viewport      { width: device-width; }
+        @viewport         { width: device-width; }
+      </style>
+  <title>SpECTRE: EinsteinSolutions::TovSolution Class Reference</title>
+  <link href="tabs.css" rel="stylesheet" type="text/css"/>
+  <script type="text/javascript" src="jquery.js"></script>
+  <script type="text/javascript" src="dynsections.js"></script>
+  <link href="search/search.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="search/searchdata.js"></script>
+<script type="text/javascript" src="search/search.js"></script>
+  <script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+    extensions: ["tex2jax.js", "TeX/AMSmath.js", "TeX/AMSsymbols.js", "color.js"],
+    jax: ["input/TeX","output/HTML-CSS"],
+});
+MathJax.Hub.Config({
+    TeX: { equationNumbers: { autoNumber: "AMS" } }
+});
+MathJax.Hub.Config({
+    tex2jax: {inlineMath: [['^^','^^'], ['\\(', '\\)']]}
+});
+</script><script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.2/MathJax.js"></script>
+  <link href="octicons.css" rel="stylesheet">
+  <link href="bootstrap.min.css" rel="stylesheet">
+  <link href="doxygen.css" rel="stylesheet" type="text/css" />
+  <script type="text/javascript" src="jquery.js"></script>
+  <script type="text/javascript" src="bootstrap.min.js"></script>
+  <script type="text/javascript" src="spectre.js"></script>
+  </head>
+  <body>
+  <div id="top" class="navbar-fixed-top"><!-- do not remove this div, it is closed by doxygen! -->
+  <!-- BEGIN TITLEAREA -->
+  <div id="titlearea">
+  <script type="text/javascript">
+  var searchBox = new SearchBox("searchBox", "search",false,'Search');
+  </script>
+  <div id="main-nav">
+    <ul class="sm sm-dox" id="main-menu">
+      <li>
+      <a href="index.html">
+      SpECTRE &#160;
+        <span id="projectnumber">v0.0.0</span>
+      </a>
+      </li>
+      <li class="dropdown">
+        <a class="dropdown-toggle" data-toggle="dropdown" href="#" id="selected">
+          <span id="selected">
+            <i class="octicon octicon-book"></i><span>Documentation</span>
+          </span>
+          <span class="caret"></span>
+        </a>
+        <ul class="dropdown-menu">
+          <li style="min-width: 135px;">
+            <a href="index.html">
+            <i class="octicon octicon-book"></i><span>Introduction</span></a>
+          </li>
+          <li style="min-width: 135px;">
+            <a href="installation.html">
+              <i class="octicon octicon-desktop-download"></i><span>Installation</span>
+            </a>
+          </li>
+          <li style="min-width: 135px;">
+            <a href="tutorials.html">
+              <i class="octicon octicon-mortar-board"></i><span>User Tutorials</span>
+            </a>
+          </li>
+          <li style="min-width: 135px;">
+            <a href="dev_guide.html">
+              <i class="octicon octicon-gist-secret"></i><span>Dev Guide</span>
+            </a>
+          </li>
+        </ul>
+      </li>
+      <li class="dropdown">
+        <a class="dropdown-toggle" data-toggle="dropdown" href="#" id="selected">
+          <span id="selected">
+            <i class="octicon octicon-code"></i>
+              <span>Reference</span>
+          </span>
+          <span class="caret"></span>
+        </a>
+        <ul class="dropdown-menu">
+          <li style="min-width: 130px;">
+            <a href="modules.html">
+              <i class="octicon octicon-code"></i>
+              <span>Topics</span>
+            </a>
+          </li>
+          <li style="min-width: 130px;">
+            <a href="namespaces.html">
+              <i class="octicon octicon-gist"></i>
+              <span>Namespaces</span>
+            </a>
+          </li>
+        </ul>
+      </li>
+      <li>
+        <a href="files.html">
+          <i class="octicon octicon-file-directory"></i><span>Files</span>
+        </a>
+      </li>
+      <li>
+        <a href="https://github.com/sxs-collaboration/spectre" target="_blank">
+          <i class="octicon octicon-mark-github"></i><span>View on GitHub</span>
+        </a>
+      </li>
+      <!--The Search <li> is added by doxygen later-->
+    </ul>
+  </div><!-- main-nav -->
+  </div><!-- titlearea -->
+  <!-- window showing the filter options -->
+  <div id="MSearchSelectWindow"  style="position: fixed;"
+       onmouseover="return searchBox.OnSearchSelectShow()"
+       onmouseout="return searchBox.OnSearchSelectHide()"
+       onkeydown="return searchBox.OnSearchSelectKey(event)">
+  </div>
+  <!-- iframe showing the search results (closed by default) -->
+  <div id="MSearchResultsWindow"  style="position: fixed;">
+  <iframe src="javascript:void(0)" frameborder="0"
+          name="MSearchResults" id="MSearchResults">
+  </iframe>
+  </div>
+<!-- Generated by Doxygen 1.8.13 -->
+<script type="text/javascript">
+var searchBox = new SearchBox("searchBox", "search",false,'Search');
+</script>
+<script type="text/javascript" src="menudata.js"></script>
+<script type="text/javascript" src="menu.js"></script>
+<script type="text/javascript">
+$(function() {
+  initMenu('',true,false,'search.php','Search');
+  $(document).ready(function() { init_search(); });
+});
+</script>
+<div id="main-nav"></div>
+<!-- window showing the filter options -->
+<div id="MSearchSelectWindow"
+     onmouseover="return searchBox.OnSearchSelectShow()"
+     onmouseout="return searchBox.OnSearchSelectHide()"
+     onkeydown="return searchBox.OnSearchSelectKey(event)">
+</div>
+
+<!-- iframe showing the search results (closed by default) -->
+<div id="MSearchResultsWindow">
+<iframe src="javascript:void(0)" frameborder="0" 
+        name="MSearchResults" id="MSearchResults">
+</iframe>
+</div>
+
+<div id="nav-path" class="navpath">
+  <ul>
+<li class="navelem"><b>EinsteinSolutions</b></li><li class="navelem"><a class="el" href="classEinsteinSolutions_1_1TovSolution.html">TovSolution</a></li>  </ul>
+</div>
+</div><!-- top -->
+<div class="header">
+  <div class="summary">
+<a href="#pub-methods">Public Member Functions</a> &#124;
+<a href="classEinsteinSolutions_1_1TovSolution-members.html">List of all members</a>  </div>
+  <div class="headertitle">
+<div class="title">EinsteinSolutions::TovSolution Class Reference<div class="ingroups"><a class="el" href="group__EinsteinSolutionsGroup.html">Einstein Solutions</a></div></div>  </div>
+</div><!--header-->
+<div class="contents">
+
+<p>TOV solver based on Lindblom's method.  
+ <a href="classEinsteinSolutions_1_1TovSolution.html#details">More...</a></p>
+
+<p><code>#include &lt;<a class="el" href="Tov_8hpp_source.html">Tov.hpp</a>&gt;</code></p>
+<table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
+Public Member Functions</h2></td></tr>
+<tr class="memitem:a7df06c9be1b446c331adb8edb29bd6f3"><td class="memItemLeft" align="right" valign="top"><a id="a7df06c9be1b446c331adb8edb29bd6f3"></a>
+&#160;</td><td class="memItemRight" valign="bottom"><b>TovSolution</b> (const <a class="elRef" doxygen="/work/spectre/docs/config/cppreference-doxygen-web.tag.xml:http://en.cppreference.com/w/" href="http://en.cppreference.com/w/cpp/memory/unique_ptr.html">std::unique_ptr</a>&lt; EquationsOfState::EquationOfState&lt; true, 1 &gt;&gt; &amp;equation_of_state, double central_mass_density, double final_log_enthalpy, double absolute_tolerance=1.0e-14, double relative_tolerance=1.0e-14)</td></tr>
+<tr class="separator:a7df06c9be1b446c331adb8edb29bd6f3"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1ad6e20fe846e51db7e2b4916e410c85"><td class="memItemLeft" align="right" valign="top"><a id="a1ad6e20fe846e51db7e2b4916e410c85"></a>
+&#160;</td><td class="memItemRight" valign="bottom"><b>TovSolution</b> (const <a class="el" href="classEinsteinSolutions_1_1TovSolution.html">TovSolution</a> &amp;)=delete</td></tr>
+<tr class="separator:a1ad6e20fe846e51db7e2b4916e410c85"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab12684ec19a7bf4daa65c40498b53d7c"><td class="memItemLeft" align="right" valign="top"><a id="ab12684ec19a7bf4daa65c40498b53d7c"></a>
+<a class="el" href="classEinsteinSolutions_1_1TovSolution.html">TovSolution</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>operator=</b> (const <a class="el" href="classEinsteinSolutions_1_1TovSolution.html">TovSolution</a> &amp;)=delete</td></tr>
+<tr class="separator:ab12684ec19a7bf4daa65c40498b53d7c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad6485c08d2ca26d877642d42df2fd37d"><td class="memItemLeft" align="right" valign="top"><a id="ad6485c08d2ca26d877642d42df2fd37d"></a>
+&#160;</td><td class="memItemRight" valign="bottom"><b>TovSolution</b> (<a class="el" href="classEinsteinSolutions_1_1TovSolution.html">TovSolution</a> &amp;&amp;) noexcept=default</td></tr>
+<tr class="separator:ad6485c08d2ca26d877642d42df2fd37d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab29a557f472eba67404d034af949807e"><td class="memItemLeft" align="right" valign="top"><a id="ab29a557f472eba67404d034af949807e"></a>
+<a class="el" href="classEinsteinSolutions_1_1TovSolution.html">TovSolution</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>operator=</b> (<a class="el" href="classEinsteinSolutions_1_1TovSolution.html">TovSolution</a> &amp;&amp;) noexcept=default</td></tr>
+<tr class="separator:ab29a557f472eba67404d034af949807e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af6733f87d98d10355c271e515334bbc4"><td class="memItemLeft" align="right" valign="top"><a id="af6733f87d98d10355c271e515334bbc4"></a>
+double&#160;</td><td class="memItemRight" valign="bottom"><b>outer_radius</b> () const noexcept</td></tr>
+<tr class="separator:af6733f87d98d10355c271e515334bbc4"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a06f395f45f080e5870f57a0003ada5e4"><td class="memItemLeft" align="right" valign="top"><a id="a06f395f45f080e5870f57a0003ada5e4"></a>
+double&#160;</td><td class="memItemRight" valign="bottom"><b>mass</b> (double r) const noexcept</td></tr>
+<tr class="separator:a06f395f45f080e5870f57a0003ada5e4"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a049367018d1ad946561ee73c2acb97b8"><td class="memItemLeft" align="right" valign="top"><a id="a049367018d1ad946561ee73c2acb97b8"></a>
+double&#160;</td><td class="memItemRight" valign="bottom"><b>specific_enthalpy</b> (double r) const noexcept</td></tr>
+<tr class="separator:a049367018d1ad946561ee73c2acb97b8"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a76f6601c0d2bb9d40ae4bb32b69118d6"><td class="memItemLeft" align="right" valign="top"><a id="a76f6601c0d2bb9d40ae4bb32b69118d6"></a>
+double&#160;</td><td class="memItemRight" valign="bottom"><b>log_specific_enthalpy</b> (double r) const noexcept</td></tr>
+<tr class="separator:a76f6601c0d2bb9d40ae4bb32b69118d6"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:adbaa2ad5f8d1fc722a136ac77f2833d9"><td class="memItemLeft" align="right" valign="top"><a id="adbaa2ad5f8d1fc722a136ac77f2833d9"></a>
+<a class="el" href="group__TensorGroup.html#ga06ebcb38a1f13c246e53378b9e8959ce">Scalar</a>&lt; <a class="el" href="classDataVector.html">DataVector</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>mass</b> (const <a class="el" href="group__TensorGroup.html#ga06ebcb38a1f13c246e53378b9e8959ce">Scalar</a>&lt; <a class="el" href="classDataVector.html">DataVector</a> &gt; &amp;radius) const noexcept</td></tr>
+<tr class="separator:adbaa2ad5f8d1fc722a136ac77f2833d9"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a153c7981dc2aacdef58ce8feb14ccc56"><td class="memItemLeft" align="right" valign="top"><a id="a153c7981dc2aacdef58ce8feb14ccc56"></a>
+<a class="el" href="group__TensorGroup.html#ga06ebcb38a1f13c246e53378b9e8959ce">Scalar</a>&lt; <a class="el" href="classDataVector.html">DataVector</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>specific_enthalpy</b> (const <a class="el" href="group__TensorGroup.html#ga06ebcb38a1f13c246e53378b9e8959ce">Scalar</a>&lt; <a class="el" href="classDataVector.html">DataVector</a> &gt; &amp;radius) const noexcept</td></tr>
+<tr class="separator:a153c7981dc2aacdef58ce8feb14ccc56"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a28db876ff3a1eedddc797e04b24c02d6"><td class="memItemLeft" align="right" valign="top"><a id="a28db876ff3a1eedddc797e04b24c02d6"></a>
+<a class="el" href="group__TensorGroup.html#ga06ebcb38a1f13c246e53378b9e8959ce">Scalar</a>&lt; <a class="el" href="classDataVector.html">DataVector</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>log_specific_enthalpy</b> (const <a class="el" href="group__TensorGroup.html#ga06ebcb38a1f13c246e53378b9e8959ce">Scalar</a>&lt; <a class="el" href="classDataVector.html">DataVector</a> &gt; &amp;radius) const noexcept</td></tr>
+<tr class="separator:a28db876ff3a1eedddc797e04b24c02d6"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a90d97034567ed6590a0876ef7b1f8920"><td class="memItemLeft" align="right" valign="top"><a id="a90d97034567ed6590a0876ef7b1f8920"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>pup</b> (PUP::er &amp;p) noexcept</td></tr>
+<tr class="separator:a90d97034567ed6590a0876ef7b1f8920"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table>
+<a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
+<div class="textblock"><p>TOV solver based on Lindblom's method. </p>
+<p>Uses Lindblom's method of integrating the TOV equations from <a href="https://arxiv.org/abs/gr-qc/9802072">"Phase Transitions and the Mass-Radius Curves of Relativistic Stars" </a> L. Lindblom, Phys.Rev. D58 (1998) 024008</p>
+<p>Instead of integrating \(m(r)\) and \(p(r)\) ( \(r\)=radius, \(m\)=mass, \(p\)=pressure) Lindblom introduces the variables \(u\) and \(v\), with \(u=r^{2}\) and \(v=m/r\). The integration is then done with the log of the specific enthalpy ( \(\mathrm{log}(h)\)) as the independent variable.</p>
+<p>Lindblom's paper simply labels the independent variable as \(h\). The \(h\) in Lindblom's paper is NOT the specific enthalpy. Rather, Lindblom's \(h\) is in fact \(\mathrm{log}(h)\). </p>
+</div><hr/>The documentation for this class was generated from the following files:<ul>
+<li>src/PointwiseFunctions/AnalyticSolutions/EinsteinSolutions/<a class="el" href="Tov_8hpp_source.html">Tov.hpp</a></li>
+<li>src/PointwiseFunctions/AnalyticSolutions/EinsteinSolutions/Tov.cpp</li>
+</ul>
+</div><!-- contents -->
+<!-- HTML footer for doxygen 1.8.10-->
+<!-- start footer part -->
+<hr class="footer"/><address class="footer"><small>
+&copy; Copyright 2017 - 2018
+<a href="https://black-holes.org">SXS Collaboration</a>,
+<a href="LICENSE.txt" target="_blank">
+<span class="hidden-xs">Distributed under the</span>
+MIT License</a>
+</small></address>
+</body>
+</html>

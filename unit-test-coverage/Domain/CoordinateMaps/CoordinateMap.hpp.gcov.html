@@ -1,0 +1,739 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+
+<html lang="en">
+
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <title>LCOV - 4a100dde3b231e0ada6ff7b2b4c32892a30db7f6 - Domain/CoordinateMaps/CoordinateMap.hpp</title>
+  <link rel="stylesheet" type="text/css" href="../../gcov.css">
+</head>
+
+<body>
+
+  <table width="100%" border=0 cellspacing=0 cellpadding=0>
+    <tr><td class="title">SpECTRE Unit Test Code Coverage Report</td></tr>
+    <tr><td class="ruler"><img src="../../glass.png" width=3 height=3 alt=""></td></tr>
+
+    <tr>
+      <td width="100%">
+        <table cellpadding=1 border=0 width="100%">
+          <tr>
+            <td width="10%" class="headerItem">Current view:</td>
+            <td width="35%" class="headerValue"><a href="../../index.html">top level</a> - <a href="index.html">Domain/CoordinateMaps</a> - CoordinateMap.hpp<span style="font-size: 80%;"> (source / <a href="CoordinateMap.hpp.func-sort-c.html">functions</a>)</span></td>
+            <td width="5%"></td>
+            <td width="15%"></td>
+            <td width="10%" class="headerCovTableHead">Hit</td>
+            <td width="10%" class="headerCovTableHead">Total</td>
+            <td width="15%" class="headerCovTableHead">Coverage</td>
+          </tr>
+          <tr>
+            <td class="headerItem">Commit:</td>
+             <td class="headerValue"><a target="_blank" href="https://github.com/sxs-collaboration/spectre/commit/4a100dde3b231e0ada6ff7b2b4c32892a30db7f6">4a100dde3b231e0ada6ff7b2b4c32892a30db7f6</a></td>
+            <td></td>
+            <td class="headerItem">Lines:</td>
+            <td class="headerCovTableEntry">140</td>
+            <td class="headerCovTableEntry">140</td>
+            <td class="headerCovTableEntryHi">100.0 %</td>
+          </tr>
+          <tr>
+            <td class="headerItem">Date:</td>
+            <td class="headerValue">2018-08-16 19:06:01</td>
+            <td></td>
+            <td class="headerItem">Functions:</td>
+            <td class="headerCovTableEntry">1153</td>
+            <td class="headerCovTableEntry">2768</td>
+            <td class="headerCovTableEntryLo">41.7 %</td>
+          </tr>
+          <tr>
+            <td class="headerItem">Legend:</td>
+            <td class="headerValueLeg">            Lines:
+            <span class="coverLegendCov">hit</span>
+            <span class="coverLegendNoCov">not hit</span>
+</td>
+            <td></td>
+          </tr>
+          <tr><td><img src="../../glass.png" width=3 height=3 alt=""></td></tr>
+        </table>
+      </td>
+    </tr>
+
+    <tr><td class="ruler"><img src="../../glass.png" width=3 height=3 alt=""></td></tr>
+  </table>
+
+  <table cellpadding=0 cellspacing=0 border=0>
+    <tr>
+      <td><br></td>
+    </tr>
+    <tr>
+      <td>
+<pre class="sourceHeading">          Line data    Source code</pre>
+<pre class="source">
+<a name="1"><span class="lineNum">       1 </span>            : // Distributed under the MIT License.</a>
+<span class="lineNum">       2 </span>            : // See LICENSE.txt for details.
+<span class="lineNum">       3 </span>            : 
+<span class="lineNum">       4 </span>            : /// \file
+<span class="lineNum">       5 </span>            : /// Defines class CoordinateMap
+<span class="lineNum">       6 </span>            : 
+<span class="lineNum">       7 </span>            : #pragma once
+<span class="lineNum">       8 </span>            : 
+<span class="lineNum">       9 </span>            : #include &lt;algorithm&gt;
+<span class="lineNum">      10 </span>            : #include &lt;array&gt;
+<span class="lineNum">      11 </span>            : #include &lt;cstddef&gt;
+<span class="lineNum">      12 </span>            : #include &lt;cstdint&gt;
+<span class="lineNum">      13 </span>            : #include &lt;initializer_list&gt;
+<span class="lineNum">      14 </span>            : #include &lt;memory&gt;
+<span class="lineNum">      15 </span>            : #include &lt;pup.h&gt;
+<span class="lineNum">      16 </span>            : #include &lt;tuple&gt;
+<span class="lineNum">      17 </span>            : #include &lt;type_traits&gt;
+<span class="lineNum">      18 </span>            : #include &lt;typeinfo&gt;
+<span class="lineNum">      19 </span>            : #include &lt;unordered_map&gt;
+<span class="lineNum">      20 </span>            : #include &lt;vector&gt;
+<span class="lineNum">      21 </span>            : 
+<span class="lineNum">      22 </span>            : #include &quot;DataStructures/Tensor/Tensor.hpp&quot;
+<span class="lineNum">      23 </span>            : #include &quot;Parallel/CharmPupable.hpp&quot;
+<span class="lineNum">      24 </span>            : #include &quot;Parallel/PupStlCpp11.hpp&quot;
+<span class="lineNum">      25 </span>            : #include &quot;Utilities/ForceInline.hpp&quot;
+<span class="lineNum">      26 </span>            : #include &quot;Utilities/Gsl.hpp&quot;
+<span class="lineNum">      27 </span>            : #include &quot;Utilities/MakeArray.hpp&quot;
+<span class="lineNum">      28 </span>            : #include &quot;Utilities/TMPL.hpp&quot;
+<span class="lineNum">      29 </span>            : #include &quot;Utilities/Tuple.hpp&quot;
+<span class="lineNum">      30 </span>            : 
+<span class="lineNum">      31 </span>            : /// \cond
+<span class="lineNum">      32 </span>            : class DataVector;
+<span class="lineNum">      33 </span>            : class FunctionOfTime;
+<span class="lineNum">      34 </span>            : /// \endcond
+<span class="lineNum">      35 </span>            : 
+<span class="lineNum">      36 </span>            : /// Contains all coordinate maps.
+<span class="lineNum">      37 </span>            : namespace CoordinateMaps {
+<span class="lineNum">      38 </span>            : template &lt;typename FirstMap, typename... Maps&gt;
+<span class="lineNum">      39 </span>            : constexpr size_t map_dim = FirstMap::dim;
+<span class="lineNum">      40 </span>            : }  // namespace CoordinateMaps
+<span class="lineNum">      41 </span>            : 
+<span class="lineNum">      42 </span>            : /*!
+<span class="lineNum">      43 </span>            :  * \ingroup CoordinateMapsGroup
+<span class="lineNum">      44 </span>            :  * \brief Abstract base class for CoordinateMap
+<span class="lineNum">      45 </span>            :  */
+<span class="lineNum">      46 </span>            : template &lt;typename SourceFrame, typename TargetFrame, size_t Dim&gt;
+<span class="lineNum">      47 </span>            : class CoordinateMapBase : public PUP::able {
+<span class="lineNum">      48 </span>            :  public:
+<span class="lineNum">      49 </span>            :   static constexpr size_t dim = Dim;
+<span class="lineNum">      50 </span>            :   using source_frame = SourceFrame;
+<a name="51"><span class="lineNum">      51 </span>            :   using target_frame = TargetFrame;</a>
+<span class="lineNum">      52 </span>            : 
+<a name="53"><span class="lineNum">      53 </span><span class="lineCov">        577 :   WRAPPED_PUPable_abstract(CoordinateMapBase);  // NOLINT</span></a>
+<a name="54"><span class="lineNum">      54 </span>            : </a>
+<span class="lineNum">      55 </span><span class="lineCov">       2081 :   CoordinateMapBase() = default;</span>
+<a name="56"><span class="lineNum">      56 </span><span class="lineCov">        478 :   CoordinateMapBase(const CoordinateMapBase&amp; /*rhs*/) = default;</span></a>
+<span class="lineNum">      57 </span>            :   CoordinateMapBase&amp; operator=(const CoordinateMapBase&amp; /*rhs*/) = default;
+<a name="58"><span class="lineNum">      58 </span><span class="lineCov">        489 :   CoordinateMapBase(CoordinateMapBase&amp;&amp; /*rhs*/) = default;</span></a>
+<span class="lineNum">      59 </span>            :   CoordinateMapBase&amp; operator=(CoordinateMapBase&amp;&amp; /*rhs*/) = default;
+<span class="lineNum">      60 </span><span class="lineCov">       3014 :   ~CoordinateMapBase() override = default;</span>
+<span class="lineNum">      61 </span>            : 
+<span class="lineNum">      62 </span>            :   virtual std::unique_ptr&lt;CoordinateMapBase&lt;SourceFrame, TargetFrame, Dim&gt;&gt;
+<span class="lineNum">      63 </span>            :   get_clone() const = 0;
+<span class="lineNum">      64 </span>            : 
+<span class="lineNum">      65 </span>            :   // @{
+<span class="lineNum">      66 </span>            :   /// Apply the `Maps` to the point(s) `source_point`
+<span class="lineNum">      67 </span>            :   virtual tnsr::I&lt;double, Dim, TargetFrame&gt; operator()(
+<span class="lineNum">      68 </span>            :       tnsr::I&lt;double, Dim, SourceFrame&gt; source_point,
+<span class="lineNum">      69 </span>            :       double time = std::numeric_limits&lt;double&gt;::signaling_NaN(),
+<span class="lineNum">      70 </span>            :       const std::unordered_map&lt;std::string, FunctionOfTime&amp;&gt;&amp; f_of_t_list =
+<span class="lineNum">      71 </span>            :           std::unordered_map&lt;std::string, FunctionOfTime&amp;&gt;{}) const
+<span class="lineNum">      72 </span>            :       noexcept = 0;
+<span class="lineNum">      73 </span>            :   virtual tnsr::I&lt;DataVector, Dim, TargetFrame&gt; operator()(
+<span class="lineNum">      74 </span>            :       tnsr::I&lt;DataVector, Dim, SourceFrame&gt; source_point,
+<span class="lineNum">      75 </span>            :       double time = std::numeric_limits&lt;double&gt;::signaling_NaN(),
+<span class="lineNum">      76 </span>            :       const std::unordered_map&lt;std::string, FunctionOfTime&amp;&gt;&amp; f_of_t_list =
+<span class="lineNum">      77 </span>            :           std::unordered_map&lt;std::string, FunctionOfTime&amp;&gt;{}) const
+<span class="lineNum">      78 </span>            :       noexcept = 0;
+<span class="lineNum">      79 </span>            :   // @}
+<span class="lineNum">      80 </span>            : 
+<span class="lineNum">      81 </span>            :   // @{
+<span class="lineNum">      82 </span>            :   /// Apply the inverse `Maps` to the point(s) `target_point`
+<span class="lineNum">      83 </span>            :   virtual tnsr::I&lt;double, Dim, SourceFrame&gt; inverse(
+<span class="lineNum">      84 </span>            :       tnsr::I&lt;double, Dim, TargetFrame&gt; target_point,
+<span class="lineNum">      85 </span>            :       double time = std::numeric_limits&lt;double&gt;::signaling_NaN(),
+<span class="lineNum">      86 </span>            :       const std::unordered_map&lt;std::string, FunctionOfTime&amp;&gt;&amp; f_of_t_list =
+<span class="lineNum">      87 </span>            :           std::unordered_map&lt;std::string, FunctionOfTime&amp;&gt;{}) const
+<span class="lineNum">      88 </span>            :       noexcept = 0;
+<span class="lineNum">      89 </span>            :   virtual tnsr::I&lt;DataVector, Dim, SourceFrame&gt; inverse(
+<span class="lineNum">      90 </span>            :       tnsr::I&lt;DataVector, Dim, TargetFrame&gt; target_point,
+<span class="lineNum">      91 </span>            :       double time = std::numeric_limits&lt;double&gt;::signaling_NaN(),
+<span class="lineNum">      92 </span>            :       const std::unordered_map&lt;std::string, FunctionOfTime&amp;&gt;&amp; f_of_t_list =
+<span class="lineNum">      93 </span>            :           std::unordered_map&lt;std::string, FunctionOfTime&amp;&gt;{}) const
+<span class="lineNum">      94 </span>            :       noexcept = 0;
+<span class="lineNum">      95 </span>            : 
+<span class="lineNum">      96 </span>            :   // @}
+<span class="lineNum">      97 </span>            : 
+<span class="lineNum">      98 </span>            :   // @{
+<span class="lineNum">      99 </span>            :   /// Compute the inverse Jacobian of the `Maps` at the point(s)
+<span class="lineNum">     100 </span>            :   /// `source_point`
+<span class="lineNum">     101 </span>            :   virtual InverseJacobian&lt;double, Dim, SourceFrame, TargetFrame&gt; inv_jacobian(
+<span class="lineNum">     102 </span>            :       tnsr::I&lt;double, Dim, SourceFrame&gt; source_point,
+<span class="lineNum">     103 </span>            :       double time = std::numeric_limits&lt;double&gt;::signaling_NaN(),
+<span class="lineNum">     104 </span>            :       const std::unordered_map&lt;std::string, FunctionOfTime&amp;&gt;&amp; f_of_t_list =
+<span class="lineNum">     105 </span>            :           std::unordered_map&lt;std::string, FunctionOfTime&amp;&gt;{}) const
+<span class="lineNum">     106 </span>            :       noexcept = 0;
+<span class="lineNum">     107 </span>            :   virtual InverseJacobian&lt;DataVector, Dim, SourceFrame, TargetFrame&gt;
+<span class="lineNum">     108 </span>            :   inv_jacobian(
+<span class="lineNum">     109 </span>            :       tnsr::I&lt;DataVector, Dim, SourceFrame&gt; source_point,
+<span class="lineNum">     110 </span>            :       double time = std::numeric_limits&lt;double&gt;::signaling_NaN(),
+<span class="lineNum">     111 </span>            :       const std::unordered_map&lt;std::string, FunctionOfTime&amp;&gt;&amp; f_of_t_list =
+<span class="lineNum">     112 </span>            :           std::unordered_map&lt;std::string, FunctionOfTime&amp;&gt;{}) const
+<span class="lineNum">     113 </span>            :       noexcept = 0;
+<span class="lineNum">     114 </span>            :   // @}
+<span class="lineNum">     115 </span>            : 
+<span class="lineNum">     116 </span>            :   // @{
+<span class="lineNum">     117 </span>            :   /// Compute the Jacobian of the `Maps` at the point(s) `source_point`
+<span class="lineNum">     118 </span>            :   virtual Jacobian&lt;double, Dim, SourceFrame, TargetFrame&gt; jacobian(
+<span class="lineNum">     119 </span>            :       tnsr::I&lt;double, Dim, SourceFrame&gt; source_point,
+<span class="lineNum">     120 </span>            :       double time = std::numeric_limits&lt;double&gt;::signaling_NaN(),
+<span class="lineNum">     121 </span>            :       const std::unordered_map&lt;std::string, FunctionOfTime&amp;&gt;&amp; f_of_t_list =
+<span class="lineNum">     122 </span>            :           std::unordered_map&lt;std::string, FunctionOfTime&amp;&gt;{}) const
+<span class="lineNum">     123 </span>            :       noexcept = 0;
+<span class="lineNum">     124 </span>            :   virtual Jacobian&lt;DataVector, Dim, SourceFrame, TargetFrame&gt; jacobian(
+<span class="lineNum">     125 </span>            :       tnsr::I&lt;DataVector, Dim, SourceFrame&gt; source_point,
+<span class="lineNum">     126 </span>            :       double time = std::numeric_limits&lt;double&gt;::signaling_NaN(),
+<span class="lineNum">     127 </span>            :       const std::unordered_map&lt;std::string, FunctionOfTime&amp;&gt;&amp; f_of_t_list =
+<span class="lineNum">     128 </span>            :           std::unordered_map&lt;std::string, FunctionOfTime&amp;&gt;{}) const
+<span class="lineNum">     129 </span>            :       noexcept = 0;
+<span class="lineNum">     130 </span>            :   // @}
+<a name="131"><span class="lineNum">     131 </span>            :  private:</a>
+<span class="lineNum">     132 </span>            :   virtual bool is_equal_to(const CoordinateMapBase&amp; other) const = 0;
+<span class="lineNum">     133 </span><span class="lineCov">        483 :   friend bool operator==(const CoordinateMapBase&amp; lhs,</span>
+<span class="lineNum">     134 </span>            :                          const CoordinateMapBase&amp; rhs) noexcept {
+<a name="135"><span class="lineNum">     135 </span><span class="lineCov">        483 :     return typeid(lhs) == typeid(rhs) and lhs.is_equal_to(rhs);</span></a>
+<span class="lineNum">     136 </span>            :   }
+<span class="lineNum">     137 </span><span class="lineCov">          1 :   friend bool operator!=(const CoordinateMapBase&amp; lhs,</span>
+<span class="lineNum">     138 </span>            :                          const CoordinateMapBase&amp; rhs) noexcept {
+<span class="lineNum">     139 </span><span class="lineCov">          1 :     return not(lhs == rhs);</span>
+<span class="lineNum">     140 </span>            :   }
+<span class="lineNum">     141 </span>            : };
+<span class="lineNum">     142 </span>            : 
+<span class="lineNum">     143 </span>            : /*!
+<span class="lineNum">     144 </span>            :  * \ingroup CoordinateMapsGroup
+<span class="lineNum">     145 </span>            :  * \brief A coordinate map or composition of coordinate maps
+<span class="lineNum">     146 </span>            :  *
+<span class="lineNum">     147 </span>            :  * Maps coordinates from the `SourceFrame` to the `TargetFrame` using the
+<span class="lineNum">     148 </span>            :  * coordinate maps `Maps...`. The individual maps are applied left to right
+<span class="lineNum">     149 </span>            :  * from the source to the target Frame. The inverse map, as well as Jacobian
+<span class="lineNum">     150 </span>            :  * and inverse Jacobian are also provided. The `CoordinateMap` class must
+<span class="lineNum">     151 </span>            :  * be used even if just wrapping a single coordinate map. It is designed to
+<span class="lineNum">     152 </span>            :  * be an extremely minimal interface to the underlying coordinate maps. For
+<span class="lineNum">     153 </span>            :  * a list of all coordinate maps see the CoordinateMaps group or namespace.
+<span class="lineNum">     154 </span>            :  *
+<span class="lineNum">     155 </span>            :  * Each coordinate map must contain a `static constexpr size_t dim` variable
+<span class="lineNum">     156 </span>            :  * that is equal to the dimensionality of the map. The Coordinatemap class
+<span class="lineNum">     157 </span>            :  * contains a member `static constexpr size_t dim`, a type alias `source_frame`,
+<span class="lineNum">     158 </span>            :  * a type alias `target_frame` and `typelist of the `Maps...`.
+<span class="lineNum">     159 </span>            :  */
+<span class="lineNum">     160 </span>            : template &lt;typename SourceFrame, typename TargetFrame, typename... Maps&gt;
+<span class="lineNum">     161 </span>            : class CoordinateMap
+<span class="lineNum">     162 </span>            :     : public CoordinateMapBase&lt;SourceFrame, TargetFrame,
+<span class="lineNum">     163 </span>            :                                CoordinateMaps::map_dim&lt;Maps...&gt;&gt; {
+<span class="lineNum">     164 </span>            :   static_assert(sizeof...(Maps) &gt; 0, &quot;Must have at least one map&quot;);
+<span class="lineNum">     165 </span>            :   static_assert(
+<span class="lineNum">     166 </span>            :       tmpl::all&lt;tmpl::integral_list&lt;size_t, Maps::dim...&gt;,
+<span class="lineNum">     167 </span>            :                 std::is_same&lt;tmpl::integral_constant&lt;
+<span class="lineNum">     168 </span>            :                                  size_t, CoordinateMaps::map_dim&lt;Maps...&gt;&gt;,
+<span class="lineNum">     169 </span>            :                              tmpl::_1&gt;&gt;::value,
+<span class="lineNum">     170 </span>            :       &quot;All Maps passed to CoordinateMap must be of the same dimensionality.&quot;);
+<span class="lineNum">     171 </span>            : 
+<span class="lineNum">     172 </span>            :  public:
+<span class="lineNum">     173 </span>            :   static constexpr size_t dim = CoordinateMaps::map_dim&lt;Maps...&gt;;
+<span class="lineNum">     174 </span>            :   using source_frame = SourceFrame;
+<span class="lineNum">     175 </span>            :   using target_frame = TargetFrame;
+<span class="lineNum">     176 </span>            :   using maps_list = tmpl::list&lt;Maps...&gt;;
+<a name="177"><span class="lineNum">     177 </span>            : </a>
+<span class="lineNum">     178 </span>            :   /// Used for Charm++ serialization
+<a name="179"><span class="lineNum">     179 </span><span class="lineCov">          2 :   CoordinateMap() = default;</span></a>
+<span class="lineNum">     180 </span>            : 
+<a name="181"><span class="lineNum">     181 </span><span class="lineCov">        478 :   CoordinateMap(const CoordinateMap&amp; /*rhs*/) = default;</span></a>
+<span class="lineNum">     182 </span>            :   CoordinateMap&amp; operator=(const CoordinateMap&amp; /*rhs*/) = default;
+<a name="183"><span class="lineNum">     183 </span><span class="lineCov">        489 :   CoordinateMap(CoordinateMap&amp;&amp; /*rhs*/) = default;</span></a>
+<span class="lineNum">     184 </span>            :   CoordinateMap&amp; operator=(CoordinateMap&amp;&amp; /*rhs*/) = default;
+<span class="lineNum">     185 </span><span class="lineCov">       4178 :   ~CoordinateMap() override = default;</span>
+<span class="lineNum">     186 </span>            : 
+<a name="187"><span class="lineNum">     187 </span>            :   constexpr explicit CoordinateMap(Maps... maps);</a>
+<span class="lineNum">     188 </span>            : 
+<span class="lineNum">     189 </span><span class="lineCov">         51 :   std::unique_ptr&lt;CoordinateMapBase&lt;SourceFrame, TargetFrame, dim&gt;&gt; get_clone()</span>
+<span class="lineNum">     190 </span>            :       const override {
+<span class="lineNum">     191 </span><span class="lineCov">         51 :     return std::make_unique&lt;CoordinateMap&gt;(*this);</span>
+<span class="lineNum">     192 </span>            :   }
+<span class="lineNum">     193 </span>            : 
+<a name="194"><span class="lineNum">     194 </span>            :   // @{</a>
+<span class="lineNum">     195 </span>            :   /// Apply the `Maps...` to the point(s) `source_point`
+<span class="lineNum">     196 </span><span class="lineCov">      10302 :   constexpr tnsr::I&lt;double, dim, TargetFrame&gt; operator()(</span>
+<span class="lineNum">     197 </span>            :       tnsr::I&lt;double, dim, SourceFrame&gt; source_point,
+<span class="lineNum">     198 </span>            :       const double time = std::numeric_limits&lt;double&gt;::signaling_NaN(),
+<span class="lineNum">     199 </span>            :       const std::unordered_map&lt;std::string, FunctionOfTime&amp;&gt;&amp; f_of_t_list =
+<span class="lineNum">     200 </span>            :           std::unordered_map&lt;std::string, FunctionOfTime&amp;&gt;{}) const
+<span class="lineNum">     201 </span>            :       noexcept override {
+<span class="lineNum">     202 </span><span class="lineCov">      20604 :     return call_impl(std::move(source_point), time, f_of_t_list,</span>
+<a name="203"><span class="lineNum">     203 </span><span class="lineCov">      10302 :                      std::make_index_sequence&lt;sizeof...(Maps)&gt;{});</span></a>
+<span class="lineNum">     204 </span>            :   }
+<span class="lineNum">     205 </span><span class="lineCov">        880 :   constexpr tnsr::I&lt;DataVector, dim, TargetFrame&gt; operator()(</span>
+<span class="lineNum">     206 </span>            :       tnsr::I&lt;DataVector, dim, SourceFrame&gt; source_point,
+<span class="lineNum">     207 </span>            :       const double time = std::numeric_limits&lt;double&gt;::signaling_NaN(),
+<span class="lineNum">     208 </span>            :       const std::unordered_map&lt;std::string, FunctionOfTime&amp;&gt;&amp; f_of_t_list =
+<span class="lineNum">     209 </span>            :           std::unordered_map&lt;std::string, FunctionOfTime&amp;&gt;{}) const
+<span class="lineNum">     210 </span>            :       noexcept override {
+<span class="lineNum">     211 </span><span class="lineCov">        880 :     return call_impl(std::move(source_point), time, f_of_t_list,</span>
+<span class="lineNum">     212 </span><span class="lineCov">        880 :                      std::make_index_sequence&lt;sizeof...(Maps)&gt;{});</span>
+<span class="lineNum">     213 </span>            :   }
+<span class="lineNum">     214 </span>            :   // @}
+<span class="lineNum">     215 </span>            : 
+<a name="216"><span class="lineNum">     216 </span>            :   // @{</a>
+<span class="lineNum">     217 </span>            :   /// Apply the inverse `Maps...` to the point(s) `target_point`
+<span class="lineNum">     218 </span><span class="lineCov">         84 :   constexpr tnsr::I&lt;double, dim, SourceFrame&gt; inverse(</span>
+<span class="lineNum">     219 </span>            :       tnsr::I&lt;double, dim, TargetFrame&gt; target_point,
+<span class="lineNum">     220 </span>            :       const double time = std::numeric_limits&lt;double&gt;::signaling_NaN(),
+<span class="lineNum">     221 </span>            :       const std::unordered_map&lt;std::string, FunctionOfTime&amp;&gt;&amp; f_of_t_list =
+<span class="lineNum">     222 </span>            :           std::unordered_map&lt;std::string, FunctionOfTime&amp;&gt;{}) const
+<span class="lineNum">     223 </span>            :       noexcept override {
+<span class="lineNum">     224 </span><span class="lineCov">        168 :     return inverse_impl(std::move(target_point), time, f_of_t_list,</span>
+<a name="225"><span class="lineNum">     225 </span><span class="lineCov">         84 :                         std::make_index_sequence&lt;sizeof...(Maps)&gt;{});</span></a>
+<span class="lineNum">     226 </span>            :   }
+<span class="lineNum">     227 </span><span class="lineCov">         62 :   constexpr tnsr::I&lt;DataVector, dim, SourceFrame&gt; inverse(</span>
+<span class="lineNum">     228 </span>            :       tnsr::I&lt;DataVector, dim, TargetFrame&gt; target_point,
+<span class="lineNum">     229 </span>            :       const double time = std::numeric_limits&lt;double&gt;::signaling_NaN(),
+<span class="lineNum">     230 </span>            :       const std::unordered_map&lt;std::string, FunctionOfTime&amp;&gt;&amp; f_of_t_list =
+<span class="lineNum">     231 </span>            :           std::unordered_map&lt;std::string, FunctionOfTime&amp;&gt;{}) const
+<span class="lineNum">     232 </span>            :       noexcept override {
+<span class="lineNum">     233 </span><span class="lineCov">         62 :     return inverse_impl(std::move(target_point), time, f_of_t_list,</span>
+<span class="lineNum">     234 </span><span class="lineCov">         62 :                         std::make_index_sequence&lt;sizeof...(Maps)&gt;{});</span>
+<span class="lineNum">     235 </span>            :   }
+<span class="lineNum">     236 </span>            :   // @}
+<span class="lineNum">     237 </span>            : 
+<span class="lineNum">     238 </span>            :   // @{
+<a name="239"><span class="lineNum">     239 </span>            :   /// Compute the inverse Jacobian of the `Maps...` at the point(s)</a>
+<span class="lineNum">     240 </span>            :   /// `source_point`
+<span class="lineNum">     241 </span><span class="lineCov">       7654 :   constexpr InverseJacobian&lt;double, dim, SourceFrame, TargetFrame&gt; inv_jacobian(</span>
+<span class="lineNum">     242 </span>            :       tnsr::I&lt;double, dim, SourceFrame&gt; source_point,
+<span class="lineNum">     243 </span>            :       const double time = std::numeric_limits&lt;double&gt;::signaling_NaN(),
+<span class="lineNum">     244 </span>            :       const std::unordered_map&lt;std::string, FunctionOfTime&amp;&gt;&amp; f_of_t_list =
+<span class="lineNum">     245 </span>            :           std::unordered_map&lt;std::string, FunctionOfTime&amp;&gt;{}) const
+<span class="lineNum">     246 </span>            :       noexcept override {
+<span class="lineNum">     247 </span><span class="lineCov">      15308 :     return inv_jacobian_impl(std::move(source_point), time, f_of_t_list);</span>
+<a name="248"><span class="lineNum">     248 </span>            :   }</a>
+<span class="lineNum">     249 </span>            :   constexpr InverseJacobian&lt;DataVector, dim, SourceFrame, TargetFrame&gt;
+<span class="lineNum">     250 </span><span class="lineCov">        720 :   inv_jacobian(</span>
+<span class="lineNum">     251 </span>            :       tnsr::I&lt;DataVector, dim, SourceFrame&gt; source_point,
+<span class="lineNum">     252 </span>            :       const double time = std::numeric_limits&lt;double&gt;::signaling_NaN(),
+<span class="lineNum">     253 </span>            :       const std::unordered_map&lt;std::string, FunctionOfTime&amp;&gt;&amp; f_of_t_list =
+<span class="lineNum">     254 </span>            :           std::unordered_map&lt;std::string, FunctionOfTime&amp;&gt;{}) const
+<span class="lineNum">     255 </span>            :       noexcept override {
+<span class="lineNum">     256 </span><span class="lineCov">       1440 :     return inv_jacobian_impl(std::move(source_point), time, f_of_t_list);</span>
+<span class="lineNum">     257 </span>            :   }
+<span class="lineNum">     258 </span>            :   // @}
+<span class="lineNum">     259 </span>            : 
+<a name="260"><span class="lineNum">     260 </span>            :   // @{</a>
+<span class="lineNum">     261 </span>            :   /// Compute the Jacobian of the `Maps...` at the point(s) `source_point`
+<span class="lineNum">     262 </span><span class="lineCov">       7654 :   constexpr Jacobian&lt;double, dim, SourceFrame, TargetFrame&gt; jacobian(</span>
+<span class="lineNum">     263 </span>            :       tnsr::I&lt;double, dim, SourceFrame&gt; source_point,
+<span class="lineNum">     264 </span>            :       const double time = std::numeric_limits&lt;double&gt;::signaling_NaN(),
+<span class="lineNum">     265 </span>            :       const std::unordered_map&lt;std::string, FunctionOfTime&amp;&gt;&amp; f_of_t_list =
+<span class="lineNum">     266 </span>            :           std::unordered_map&lt;std::string, FunctionOfTime&amp;&gt;{}) const
+<span class="lineNum">     267 </span>            :       noexcept override {
+<a name="268"><span class="lineNum">     268 </span><span class="lineCov">      15308 :     return jacobian_impl(std::move(source_point), time, f_of_t_list);</span></a>
+<span class="lineNum">     269 </span>            :   }
+<span class="lineNum">     270 </span><span class="lineCov">          2 :   constexpr Jacobian&lt;DataVector, dim, SourceFrame, TargetFrame&gt; jacobian(</span>
+<span class="lineNum">     271 </span>            :       tnsr::I&lt;DataVector, dim, SourceFrame&gt; source_point,
+<span class="lineNum">     272 </span>            :       const double time = std::numeric_limits&lt;double&gt;::signaling_NaN(),
+<span class="lineNum">     273 </span>            :       const std::unordered_map&lt;std::string, FunctionOfTime&amp;&gt;&amp; f_of_t_list =
+<span class="lineNum">     274 </span>            :           std::unordered_map&lt;std::string, FunctionOfTime&amp;&gt;{}) const
+<span class="lineNum">     275 </span>            :       noexcept override {
+<span class="lineNum">     276 </span><span class="lineCov">          4 :     return jacobian_impl(std::move(source_point), time, f_of_t_list);</span>
+<span class="lineNum">     277 </span>            :   }
+<a name="278"><span class="lineNum">     278 </span>            :   // @}</a>
+<span class="lineNum">     279 </span>            : 
+<span class="lineNum">     280 </span><span class="lineCov">       1432 :   WRAPPED_PUPable_decl_base_template(  // NOLINT</span>
+<span class="lineNum">     281 </span>            :       SINGLE_ARG(CoordinateMapBase&lt;SourceFrame, TargetFrame, dim&gt;),
+<a name="282"><span class="lineNum">     282 </span>            :       CoordinateMap);</a>
+<span class="lineNum">     283 </span>            : 
+<span class="lineNum">     284 </span><span class="lineCov">        211 :   explicit CoordinateMap(CkMigrateMessage* /*unused*/) {}</span>
+<a name="285"><span class="lineNum">     285 </span>            : </a>
+<span class="lineNum">     286 </span>            :   // clang-tidy: google-runtime-references
+<span class="lineNum">     287 </span><span class="lineCov">        583 :   void pup(PUP::er&amp; p) override {  // NOLINT</span>
+<span class="lineNum">     288 </span><span class="lineCov">        583 :     CoordinateMapBase&lt;SourceFrame, TargetFrame, dim&gt;::pup(p);</span>
+<span class="lineNum">     289 </span><span class="lineCov">        583 :     PUP::pup(p, maps_);</span>
+<span class="lineNum">     290 </span><span class="lineCov">        583 :   }</span>
+<a name="291"><span class="lineNum">     291 </span>            : </a>
+<span class="lineNum">     292 </span>            :  private:
+<span class="lineNum">     293 </span><span class="lineCov">        490 :   friend bool operator==(const CoordinateMap&amp; lhs,</span>
+<span class="lineNum">     294 </span>            :                          const CoordinateMap&amp; rhs) noexcept {
+<span class="lineNum">     295 </span><span class="lineCov">        490 :     return lhs.maps_ == rhs.maps_;</span>
+<a name="296"><span class="lineNum">     296 </span>            :   }</a>
+<span class="lineNum">     297 </span>            : 
+<span class="lineNum">     298 </span><span class="lineCov">        483 :   bool is_equal_to(const CoordinateMapBase&lt;SourceFrame, TargetFrame, dim&gt;&amp;</span>
+<span class="lineNum">     299 </span>            :                        other) const override {
+<span class="lineNum">     300 </span><span class="lineCov">        483 :     const auto&amp; cast_of_other = dynamic_cast&lt;const CoordinateMap&amp;&gt;(other);</span>
+<span class="lineNum">     301 </span><span class="lineCov">        483 :     return *this == cast_of_other;</span>
+<span class="lineNum">     302 </span>            :   }
+<span class="lineNum">     303 </span>            : 
+<span class="lineNum">     304 </span>            :   template &lt;typename T, size_t... Is&gt;
+<span class="lineNum">     305 </span>            :   constexpr SPECTRE_ALWAYS_INLINE tnsr::I&lt;T, dim, TargetFrame&gt; call_impl(
+<span class="lineNum">     306 </span>            :       tnsr::I&lt;T, dim, SourceFrame&gt;&amp;&amp; source_point, double time,
+<span class="lineNum">     307 </span>            :       const std::unordered_map&lt;std::string, FunctionOfTime&amp;&gt;&amp; f_of_t_list,
+<span class="lineNum">     308 </span>            :       std::index_sequence&lt;Is...&gt; /*meta*/) const noexcept;
+<span class="lineNum">     309 </span>            : 
+<span class="lineNum">     310 </span>            :   template &lt;typename T, size_t... Is&gt;
+<span class="lineNum">     311 </span>            :   constexpr SPECTRE_ALWAYS_INLINE tnsr::I&lt;T, dim, SourceFrame&gt; inverse_impl(
+<span class="lineNum">     312 </span>            :       tnsr::I&lt;T, dim, TargetFrame&gt;&amp;&amp; target_point, double time,
+<span class="lineNum">     313 </span>            :       const std::unordered_map&lt;std::string, FunctionOfTime&amp;&gt;&amp; f_of_t_list,
+<span class="lineNum">     314 </span>            :       std::index_sequence&lt;Is...&gt; /*meta*/) const noexcept;
+<span class="lineNum">     315 </span>            : 
+<span class="lineNum">     316 </span>            :   template &lt;typename T&gt;
+<span class="lineNum">     317 </span>            :   constexpr SPECTRE_ALWAYS_INLINE InverseJacobian&lt;T, dim, SourceFrame,
+<span class="lineNum">     318 </span>            :                                                   TargetFrame&gt;
+<span class="lineNum">     319 </span>            :   inv_jacobian_impl(
+<span class="lineNum">     320 </span>            :       tnsr::I&lt;T, dim, SourceFrame&gt;&amp;&amp; source_point, double time,
+<span class="lineNum">     321 </span>            :       const std::unordered_map&lt;std::string, FunctionOfTime&amp;&gt;&amp; f_of_t_list) const
+<span class="lineNum">     322 </span>            :       noexcept;
+<span class="lineNum">     323 </span>            : 
+<span class="lineNum">     324 </span>            :   template &lt;typename T&gt;
+<span class="lineNum">     325 </span>            :   constexpr SPECTRE_ALWAYS_INLINE Jacobian&lt;T, dim, SourceFrame, TargetFrame&gt;
+<span class="lineNum">     326 </span>            :   jacobian_impl(
+<span class="lineNum">     327 </span>            :       tnsr::I&lt;T, dim, SourceFrame&gt;&amp;&amp; source_point, double time,
+<span class="lineNum">     328 </span>            :       const std::unordered_map&lt;std::string, FunctionOfTime&amp;&gt;&amp; f_of_t_list) const
+<span class="lineNum">     329 </span>            :       noexcept;
+<span class="lineNum">     330 </span>            : 
+<span class="lineNum">     331 </span>            :   std::tuple&lt;Maps...&gt; maps_;
+<span class="lineNum">     332 </span>            : };
+<span class="lineNum">     333 </span>            : 
+<span class="lineNum">     334 </span>            : ////////////////////////////////////////////////////////////////
+<span class="lineNum">     335 </span>            : // CoordinateMap definitions
+<span class="lineNum">     336 </span>            : ////////////////////////////////////////////////////////////////
+<span class="lineNum">     337 </span>            : 
+<span class="lineNum">     338 </span>            : // define type-trait to check for time-dependent mapping
+<span class="lineNum">     339 </span>            : namespace CoordinateMap_detail {
+<span class="lineNum">     340 </span>            : template &lt;typename T&gt;
+<span class="lineNum">     341 </span>            : using is_map_time_dependent_t =
+<span class="lineNum">     342 </span>            :     tt::is_callable_t&lt;T, std::array&lt;std::decay_t&lt;T&gt;, std::decay_t&lt;T&gt;::dim&gt;,
+<span class="lineNum">     343 </span>            :                       double, std::unordered_map&lt;std::string, FunctionOfTime&amp;&gt;&gt;;
+<span class="lineNum">     344 </span>            : }  // namespace CoordinateMap_detail
+<a name="345"><span class="lineNum">     345 </span>            : </a>
+<span class="lineNum">     346 </span>            : template &lt;typename SourceFrame, typename TargetFrame, typename... Maps&gt;
+<span class="lineNum">     347 </span><span class="lineCov">       1868 : constexpr CoordinateMap&lt;SourceFrame, TargetFrame, Maps...&gt;::CoordinateMap(</span>
+<span class="lineNum">     348 </span>            :     Maps... maps)
+<span class="lineNum">     349 </span><span class="lineCov">       1868 :     : maps_(std::move(maps)...) {}</span>
+<span class="lineNum">     350 </span>            : 
+<span class="lineNum">     351 </span>            : template &lt;typename SourceFrame, typename TargetFrame, typename... Maps&gt;
+<span class="lineNum">     352 </span>            : template &lt;typename T, size_t... Is&gt;
+<span class="lineNum">     353 </span>            : constexpr SPECTRE_ALWAYS_INLINE tnsr::I&lt;
+<span class="lineNum">     354 </span>            :     T, CoordinateMap&lt;SourceFrame, TargetFrame, Maps...&gt;::dim, TargetFrame&gt;
+<span class="lineNum">     355 </span>            : CoordinateMap&lt;SourceFrame, TargetFrame, Maps...&gt;::call_impl(
+<span class="lineNum">     356 </span>            :     tnsr::I&lt;T, dim, SourceFrame&gt;&amp;&amp; source_point, const double time,
+<span class="lineNum">     357 </span>            :     const std::unordered_map&lt;std::string, FunctionOfTime&amp;&gt;&amp; f_of_t_list,
+<span class="lineNum">     358 </span>            :     std::index_sequence&lt;Is...&gt; /*meta*/) const noexcept {
+<span class="lineNum">     359 </span><span class="lineCov">      12062 :   std::array&lt;T, dim&gt; mapped_point = make_array&lt;T, dim&gt;(std::move(source_point));</span>
+<span class="lineNum">     360 </span>            : 
+<span class="lineNum">     361 </span><span class="lineCov">      35726 :   (void)std::initializer_list&lt;char&gt;{make_overloader(</span>
+<span class="lineNum">     362 </span>            :       [](const auto&amp; the_map, std::array&lt;T, dim&gt;&amp; point, const double /*t*/,
+<a name="363"><span class="lineNum">     363 </span>            :          const std::unordered_map&lt;std::string, FunctionOfTime&amp;&gt;&amp;</a>
+<span class="lineNum">     364 </span>            :          /*f_of_ts*/,
+<span class="lineNum">     365 </span><span class="lineCov">      12272 :          const std::false_type /*is_time_independent*/) noexcept {</span>
+<span class="lineNum">     366 </span><span class="lineCov">      12272 :         point = the_map(point);</span>
+<span class="lineNum">     367 </span><span class="lineCov">      12272 :         return '0';</span>
+<span class="lineNum">     368 </span>            :       },
+<span class="lineNum">     369 </span>            :       [](const auto&amp; the_map, std::array&lt;T, dim&gt;&amp; point, const double t,
+<span class="lineNum">     370 </span>            :          const std::unordered_map&lt;std::string, FunctionOfTime&amp;&gt;&amp; f_of_ts,
+<span class="lineNum">     371 </span>            :          const std::true_type /*is_time_dependent*/) noexcept {
+<span class="lineNum">     372 </span>            :         point = the_map(point, t, f_of_ts);
+<span class="lineNum">     373 </span>            :         return '0';
+<span class="lineNum">     374 </span><span class="lineCov">      24544 :       })(std::get&lt;Is&gt;(maps_), mapped_point, time, f_of_t_list,</span>
+<span class="lineNum">     375 </span>            :          CoordinateMap_detail::is_map_time_dependent_t&lt;Maps&gt;{})...};
+<span class="lineNum">     376 </span>            : 
+<span class="lineNum">     377 </span><span class="lineCov">      11182 :   return tnsr::I&lt;T, dim, TargetFrame&gt;(std::move(mapped_point));</span>
+<span class="lineNum">     378 </span>            : }
+<span class="lineNum">     379 </span>            : 
+<span class="lineNum">     380 </span>            : template &lt;typename SourceFrame, typename TargetFrame, typename... Maps&gt;
+<span class="lineNum">     381 </span>            : template &lt;typename T, size_t... Is&gt;
+<span class="lineNum">     382 </span>            : constexpr SPECTRE_ALWAYS_INLINE tnsr::I&lt;
+<span class="lineNum">     383 </span>            :     T, CoordinateMap&lt;SourceFrame, TargetFrame, Maps...&gt;::dim, SourceFrame&gt;
+<span class="lineNum">     384 </span>            : CoordinateMap&lt;SourceFrame, TargetFrame, Maps...&gt;::inverse_impl(
+<span class="lineNum">     385 </span>            :     tnsr::I&lt;T, dim, TargetFrame&gt;&amp;&amp; target_point, const double time,
+<span class="lineNum">     386 </span>            :     const std::unordered_map&lt;std::string, FunctionOfTime&amp;&gt;&amp; f_of_t_list,
+<span class="lineNum">     387 </span>            :     std::index_sequence&lt;Is...&gt; /*meta*/) const noexcept {
+<span class="lineNum">     388 </span><span class="lineCov">        208 :   std::array&lt;T, dim&gt; mapped_point = make_array&lt;T, dim&gt;(std::move(target_point));</span>
+<span class="lineNum">     389 </span>            : 
+<span class="lineNum">     390 </span><span class="lineCov">        638 :   (void)std::initializer_list&lt;char&gt;{make_overloader(</span>
+<span class="lineNum">     391 </span>            :       [](const auto&amp; the_map, std::array&lt;T, dim&gt;&amp; point, const double /*t*/,
+<a name="392"><span class="lineNum">     392 </span>            :          const std::unordered_map&lt;std::string, FunctionOfTime&amp;&gt;&amp;</a>
+<span class="lineNum">     393 </span>            :          /*f_of_ts*/,
+<span class="lineNum">     394 </span><span class="lineCov">        246 :          const std::false_type /*is_time_independent*/) noexcept {</span>
+<span class="lineNum">     395 </span><span class="lineCov">        246 :         point = the_map.inverse(point);</span>
+<span class="lineNum">     396 </span><span class="lineCov">        246 :         return '0';</span>
+<span class="lineNum">     397 </span>            :       },
+<span class="lineNum">     398 </span>            :       [](const auto&amp; the_map, std::array&lt;T, dim&gt;&amp; point, const double t,
+<span class="lineNum">     399 </span>            :          const std::unordered_map&lt;std::string, FunctionOfTime&amp;&gt;&amp; f_of_ts,
+<span class="lineNum">     400 </span>            :          const std::true_type /*is_time_dependent*/) noexcept {
+<span class="lineNum">     401 </span>            :         point = the_map.inverse(point, t, f_of_ts);
+<span class="lineNum">     402 </span>            :         return '0';
+<span class="lineNum">     403 </span>            :         // this is the inverse function, so the iterator sequence below is
+<span class="lineNum">     404 </span>            :         // reversed
+<span class="lineNum">     405 </span><span class="lineCov">        492 :       })(std::get&lt;sizeof...(Maps)-1 - Is&gt;(maps_), mapped_point, time,</span>
+<span class="lineNum">     406 </span>            :          f_of_t_list,
+<span class="lineNum">     407 </span>            :          CoordinateMap_detail::is_map_time_dependent_t&lt;Maps&gt;{})...};
+<span class="lineNum">     408 </span>            : 
+<span class="lineNum">     409 </span><span class="lineCov">        146 :   return tnsr::I&lt;T, dim, SourceFrame&gt;(std::move(mapped_point));</span>
+<span class="lineNum">     410 </span>            : }
+<span class="lineNum">     411 </span>            : 
+<span class="lineNum">     412 </span>            : // define type-trait to check for time-dependent jacobian
+<span class="lineNum">     413 </span>            : namespace CoordinateMap_detail {
+<span class="lineNum">     414 </span>            : CREATE_IS_CALLABLE(jacobian)
+<span class="lineNum">     415 </span>            : template &lt;typename Map, typename T&gt;
+<span class="lineNum">     416 </span>            : using is_jacobian_time_dependent_t =
+<span class="lineNum">     417 </span>            :     CoordinateMap_detail::is_jacobian_callable_t&lt;
+<span class="lineNum">     418 </span>            :         Map, std::array&lt;std::decay_t&lt;T&gt;, std::decay_t&lt;Map&gt;::dim&gt;, double,
+<span class="lineNum">     419 </span>            :         std::unordered_map&lt;std::string, FunctionOfTime&amp;&gt;&gt;;
+<span class="lineNum">     420 </span>            : }  // namespace CoordinateMap_detail
+<span class="lineNum">     421 </span>            : 
+<span class="lineNum">     422 </span>            : template &lt;typename SourceFrame, typename TargetFrame, typename... Maps&gt;
+<span class="lineNum">     423 </span>            : template &lt;typename T&gt;
+<span class="lineNum">     424 </span>            : constexpr SPECTRE_ALWAYS_INLINE auto
+<span class="lineNum">     425 </span>            : CoordinateMap&lt;SourceFrame, TargetFrame, Maps...&gt;::inv_jacobian_impl(
+<span class="lineNum">     426 </span>            :     tnsr::I&lt;T, dim, SourceFrame&gt;&amp;&amp; source_point, const double time,
+<span class="lineNum">     427 </span>            :     const std::unordered_map&lt;std::string, FunctionOfTime&amp;&gt;&amp; f_of_t_list) const
+<span class="lineNum">     428 </span>            :     noexcept -&gt; InverseJacobian&lt;T, dim, SourceFrame, TargetFrame&gt; {
+<span class="lineNum">     429 </span><span class="lineCov">       9094 :   std::array&lt;T, dim&gt; mapped_point = make_array&lt;T, dim&gt;(std::move(source_point));</span>
+<span class="lineNum">     430 </span>            : 
+<span class="lineNum">     431 </span><span class="lineCov">       8374 :   InverseJacobian&lt;T, dim, SourceFrame, TargetFrame&gt; inv_jac{};</span>
+<span class="lineNum">     432 </span>            : 
+<span class="lineNum">     433 </span><span class="lineCov">       8374 :   tuple_transform(</span>
+<a name="434"><span class="lineNum">     434 </span>            :       maps_,</a>
+<span class="lineNum">     435 </span>            :       [&amp;inv_jac, &amp;mapped_point, time, &amp;f_of_t_list](
+<span class="lineNum">     436 </span><span class="lineCov">      95915 :           const auto&amp; map, auto index, const std::tuple&lt;Maps...&gt;&amp; maps) {</span>
+<span class="lineNum">     437 </span><span class="lineCov">       9003 :         constexpr const size_t count = decltype(index)::value;</span>
+<span class="lineNum">     438 </span>            : 
+<span class="lineNum">     439 </span><span class="lineCov">       9797 :         tnsr::Ij&lt;T, dim, Frame::NoFrame&gt; temp_inv_jac{};</span>
+<span class="lineNum">     440 </span>            : 
+<span class="lineNum">     441 </span>            :         // chooses the correct call based on time-dependence of jacobian
+<span class="lineNum">     442 </span>            :         auto inv_jac_overload = make_overloader(
+<span class="lineNum">     443 </span>            :             [](const gsl::not_null&lt;tnsr::Ij&lt;T, dim, Frame::NoFrame&gt;*&gt; t_inv_jac,
+<span class="lineNum">     444 </span>            :                const auto&amp; the_map, const std::array&lt;T, dim&gt;&amp; point,
+<span class="lineNum">     445 </span>            :                const double /*t*/,
+<a name="446"><span class="lineNum">     446 </span>            :                const std::unordered_map&lt;std::string, FunctionOfTime&amp;&gt;&amp;</a>
+<span class="lineNum">     447 </span>            :                /*f_of_ts*/,
+<span class="lineNum">     448 </span><span class="lineCov">       9003 :                const std::false_type /*is_time_independent*/) {</span>
+<span class="lineNum">     449 </span><span class="lineCov">       9003 :               *t_inv_jac = the_map.inv_jacobian(point);</span>
+<span class="lineNum">     450 </span><span class="lineCov">       9003 :               return nullptr;</span>
+<span class="lineNum">     451 </span>            :             },
+<span class="lineNum">     452 </span>            :             [](const gsl::not_null&lt;tnsr::Ij&lt;T, dim, Frame::NoFrame&gt;*&gt; t_inv_jac,
+<span class="lineNum">     453 </span>            :                const auto&amp; the_map, const std::array&lt;T, dim&gt;&amp; point,
+<span class="lineNum">     454 </span>            :                const double t,
+<span class="lineNum">     455 </span>            :                const std::unordered_map&lt;std::string, FunctionOfTime&amp;&gt;&amp; f_of_ts,
+<span class="lineNum">     456 </span>            :                const std::true_type /*is_time_dependent*/) {
+<span class="lineNum">     457 </span>            :               *t_inv_jac = the_map.inv_jacobian(point, t, f_of_ts);
+<span class="lineNum">     458 </span>            :               return nullptr;
+<span class="lineNum">     459 </span>            :             });
+<span class="lineNum">     460 </span>            : 
+<span class="lineNum">     461 </span>            :         if (LIKELY(count != 0)) {
+<span class="lineNum">     462 </span><span class="lineCov">        703 :           mapped_point =</span>
+<span class="lineNum">     463 </span><span class="lineCov">        629 :               std::get&lt;(count != 0 ? count - 1 : 0)&gt;(maps)(mapped_point);</span>
+<span class="lineNum">     464 </span><span class="lineCov">        629 :           inv_jac_overload(</span>
+<span class="lineNum">     465 </span>            :               &amp;temp_inv_jac, map, mapped_point, time, f_of_t_list,
+<span class="lineNum">     466 </span>            :               CoordinateMap_detail::is_jacobian_time_dependent_t&lt;decltype(map),
+<span class="lineNum">     467 </span>            :                                                                  T&gt;{});
+<span class="lineNum">     468 </span><span class="lineCov">        703 :           std::array&lt;T, dim&gt; temp{};</span>
+<span class="lineNum">     469 </span><span class="lineCov">       2072 :           for (size_t source = 0; source &lt; dim; ++source) {</span>
+<span class="lineNum">     470 </span><span class="lineCov">       5096 :             for (size_t target = 0; target &lt; dim; ++target) {</span>
+<span class="lineNum">     471 </span><span class="lineCov">       6957 :               gsl::at(temp, target) =</span>
+<span class="lineNum">     472 </span><span class="lineCov">       7655 :                   inv_jac.get(source, 0) * temp_inv_jac.get(0, target);</span>
+<span class="lineNum">     473 </span><span class="lineCov">      19638 :               for (size_t dummy = 1; dummy &lt; dim; ++dummy) {</span>
+<span class="lineNum">     474 </span><span class="lineCov">      12882 :                 gsl::at(temp, target) += inv_jac.get(source, dummy) *</span>
+<span class="lineNum">     475 </span>            :                                          temp_inv_jac.get(dummy, target);
+<span class="lineNum">     476 </span>            :               }
+<span class="lineNum">     477 </span>            :             }
+<span class="lineNum">     478 </span><span class="lineCov">       5096 :             for (size_t target = 0; target &lt; dim; ++target) {</span>
+<span class="lineNum">     479 </span><span class="lineCov">       7306 :               inv_jac.get(source, target) = std::move(gsl::at(temp, target));</span>
+<span class="lineNum">     480 </span>            :             }
+<span class="lineNum">     481 </span>            :           }
+<span class="lineNum">     482 </span>            :         } else {
+<span class="lineNum">     483 </span><span class="lineCov">       8374 :           inv_jac_overload(</span>
+<span class="lineNum">     484 </span>            :               &amp;temp_inv_jac, map, mapped_point, time, f_of_t_list,
+<span class="lineNum">     485 </span>            :               CoordinateMap_detail::is_jacobian_time_dependent_t&lt;decltype(map),
+<span class="lineNum">     486 </span>            :                                                                  T&gt;{});
+<span class="lineNum">     487 </span><span class="lineCov">      30986 :           for (size_t source = 0; source &lt; dim; ++source) {</span>
+<span class="lineNum">     488 </span><span class="lineCov">      86346 :             for (size_t target = 0; target &lt; dim; ++target) {</span>
+<span class="lineNum">     489 </span><span class="lineCov">      63734 :               inv_jac.get(source, target) =</span>
+<span class="lineNum">     490 </span><span class="lineCov">      63734 :                   std::move(temp_inv_jac.get(source, target));</span>
+<span class="lineNum">     491 </span>            :             }
+<span class="lineNum">     492 </span>            :           }
+<span class="lineNum">     493 </span>            :         }
+<span class="lineNum">     494 </span><span class="lineCov">       9003 :       },</span>
+<span class="lineNum">     495 </span>            :       maps_);
+<span class="lineNum">     496 </span><span class="lineCov">        386 :   return inv_jac;</span>
+<span class="lineNum">     497 </span>            : }
+<span class="lineNum">     498 </span>            : 
+<span class="lineNum">     499 </span>            : template &lt;typename SourceFrame, typename TargetFrame, typename... Maps&gt;
+<span class="lineNum">     500 </span>            : template &lt;typename T&gt;
+<span class="lineNum">     501 </span>            : constexpr SPECTRE_ALWAYS_INLINE auto
+<span class="lineNum">     502 </span>            : CoordinateMap&lt;SourceFrame, TargetFrame, Maps...&gt;::jacobian_impl(
+<span class="lineNum">     503 </span>            :     tnsr::I&lt;T, dim, SourceFrame&gt;&amp;&amp; source_point, const double time,
+<span class="lineNum">     504 </span>            :     const std::unordered_map&lt;std::string, FunctionOfTime&amp;&gt;&amp; f_of_t_list) const
+<span class="lineNum">     505 </span>            :     noexcept -&gt; Jacobian&lt;T, dim, SourceFrame, TargetFrame&gt; {
+<span class="lineNum">     506 </span><span class="lineCov">       7658 :   std::array&lt;T, dim&gt; mapped_point = make_array&lt;T, dim&gt;(std::move(source_point));</span>
+<span class="lineNum">     507 </span><span class="lineCov">       7656 :   Jacobian&lt;T, dim, SourceFrame, TargetFrame&gt; jac{};</span>
+<span class="lineNum">     508 </span>            : 
+<span class="lineNum">     509 </span><span class="lineCov">       7656 :   tuple_transform(</span>
+<a name="510"><span class="lineNum">     510 </span>            :       maps_,</a>
+<span class="lineNum">     511 </span>            :       [&amp;jac, &amp;mapped_point, time, &amp;f_of_t_list](
+<span class="lineNum">     512 </span><span class="lineCov">      88613 :           const auto&amp; map, auto index, const std::tuple&lt;Maps...&gt;&amp; maps) {</span>
+<span class="lineNum">     513 </span><span class="lineCov">       8213 :         constexpr const size_t count = decltype(index)::value;</span>
+<span class="lineNum">     514 </span>            : 
+<span class="lineNum">     515 </span><span class="lineCov">       8217 :         tnsr::Ij&lt;T, dim, Frame::NoFrame&gt; noframe_jac{};</span>
+<span class="lineNum">     516 </span>            : 
+<span class="lineNum">     517 </span>            :         // chooses the correct call based on time-dependence of jacobian
+<span class="lineNum">     518 </span>            :         auto jac_overload = make_overloader(
+<span class="lineNum">     519 </span>            :             [](const gsl::not_null&lt;tnsr::Ij&lt;T, dim, Frame::NoFrame&gt;*&gt;
+<span class="lineNum">     520 </span>            :                    no_frame_jac,
+<span class="lineNum">     521 </span>            :                const auto&amp; the_map, const std::array&lt;T, dim&gt;&amp; point,
+<span class="lineNum">     522 </span>            :                const double /*t*/,
+<a name="523"><span class="lineNum">     523 </span>            :                const std::unordered_map&lt;std::string, FunctionOfTime&amp;&gt;&amp;</a>
+<span class="lineNum">     524 </span>            :                /*f_of_ts*/,
+<span class="lineNum">     525 </span><span class="lineCov">       8213 :                const std::false_type /*is_time_independent*/) {</span>
+<span class="lineNum">     526 </span><span class="lineCov">       8213 :               *no_frame_jac = the_map.jacobian(point);</span>
+<span class="lineNum">     527 </span><span class="lineCov">       8213 :               return nullptr;</span>
+<span class="lineNum">     528 </span>            :             },
+<span class="lineNum">     529 </span>            :             [](const gsl::not_null&lt;tnsr::Ij&lt;T, dim, Frame::NoFrame&gt;*&gt;
+<span class="lineNum">     530 </span>            :                    no_frame_jac,
+<span class="lineNum">     531 </span>            :                const auto&amp; the_map, const std::array&lt;T, dim&gt;&amp; point,
+<span class="lineNum">     532 </span>            :                const double t,
+<span class="lineNum">     533 </span>            :                const std::unordered_map&lt;std::string, FunctionOfTime&amp;&gt;&amp; f_of_ts,
+<span class="lineNum">     534 </span>            :                const std::true_type /*is_time_dependent*/) {
+<span class="lineNum">     535 </span>            :               *no_frame_jac = the_map.jacobian(point, t, f_of_ts);
+<span class="lineNum">     536 </span>            :               return nullptr;
+<span class="lineNum">     537 </span>            :             });
+<span class="lineNum">     538 </span>            : 
+<span class="lineNum">     539 </span>            :         if (LIKELY(count != 0)) {
+<span class="lineNum">     540 </span><span class="lineCov">        559 :           mapped_point =</span>
+<span class="lineNum">     541 </span><span class="lineCov">        557 :               std::get&lt;(count != 0 ? count - 1 : 0)&gt;(maps)(mapped_point);</span>
+<span class="lineNum">     542 </span><span class="lineCov">        557 :           jac_overload(</span>
+<span class="lineNum">     543 </span>            :               &amp;noframe_jac, map, mapped_point, time, f_of_t_list,
+<span class="lineNum">     544 </span>            :               CoordinateMap_detail::is_jacobian_time_dependent_t&lt;decltype(map),
+<span class="lineNum">     545 </span>            :                                                                  T&gt;{});
+<span class="lineNum">     546 </span><span class="lineCov">        559 :           std::array&lt;T, dim&gt; temp{};</span>
+<span class="lineNum">     547 </span><span class="lineCov">       1856 :           for (size_t source = 0; source &lt; dim; ++source) {</span>
+<span class="lineNum">     548 </span><span class="lineCov">       4616 :             for (size_t target = 0; target &lt; dim; ++target) {</span>
+<span class="lineNum">     549 </span><span class="lineCov">       6621 :               gsl::at(temp, target) =</span>
+<span class="lineNum">     550 </span><span class="lineCov">       9938 :                   noframe_jac.get(target, 0) * jac.get(0, source);</span>
+<span class="lineNum">     551 </span><span class="lineCov">      17910 :               for (size_t dummy = 1; dummy &lt; dim; ++dummy) {</span>
+<span class="lineNum">     552 </span><span class="lineCov">       5638 :                 gsl::at(temp, target) +=</span>
+<span class="lineNum">     553 </span><span class="lineCov">      11276 :                     noframe_jac.get(target, dummy) * jac.get(dummy, source);</span>
+<span class="lineNum">     554 </span>            :               }
+<span class="lineNum">     555 </span>            :             }
+<span class="lineNum">     556 </span><span class="lineCov">       4616 :             for (size_t target = 0; target &lt; dim; ++target) {</span>
+<span class="lineNum">     557 </span><span class="lineCov">       6634 :               jac.get(target, source) = std::move(gsl::at(temp, target));</span>
+<span class="lineNum">     558 </span>            :             }
+<span class="lineNum">     559 </span>            :           }
+<span class="lineNum">     560 </span>            :         } else {
+<span class="lineNum">     561 </span><span class="lineCov">       7656 :           jac_overload(</span>
+<span class="lineNum">     562 </span>            :               &amp;noframe_jac, map, mapped_point, time, f_of_t_list,
+<span class="lineNum">     563 </span>            :               CoordinateMap_detail::is_jacobian_time_dependent_t&lt;decltype(map),
+<span class="lineNum">     564 </span>            :                                                                  T&gt;{});
+<span class="lineNum">     565 </span><span class="lineCov">      28560 :           for (size_t target = 0; target &lt; dim; ++target) {</span>
+<span class="lineNum">     566 </span><span class="lineCov">      80260 :             for (size_t source = 0; source &lt; dim; ++source) {</span>
+<span class="lineNum">     567 </span><span class="lineCov">      59356 :               jac.get(target, source) =</span>
+<span class="lineNum">     568 </span><span class="lineCov">      59356 :                   std::move(noframe_jac.get(target, source));</span>
+<span class="lineNum">     569 </span>            :             }
+<span class="lineNum">     570 </span>            :           }
+<span class="lineNum">     571 </span>            :         }
+<span class="lineNum">     572 </span><span class="lineCov">       8213 :       },</span>
+<span class="lineNum">     573 </span>            :       maps_);
+<span class="lineNum">     574 </span><span class="lineCov">        386 :   return jac;</span>
+<span class="lineNum">     575 </span>            : }
+<a name="576"><span class="lineNum">     576 </span>            : </a>
+<span class="lineNum">     577 </span>            : template &lt;typename SourceFrame, typename TargetFrame, typename... Maps&gt;
+<span class="lineNum">     578 </span><span class="lineCov">          2 : bool operator!=(</span>
+<span class="lineNum">     579 </span>            :     const CoordinateMap&lt;SourceFrame, TargetFrame, Maps...&gt;&amp; lhs,
+<span class="lineNum">     580 </span>            :     const CoordinateMap&lt;SourceFrame, TargetFrame, Maps...&gt;&amp; rhs) noexcept {
+<span class="lineNum">     581 </span><span class="lineCov">          2 :   return not(lhs == rhs);</span>
+<span class="lineNum">     582 </span>            : }
+<span class="lineNum">     583 </span>            : 
+<span class="lineNum">     584 </span>            : /// \ingroup ComputationalDomainGroup
+<span class="lineNum">     585 </span>            : /// \brief Creates a `CoordinateMap` of `maps...`
+<a name="586"><span class="lineNum">     586 </span>            : template &lt;typename SourceFrame, typename TargetFrame, typename... Maps&gt;</a>
+<span class="lineNum">     587 </span>            : constexpr CoordinateMap&lt;SourceFrame, TargetFrame, std::decay_t&lt;Maps&gt;...&gt;
+<span class="lineNum">     588 </span><span class="lineCov">       1128 : make_coordinate_map(Maps&amp;&amp;... maps) {</span>
+<span class="lineNum">     589 </span>            :   return CoordinateMap&lt;SourceFrame, TargetFrame, std::decay_t&lt;Maps&gt;...&gt;(
+<span class="lineNum">     590 </span><span class="lineCov">       1128 :       std::forward&lt;Maps&gt;(maps)...);</span>
+<span class="lineNum">     591 </span>            : }
+<span class="lineNum">     592 </span>            : 
+<span class="lineNum">     593 </span>            : /// \ingroup ComputationalDomainGroup
+<span class="lineNum">     594 </span>            : /// \brief Creates a `std::unique_ptr&lt;CoordinateMapBase&gt;` of `maps...`
+<span class="lineNum">     595 </span>            : template &lt;typename SourceFrame, typename TargetFrame, typename... Maps&gt;
+<span class="lineNum">     596 </span>            : std::unique_ptr&lt;CoordinateMapBase&lt;
+<a name="597"><span class="lineNum">     597 </span>            :     SourceFrame, TargetFrame,</a>
+<span class="lineNum">     598 </span>            :     CoordinateMap&lt;SourceFrame, TargetFrame, std::decay_t&lt;Maps&gt;...&gt;::dim&gt;&gt;
+<span class="lineNum">     599 </span><span class="lineCov">        737 : make_coordinate_map_base(Maps&amp;&amp;... maps) noexcept {</span>
+<span class="lineNum">     600 </span>            :   return std::make_unique&lt;
+<span class="lineNum">     601 </span>            :       CoordinateMap&lt;SourceFrame, TargetFrame, std::decay_t&lt;Maps&gt;...&gt;&gt;(
+<span class="lineNum">     602 </span><span class="lineCov">        737 :       std::forward&lt;Maps&gt;(maps)...);</span>
+<span class="lineNum">     603 </span>            : }
+<span class="lineNum">     604 </span>            : 
+<span class="lineNum">     605 </span>            : /// \ingroup ComputationalDomainGroup
+<span class="lineNum">     606 </span>            : /// \brief Creates a `std::vector&lt;std::unique_ptr&lt;CoordinateMapBase&gt;&gt;`
+<span class="lineNum">     607 </span>            : /// containing the result of `make_coordinate_map_base` applied to each
+<span class="lineNum">     608 </span>            : /// argument passed in.
+<span class="lineNum">     609 </span>            : template &lt;typename SourceFrame, typename TargetFrame, typename Arg0,
+<span class="lineNum">     610 </span>            :           typename... Args&gt;
+<a name="611"><span class="lineNum">     611 </span>            : std::vector&lt;std::unique_ptr&lt;</a>
+<span class="lineNum">     612 </span>            :     CoordinateMapBase&lt;SourceFrame, TargetFrame, std::decay_t&lt;Arg0&gt;::dim&gt;&gt;&gt;
+<span class="lineNum">     613 </span><span class="lineCov">         82 : make_vector_coordinate_map_base(Arg0&amp;&amp; arg_0,</span>
+<span class="lineNum">     614 </span>            :                                 Args&amp;&amp;... remaining_args) noexcept {
+<span class="lineNum">     615 </span>            :   std::vector&lt;std::unique_ptr&lt;
+<span class="lineNum">     616 </span>            :       CoordinateMapBase&lt;SourceFrame, TargetFrame, std::decay_t&lt;Arg0&gt;::dim&gt;&gt;&gt;
+<span class="lineNum">     617 </span><span class="lineCov">         82 :       return_vector;</span>
+<span class="lineNum">     618 </span><span class="lineCov">         82 :   return_vector.reserve(sizeof...(Args) + 1);</span>
+<span class="lineNum">     619 </span><span class="lineCov">         82 :   return_vector.emplace_back(make_coordinate_map_base&lt;SourceFrame, TargetFrame&gt;(</span>
+<span class="lineNum">     620 </span>            :       std::forward&lt;Arg0&gt;(arg_0)));
+<span class="lineNum">     621 </span><span class="lineCov">        226 :   (void)std::initializer_list&lt;int&gt;{</span>
+<span class="lineNum">     622 </span><span class="lineCov">        248 :       (((void)return_vector.emplace_back(</span>
+<span class="lineNum">     623 </span>            :            make_coordinate_map_base&lt;SourceFrame, TargetFrame&gt;(
+<span class="lineNum">     624 </span>            :                std::forward&lt;Args&gt;(remaining_args)))),
+<span class="lineNum">     625 </span>            :        0)...};
+<span class="lineNum">     626 </span><span class="lineCov">         82 :   return return_vector;</span>
+<span class="lineNum">     627 </span>            : }
+<span class="lineNum">     628 </span>            : 
+<span class="lineNum">     629 </span>            : /// \ingroup ComputationalDomainGroup
+<span class="lineNum">     630 </span>            : /// \brief Creates a `std::vector&lt;std::unique_ptr&lt;CoordinateMapBase&gt;&gt;`
+<span class="lineNum">     631 </span>            : /// containing the result of `make_coordinate_map_base` applied to each
+<span class="lineNum">     632 </span>            : /// element of the vector of maps composed with the rest of the arguments
+<span class="lineNum">     633 </span>            : /// passed in.
+<span class="lineNum">     634 </span>            : template &lt;typename SourceFrame, typename TargetFrame, size_t Dim, typename Map,
+<a name="635"><span class="lineNum">     635 </span>            :           typename... Maps&gt;</a>
+<span class="lineNum">     636 </span>            : std::vector&lt;std::unique_ptr&lt;CoordinateMapBase&lt;SourceFrame, TargetFrame, Dim&gt;&gt;&gt;
+<span class="lineNum">     637 </span><span class="lineCov">         27 : make_vector_coordinate_map_base(std::vector&lt;Map&gt; maps,</span>
+<span class="lineNum">     638 </span>            :                                 const Maps&amp;... remaining_maps) noexcept {
+<span class="lineNum">     639 </span>            :   std::vector&lt;std::unique_ptr&lt;CoordinateMapBase&lt;SourceFrame, TargetFrame, Dim&gt;&gt;&gt;
+<span class="lineNum">     640 </span><span class="lineCov">         27 :       return_vector;</span>
+<span class="lineNum">     641 </span><span class="lineCov">         27 :   return_vector.reserve(sizeof...(Maps) + 1);</span>
+<span class="lineNum">     642 </span><span class="lineCov">        201 :   for (auto&amp; map : maps) {</span>
+<span class="lineNum">     643 </span><span class="lineCov">        174 :     return_vector.emplace_back(</span>
+<span class="lineNum">     644 </span><span class="lineCov">        174 :         make_coordinate_map_base&lt;SourceFrame, TargetFrame&gt;(std::move(map),</span>
+<span class="lineNum">     645 </span>            :                                                            remaining_maps...));
+<span class="lineNum">     646 </span>            :   }
+<span class="lineNum">     647 </span><span class="lineCov">         27 :   return return_vector;</span>
+<span class="lineNum">     648 </span>            : }
+<span class="lineNum">     649 </span>            : 
+<span class="lineNum">     650 </span>            : /// \cond
+<a name="651"><span class="lineNum">     651 </span>            : template &lt;typename SourceFrame, typename TargetFrame, typename... Maps&gt;</a>
+<span class="lineNum">     652 </span>            : PUP::able::PUP_ID
+<span class="lineNum">     653 </span><span class="lineCov">      32753 :     CoordinateMap&lt;SourceFrame, TargetFrame, Maps...&gt;::my_PUP_ID =  // NOLINT</span>
+<span class="lineNum">     654 </span>            :     0;
+<span class="lineNum">     655 </span>            : /// \endcond
+</pre>
+      </td>
+    </tr>
+  </table>
+  <br>
+
+  <table width="100%" border=0 cellspacing=0 cellpadding=0>
+    <tr><td class="ruler"><img src="../../glass.png" width=3 height=3 alt=""></td></tr>
+    <tr><td class="versionInfo">Generated by: <a href="http://ltp.sourceforge.net/coverage/lcov.php" target="_parent">LCOV version 1.13</a></td></tr>
+  </table>
+  <br>
+
+</body>
+</html>

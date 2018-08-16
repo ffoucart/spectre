@@ -1,0 +1,136 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+
+<html lang="en">
+
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <title>LCOV - 4a100dde3b231e0ada6ff7b2b4c32892a30db7f6 - ApparentHorizons/YlmSpherepackHelper.cpp</title>
+  <link rel="stylesheet" type="text/css" href="../gcov.css">
+</head>
+
+<body>
+
+  <table width="100%" border=0 cellspacing=0 cellpadding=0>
+    <tr><td class="title">SpECTRE Unit Test Code Coverage Report</td></tr>
+    <tr><td class="ruler"><img src="../glass.png" width=3 height=3 alt=""></td></tr>
+
+    <tr>
+      <td width="100%">
+        <table cellpadding=1 border=0 width="100%">
+          <tr>
+            <td width="10%" class="headerItem">Current view:</td>
+            <td width="35%" class="headerValue"><a href="../index.html">top level</a> - <a href="index.html">ApparentHorizons</a> - YlmSpherepackHelper.cpp<span style="font-size: 80%;"> (source / <a href="YlmSpherepackHelper.cpp.func-sort-c.html">functions</a>)</span></td>
+            <td width="5%"></td>
+            <td width="15%"></td>
+            <td width="10%" class="headerCovTableHead">Hit</td>
+            <td width="10%" class="headerCovTableHead">Total</td>
+            <td width="15%" class="headerCovTableHead">Coverage</td>
+          </tr>
+          <tr>
+            <td class="headerItem">Commit:</td>
+             <td class="headerValue"><a target="_blank" href="https://github.com/sxs-collaboration/spectre/commit/4a100dde3b231e0ada6ff7b2b4c32892a30db7f6">4a100dde3b231e0ada6ff7b2b4c32892a30db7f6</a></td>
+            <td></td>
+            <td class="headerItem">Lines:</td>
+            <td class="headerCovTableEntry">22</td>
+            <td class="headerCovTableEntry">22</td>
+            <td class="headerCovTableEntryHi">100.0 %</td>
+          </tr>
+          <tr>
+            <td class="headerItem">Date:</td>
+            <td class="headerValue">2018-08-16 19:06:01</td>
+            <td></td>
+            <td class="headerItem">Functions:</td>
+            <td class="headerCovTableEntry">5</td>
+            <td class="headerCovTableEntry">5</td>
+            <td class="headerCovTableEntryHi">100.0 %</td>
+          </tr>
+          <tr>
+            <td class="headerItem">Legend:</td>
+            <td class="headerValueLeg">            Lines:
+            <span class="coverLegendCov">hit</span>
+            <span class="coverLegendNoCov">not hit</span>
+</td>
+            <td></td>
+          </tr>
+          <tr><td><img src="../glass.png" width=3 height=3 alt=""></td></tr>
+        </table>
+      </td>
+    </tr>
+
+    <tr><td class="ruler"><img src="../glass.png" width=3 height=3 alt=""></td></tr>
+  </table>
+
+  <table cellpadding=0 cellspacing=0 border=0>
+    <tr>
+      <td><br></td>
+    </tr>
+    <tr>
+      <td>
+<pre class="sourceHeading">          Line data    Source code</pre>
+<pre class="source">
+<a name="1"><span class="lineNum">       1 </span>            : // Distributed under the MIT License.</a>
+<span class="lineNum">       2 </span>            : // See LICENSE.txt for details.
+<span class="lineNum">       3 </span>            : 
+<span class="lineNum">       4 </span>            : #include &lt;ostream&gt;
+<span class="lineNum">       5 </span>            : 
+<span class="lineNum">       6 </span>            : #include &quot;ApparentHorizons/YlmSpherepackHelper.hpp&quot;
+<span class="lineNum">       7 </span>            : #include &quot;ErrorHandling/Error.hpp&quot;
+<span class="lineNum">       8 </span>            : 
+<a name="9"><span class="lineNum">       9 </span>            : namespace YlmSpherepack_detail {</a>
+<span class="lineNum">      10 </span>            : 
+<span class="lineNum">      11 </span><span class="lineCov">      37081 : std::vector&lt;double&gt;&amp; MemoryPool::get(size_t n_pts) noexcept {</span>
+<span class="lineNum">      12 </span><span class="lineCov">     112500 :   for (auto&amp; elem : memory_pool_) {</span>
+<span class="lineNum">      13 </span><span class="lineCov">     112499 :     if (not elem.currently_in_use) {</span>
+<span class="lineNum">      14 </span><span class="lineCov">      37080 :       elem.currently_in_use = true;</span>
+<span class="lineNum">      15 </span><span class="lineCov">      37080 :       auto&amp; temp = elem.storage;</span>
+<span class="lineNum">      16 </span><span class="lineCov">      37080 :       if (temp.size() &lt; n_pts) {</span>
+<span class="lineNum">      17 </span><span class="lineCov">      18145 :         temp.resize(n_pts);</span>
+<span class="lineNum">      18 </span>            :       }
+<span class="lineNum">      19 </span><span class="lineCov">      74160 :       return temp;</span>
+<span class="lineNum">      20 </span>            :     }
+<span class="lineNum">      21 </span>            :   }
+<span class="lineNum">      22 </span><span class="lineCov">          1 :   ERROR(&quot;Attempt to allocate more than &quot; &lt;&lt; num_temps_ &lt;&lt; &quot; temps.&quot;);</span>
+<span class="lineNum">      23 </span>            : }
+<span class="lineNum">      24 </span>            : 
+<span class="lineNum">      25 </span>            : // We don't simply forward this to the const double* version
+<span class="lineNum">      26 </span>            : // because std::vector&lt;T&gt;::data() might be nullptr for vectors
+<span class="lineNum">      27 </span>            : // in the pool that are unallocated, for random vectors passed into
+<a name="28"><span class="lineNum">      28 </span>            : // this function that have nothing to do with the pool, or for vectors</a>
+<span class="lineNum">      29 </span>            : // that are in the pool but have been size-zero allocated.
+<span class="lineNum">      30 </span><span class="lineCov">      30242 : void MemoryPool::free(const std::vector&lt;double&gt;&amp; to_be_freed) noexcept {</span>
+<span class="lineNum">      31 </span><span class="lineCov">      88936 :   for (auto&amp; elem : memory_pool_) {</span>
+<span class="lineNum">      32 </span><span class="lineCov">      88934 :     if (&amp;(elem.storage) == &amp;to_be_freed) {</span>
+<span class="lineNum">      33 </span><span class="lineCov">      30240 :       elem.currently_in_use = false;</span>
+<span class="lineNum">      34 </span><span class="lineCov">      60480 :       return;</span>
+<span class="lineNum">      35 </span>            :     }
+<span class="lineNum">      36 </span>            :   }
+<span class="lineNum">      37 </span><span class="lineCov">          2 :   ERROR(&quot;Attempt to free temp that was never allocated.&quot;);</span>
+<span class="lineNum">      38 </span>            : }
+<a name="39"><span class="lineNum">      39 </span>            : </a>
+<span class="lineNum">      40 </span>            : /// \cond DOXYGEN_FAILS_TO_PARSE_THIS
+<span class="lineNum">      41 </span><span class="lineCov">       6832 : void MemoryPool::free(const gsl::not_null&lt;double*&gt; to_be_freed) noexcept {</span>
+<span class="lineNum">      42 </span><span class="lineCov">      23539 :   for (auto&amp; elem : memory_pool_) {</span>
+<span class="lineNum">      43 </span><span class="lineCov">      23538 :     if (elem.storage.data() == to_be_freed) {</span>
+<span class="lineNum">      44 </span><span class="lineCov">       6831 :       elem.currently_in_use = false;</span>
+<span class="lineNum">      45 </span><span class="lineCov">      13662 :       return;</span>
+<span class="lineNum">      46 </span>            :     }
+<span class="lineNum">      47 </span>            :   }
+<span class="lineNum">      48 </span><span class="lineCov">          1 :   ERROR(&quot;Attempt to free temp that was never allocated.&quot;);</span>
+<span class="lineNum">      49 </span>            : }
+<a name="50"><span class="lineNum">      50 </span>            : /// \endcond</a>
+<span class="lineNum">      51 </span>            : 
+<span class="lineNum">      52 </span><span class="lineCov">       2283 : }  // namespace YlmSpherepack_detail</span>
+</pre>
+      </td>
+    </tr>
+  </table>
+  <br>
+
+  <table width="100%" border=0 cellspacing=0 cellpadding=0>
+    <tr><td class="ruler"><img src="../glass.png" width=3 height=3 alt=""></td></tr>
+    <tr><td class="versionInfo">Generated by: <a href="http://ltp.sourceforge.net/coverage/lcov.php" target="_parent">LCOV version 1.13</a></td></tr>
+  </table>
+  <br>
+
+</body>
+</html>

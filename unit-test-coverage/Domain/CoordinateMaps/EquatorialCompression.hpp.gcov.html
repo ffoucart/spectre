@@ -1,0 +1,183 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+
+<html lang="en">
+
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <title>LCOV - 4a100dde3b231e0ada6ff7b2b4c32892a30db7f6 - Domain/CoordinateMaps/EquatorialCompression.hpp</title>
+  <link rel="stylesheet" type="text/css" href="../../gcov.css">
+</head>
+
+<body>
+
+  <table width="100%" border=0 cellspacing=0 cellpadding=0>
+    <tr><td class="title">SpECTRE Unit Test Code Coverage Report</td></tr>
+    <tr><td class="ruler"><img src="../../glass.png" width=3 height=3 alt=""></td></tr>
+
+    <tr>
+      <td width="100%">
+        <table cellpadding=1 border=0 width="100%">
+          <tr>
+            <td width="10%" class="headerItem">Current view:</td>
+            <td width="35%" class="headerValue"><a href="../../index.html">top level</a> - <a href="index.html">Domain/CoordinateMaps</a> - EquatorialCompression.hpp<span style="font-size: 80%;"> (source / <a href="EquatorialCompression.hpp.func-sort-c.html">functions</a>)</span></td>
+            <td width="5%"></td>
+            <td width="15%"></td>
+            <td width="10%" class="headerCovTableHead">Hit</td>
+            <td width="10%" class="headerCovTableHead">Total</td>
+            <td width="15%" class="headerCovTableHead">Coverage</td>
+          </tr>
+          <tr>
+            <td class="headerItem">Commit:</td>
+             <td class="headerValue"><a target="_blank" href="https://github.com/sxs-collaboration/spectre/commit/4a100dde3b231e0ada6ff7b2b4c32892a30db7f6">4a100dde3b231e0ada6ff7b2b4c32892a30db7f6</a></td>
+            <td></td>
+            <td class="headerItem">Lines:</td>
+            <td class="headerCovTableEntry">3</td>
+            <td class="headerCovTableEntry">3</td>
+            <td class="headerCovTableEntryHi">100.0 %</td>
+          </tr>
+          <tr>
+            <td class="headerItem">Date:</td>
+            <td class="headerValue">2018-08-16 19:06:01</td>
+            <td></td>
+            <td class="headerItem">Functions:</td>
+            <td class="headerCovTableEntry">1</td>
+            <td class="headerCovTableEntry">1</td>
+            <td class="headerCovTableEntryHi">100.0 %</td>
+          </tr>
+          <tr>
+            <td class="headerItem">Legend:</td>
+            <td class="headerValueLeg">            Lines:
+            <span class="coverLegendCov">hit</span>
+            <span class="coverLegendNoCov">not hit</span>
+</td>
+            <td></td>
+          </tr>
+          <tr><td><img src="../../glass.png" width=3 height=3 alt=""></td></tr>
+        </table>
+      </td>
+    </tr>
+
+    <tr><td class="ruler"><img src="../../glass.png" width=3 height=3 alt=""></td></tr>
+  </table>
+
+  <table cellpadding=0 cellspacing=0 border=0>
+    <tr>
+      <td><br></td>
+    </tr>
+    <tr>
+      <td>
+<pre class="sourceHeading">          Line data    Source code</pre>
+<pre class="source">
+<a name="1"><span class="lineNum">       1 </span>            : // Distributed under the MIT License.</a>
+<span class="lineNum">       2 </span>            : // See LICENSE.txt for details.
+<span class="lineNum">       3 </span>            : 
+<span class="lineNum">       4 </span>            : #pragma once
+<span class="lineNum">       5 </span>            : 
+<span class="lineNum">       6 </span>            : #include &lt;array&gt;
+<span class="lineNum">       7 </span>            : #include &lt;cstddef&gt;
+<span class="lineNum">       8 </span>            : #include &lt;limits&gt;
+<span class="lineNum">       9 </span>            : 
+<span class="lineNum">      10 </span>            : #include &quot;DataStructures/Tensor/TypeAliases.hpp&quot;
+<span class="lineNum">      11 </span>            : #include &quot;Utilities/TypeTraits.hpp&quot;
+<span class="lineNum">      12 </span>            : 
+<span class="lineNum">      13 </span>            : namespace PUP {
+<span class="lineNum">      14 </span>            : class er;
+<span class="lineNum">      15 </span>            : }  // namespace PUP
+<span class="lineNum">      16 </span>            : 
+<span class="lineNum">      17 </span>            : namespace CoordinateMaps {
+<span class="lineNum">      18 </span>            : 
+<span class="lineNum">      19 </span>            : /*!
+<span class="lineNum">      20 </span>            :  * \ingroup CoordinateMapsGroup
+<span class="lineNum">      21 </span>            :  *
+<span class="lineNum">      22 </span>            :  * \brief Redistributes gridpoints on the sphere.
+<span class="lineNum">      23 </span>            :  * \image html EquatorialCompression.png &quot;A sphere with an `aspect_ratio` of 3.&quot;
+<span class="lineNum">      24 </span>            :  *
+<span class="lineNum">      25 </span>            :  * \details A mapping from the sphere to itself which depends on a single
+<span class="lineNum">      26 </span>            :  * parameter, the `aspect_ratio` \f$\alpha\f$, which is the ratio of the
+<span class="lineNum">      27 </span>            :  * horizontal length to the vertical height for a given point. This parameter
+<span class="lineNum">      28 </span>            :  * name was chosen because points with \f$\tan \theta = 1\f$ get mapped to
+<span class="lineNum">      29 </span>            :  * points with \f$\tan \theta' = \alpha\f$. In general, gridpoints located
+<span class="lineNum">      30 </span>            :  * at an angle \f$\theta\f$ from the pole are mapped to a new angle
+<span class="lineNum">      31 </span>            :  * \f$\theta'\f$ satisfying \f$\tan \theta' = \alpha \tan \theta\f$.
+<span class="lineNum">      32 </span>            :  *
+<span class="lineNum">      33 </span>            :  * For an `aspect_ratio` greater than one, the gridpoints are mapped towards
+<span class="lineNum">      34 </span>            :  * the equator, leading to an equatorially compressed grid. For an
+<span class="lineNum">      35 </span>            :  * `aspect_ratio` less than one, the gridpoints are mapped towards the poles.
+<span class="lineNum">      36 </span>            :  * Note that the aspect ratio must be positive.
+<span class="lineNum">      37 </span>            :  *
+<span class="lineNum">      38 </span>            :  * We define the auxiliary variables \f$ r := \sqrt{x^2 + y^2 +z^2}\f$
+<span class="lineNum">      39 </span>            :  * and \f$ \rho := \sqrt{x^2 + y^2 + \alpha^{-2} z^2}\f$.
+<span class="lineNum">      40 </span>            :  *
+<span class="lineNum">      41 </span>            :  * The map corresponding to this transformation in cartesian coordinates
+<span class="lineNum">      42 </span>            :  * is then given by:
+<span class="lineNum">      43 </span>            :  *
+<span class="lineNum">      44 </span>            :  * \f[\vec{x}'(x,y,z) =
+<span class="lineNum">      45 </span>            :  * \frac{r}{\rho}\begin{bmatrix}
+<span class="lineNum">      46 </span>            :  * x\\
+<span class="lineNum">      47 </span>            :  * y\\
+<span class="lineNum">      48 </span>            :  * \alpha^{-1} z\\
+<span class="lineNum">      49 </span>            :  * \end{bmatrix}\f]
+<span class="lineNum">      50 </span>            :  *
+<span class="lineNum">      51 </span>            :  */
+<span class="lineNum">      52 </span>            : class EquatorialCompression {
+<span class="lineNum">      53 </span>            :  public:
+<a name="54"><span class="lineNum">      54 </span>            :   static constexpr size_t dim = 3;</a>
+<span class="lineNum">      55 </span>            :   explicit EquatorialCompression(double aspect_ratio) noexcept;
+<span class="lineNum">      56 </span><span class="lineCov">         36 :   EquatorialCompression() = default;</span>
+<span class="lineNum">      57 </span>            :   ~EquatorialCompression() = default;
+<span class="lineNum">      58 </span>            :   EquatorialCompression(EquatorialCompression&amp;&amp;) = default;
+<span class="lineNum">      59 </span>            :   EquatorialCompression(const EquatorialCompression&amp;) = default;
+<span class="lineNum">      60 </span>            :   EquatorialCompression&amp; operator=(const EquatorialCompression&amp;) = default;
+<span class="lineNum">      61 </span>            :   EquatorialCompression&amp; operator=(EquatorialCompression&amp;&amp;) = default;
+<span class="lineNum">      62 </span>            : 
+<span class="lineNum">      63 </span>            :   template &lt;typename T&gt;
+<span class="lineNum">      64 </span>            :   std::array&lt;tt::remove_cvref_wrap_t&lt;T&gt;, 3&gt; operator()(
+<span class="lineNum">      65 </span>            :       const std::array&lt;T, 3&gt;&amp; source_coords) const noexcept;
+<span class="lineNum">      66 </span>            : 
+<span class="lineNum">      67 </span>            :   template &lt;typename T&gt;
+<span class="lineNum">      68 </span>            :   std::array&lt;tt::remove_cvref_wrap_t&lt;T&gt;, 3&gt; inverse(
+<span class="lineNum">      69 </span>            :       const std::array&lt;T, 3&gt;&amp; target_coords) const noexcept;
+<span class="lineNum">      70 </span>            : 
+<span class="lineNum">      71 </span>            :   template &lt;typename T&gt;
+<span class="lineNum">      72 </span>            :   tnsr::Ij&lt;tt::remove_cvref_wrap_t&lt;T&gt;, 3, Frame::NoFrame&gt; jacobian(
+<span class="lineNum">      73 </span>            :       const std::array&lt;T, 3&gt;&amp; source_coords) const noexcept;
+<span class="lineNum">      74 </span>            : 
+<span class="lineNum">      75 </span>            :   template &lt;typename T&gt;
+<span class="lineNum">      76 </span>            :   tnsr::Ij&lt;tt::remove_cvref_wrap_t&lt;T&gt;, 3, Frame::NoFrame&gt; inv_jacobian(
+<span class="lineNum">      77 </span>            :       const std::array&lt;T, 3&gt;&amp; source_coords) const noexcept;
+<span class="lineNum">      78 </span>            : 
+<span class="lineNum">      79 </span>            :   // clang-tidy: google runtime references
+<span class="lineNum">      80 </span>            :   void pup(PUP::er&amp; p) noexcept;  // NOLINT
+<span class="lineNum">      81 </span>            : 
+<span class="lineNum">      82 </span>            :  private:
+<span class="lineNum">      83 </span>            :   template &lt;typename T&gt;
+<span class="lineNum">      84 </span>            :   std::array&lt;tt::remove_cvref_wrap_t&lt;T&gt;, 3&gt; angular_distortion(
+<span class="lineNum">      85 </span>            :       const std::array&lt;T, 3&gt;&amp; coords, double inverse_alpha) const
+<span class="lineNum">      86 </span>            :       noexcept;
+<span class="lineNum">      87 </span>            :   template &lt;typename T&gt;
+<span class="lineNum">      88 </span>            :   tnsr::Ij&lt;tt::remove_cvref_wrap_t&lt;T&gt;, 3, Frame::NoFrame&gt;
+<span class="lineNum">      89 </span>            :   angular_distortion_jacobian(const std::array&lt;T, 3&gt;&amp; coords,
+<span class="lineNum">      90 </span>            :                               double inverse_alpha) const noexcept;
+<span class="lineNum">      91 </span>            :   friend bool operator==(const EquatorialCompression&amp; lhs,
+<span class="lineNum">      92 </span>            :                          const EquatorialCompression&amp; rhs) noexcept;
+<span class="lineNum">      93 </span>            : 
+<span class="lineNum">      94 </span><span class="lineCov">         12 :   double aspect_ratio_{std::numeric_limits&lt;double&gt;::signaling_NaN()};</span>
+<span class="lineNum">      95 </span><span class="lineCov">         12 :   double inverse_aspect_ratio_{std::numeric_limits&lt;double&gt;::signaling_NaN()};</span>
+<span class="lineNum">      96 </span>            : };
+<span class="lineNum">      97 </span>            : bool operator!=(const EquatorialCompression&amp; lhs,
+<span class="lineNum">      98 </span>            :                 const EquatorialCompression&amp; rhs) noexcept;
+<span class="lineNum">      99 </span>            : }  // namespace CoordinateMaps
+</pre>
+      </td>
+    </tr>
+  </table>
+  <br>
+
+  <table width="100%" border=0 cellspacing=0 cellpadding=0>
+    <tr><td class="ruler"><img src="../../glass.png" width=3 height=3 alt=""></td></tr>
+    <tr><td class="versionInfo">Generated by: <a href="http://ltp.sourceforge.net/coverage/lcov.php" target="_parent">LCOV version 1.13</a></td></tr>
+  </table>
+  <br>
+
+</body>
+</html>

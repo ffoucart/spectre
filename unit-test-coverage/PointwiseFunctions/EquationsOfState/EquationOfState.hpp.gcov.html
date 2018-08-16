@@ -1,0 +1,408 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+
+<html lang="en">
+
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <title>LCOV - 4a100dde3b231e0ada6ff7b2b4c32892a30db7f6 - PointwiseFunctions/EquationsOfState/EquationOfState.hpp</title>
+  <link rel="stylesheet" type="text/css" href="../../gcov.css">
+</head>
+
+<body>
+
+  <table width="100%" border=0 cellspacing=0 cellpadding=0>
+    <tr><td class="title">SpECTRE Unit Test Code Coverage Report</td></tr>
+    <tr><td class="ruler"><img src="../../glass.png" width=3 height=3 alt=""></td></tr>
+
+    <tr>
+      <td width="100%">
+        <table cellpadding=1 border=0 width="100%">
+          <tr>
+            <td width="10%" class="headerItem">Current view:</td>
+            <td width="35%" class="headerValue"><a href="../../index.html">top level</a> - <a href="index.html">PointwiseFunctions/EquationsOfState</a> - EquationOfState.hpp<span style="font-size: 80%;"> (source / <a href="EquationOfState.hpp.func-sort-c.html">functions</a>)</span></td>
+            <td width="5%"></td>
+            <td width="15%"></td>
+            <td width="10%" class="headerCovTableHead">Hit</td>
+            <td width="10%" class="headerCovTableHead">Total</td>
+            <td width="15%" class="headerCovTableHead">Coverage</td>
+          </tr>
+          <tr>
+            <td class="headerItem">Commit:</td>
+             <td class="headerValue"><a target="_blank" href="https://github.com/sxs-collaboration/spectre/commit/4a100dde3b231e0ada6ff7b2b4c32892a30db7f6">4a100dde3b231e0ada6ff7b2b4c32892a30db7f6</a></td>
+            <td></td>
+            <td class="headerItem">Lines:</td>
+            <td class="headerCovTableEntry">10</td>
+            <td class="headerCovTableEntry">10</td>
+            <td class="headerCovTableEntryHi">100.0 %</td>
+          </tr>
+          <tr>
+            <td class="headerItem">Date:</td>
+            <td class="headerValue">2018-08-16 19:06:01</td>
+            <td></td>
+            <td class="headerItem">Functions:</td>
+            <td class="headerCovTableEntry">20</td>
+            <td class="headerCovTableEntry">24</td>
+            <td class="headerCovTableEntryMed">83.3 %</td>
+          </tr>
+          <tr>
+            <td class="headerItem">Legend:</td>
+            <td class="headerValueLeg">            Lines:
+            <span class="coverLegendCov">hit</span>
+            <span class="coverLegendNoCov">not hit</span>
+</td>
+            <td></td>
+          </tr>
+          <tr><td><img src="../../glass.png" width=3 height=3 alt=""></td></tr>
+        </table>
+      </td>
+    </tr>
+
+    <tr><td class="ruler"><img src="../../glass.png" width=3 height=3 alt=""></td></tr>
+  </table>
+
+  <table cellpadding=0 cellspacing=0 border=0>
+    <tr>
+      <td><br></td>
+    </tr>
+    <tr>
+      <td>
+<pre class="sourceHeading">          Line data    Source code</pre>
+<pre class="source">
+<a name="1"><span class="lineNum">       1 </span>            : // Distributed under the MIT License.</a>
+<span class="lineNum">       2 </span>            : // See LICENSE.txt for details.
+<span class="lineNum">       3 </span>            : 
+<span class="lineNum">       4 </span>            : #pragma once
+<span class="lineNum">       5 </span>            : 
+<span class="lineNum">       6 </span>            : #include &lt;boost/preprocessor/punctuation/comma_if.hpp&gt;
+<span class="lineNum">       7 </span>            : #include &lt;boost/preprocessor/repetition/repeat.hpp&gt;
+<span class="lineNum">       8 </span>            : 
+<span class="lineNum">       9 </span>            : #include &quot;DataStructures/Tensor/TypeAliases.hpp&quot;
+<span class="lineNum">      10 </span>            : #include &quot;Parallel/CharmPupable.hpp&quot;
+<span class="lineNum">      11 </span>            : #include &quot;Utilities/TMPL.hpp&quot;
+<span class="lineNum">      12 </span>            : #include &quot;Utilities/TypeTraits.hpp&quot;
+<span class="lineNum">      13 </span>            : 
+<span class="lineNum">      14 </span>            : /// \cond
+<span class="lineNum">      15 </span>            : class DataVector;
+<span class="lineNum">      16 </span>            : namespace EquationsOfState {
+<span class="lineNum">      17 </span>            : template &lt;bool IsRelativistic&gt;
+<span class="lineNum">      18 </span>            : class DarkEnergyFluid;
+<span class="lineNum">      19 </span>            : template &lt;bool IsRelativistic&gt;
+<span class="lineNum">      20 </span>            : class IdealFluid;
+<span class="lineNum">      21 </span>            : template &lt;bool IsRelativistic&gt;
+<span class="lineNum">      22 </span>            : class PolytropicFluid;
+<span class="lineNum">      23 </span>            : }  // namespace EquationsOfState
+<span class="lineNum">      24 </span>            : /// \endcond
+<span class="lineNum">      25 </span>            : 
+<span class="lineNum">      26 </span>            : /// Contains all equations of state, including base class
+<span class="lineNum">      27 </span>            : namespace EquationsOfState {
+<span class="lineNum">      28 </span>            : 
+<span class="lineNum">      29 </span>            : namespace detail {
+<span class="lineNum">      30 </span>            : template &lt;bool IsRelativistic, size_t ThermodynamicDim&gt;
+<span class="lineNum">      31 </span>            : struct DerivedClasses;
+<span class="lineNum">      32 </span>            : 
+<span class="lineNum">      33 </span>            : template &lt;bool IsRelativistic&gt;
+<span class="lineNum">      34 </span>            : struct DerivedClasses&lt;IsRelativistic, 1&gt; {
+<span class="lineNum">      35 </span>            :   using type = tmpl::list&lt;PolytropicFluid&lt;IsRelativistic&gt;&gt;;
+<span class="lineNum">      36 </span>            : };
+<span class="lineNum">      37 </span>            : 
+<span class="lineNum">      38 </span>            : template &lt;&gt;
+<span class="lineNum">      39 </span>            : struct DerivedClasses&lt;true, 2&gt; {
+<span class="lineNum">      40 </span>            :   using type = tmpl::list&lt;DarkEnergyFluid&lt;true&gt;, IdealFluid&lt;true&gt;&gt;;
+<span class="lineNum">      41 </span>            : };
+<span class="lineNum">      42 </span>            : 
+<span class="lineNum">      43 </span>            : template &lt;&gt;
+<span class="lineNum">      44 </span>            : struct DerivedClasses&lt;false, 2&gt; {
+<span class="lineNum">      45 </span>            :   using type = tmpl::list&lt;IdealFluid&lt;false&gt;&gt;;
+<span class="lineNum">      46 </span>            : };
+<span class="lineNum">      47 </span>            : }  // namespace detail
+<span class="lineNum">      48 </span>            : 
+<span class="lineNum">      49 </span>            : /// \cond
+<span class="lineNum">      50 </span>            : template &lt;bool IsRelativistic, size_t ThermodynamicDim,
+<span class="lineNum">      51 </span>            :           typename = std::make_index_sequence&lt;ThermodynamicDim&gt;&gt;
+<span class="lineNum">      52 </span>            : class EquationOfState;
+<span class="lineNum">      53 </span>            : /// \endcond
+<span class="lineNum">      54 </span>            : 
+<span class="lineNum">      55 </span>            : /*!
+<span class="lineNum">      56 </span>            :  * \ingroup EquationsOfStateGroup
+<span class="lineNum">      57 </span>            :  * \brief Base class for equations of state depending on whether or not the
+<span class="lineNum">      58 </span>            :  * system is relativistic, and the number of variables used to determine the
+<span class="lineNum">      59 </span>            :  * pressure.
+<span class="lineNum">      60 </span>            :  *
+<span class="lineNum">      61 </span>            :  * The template parameter `IsRelativistic` is `true` for relativistic equations
+<span class="lineNum">      62 </span>            :  * of state and `false` for non-relativistic equations of state.
+<span class="lineNum">      63 </span>            :  *
+<span class="lineNum">      64 </span>            :  * For equations of state that have `ThermodynamicDim == 1`, there is also a
+<span class="lineNum">      65 </span>            :  * function that, given the enthalpy computes the rest mass density.
+<a name="66"><span class="lineNum">      66 </span>            :  */</a>
+<span class="lineNum">      67 </span>            : template &lt;bool IsRelativistic, size_t ThermodynamicDim, size_t... Is&gt;
+<span class="lineNum">      68 </span><span class="lineCov">         10 : class EquationOfState&lt;IsRelativistic, ThermodynamicDim,</span>
+<span class="lineNum">      69 </span>            :                       std::index_sequence&lt;Is...&gt;&gt; : public PUP::able {
+<span class="lineNum">      70 </span>            :  public:
+<span class="lineNum">      71 </span>            :   static_assert(
+<span class="lineNum">      72 </span>            :       sizeof...(Is) == ThermodynamicDim,
+<span class="lineNum">      73 </span>            :       &quot;You must not pass a std::index_sequence directly to &quot;
+<span class="lineNum">      74 </span>            :       &quot;EquationOfState, you only need to specify whether or not it is &quot;
+<span class="lineNum">      75 </span>            :       &quot;relativistic and the number of arguments the functions should take.&quot;);
+<span class="lineNum">      76 </span>            : 
+<span class="lineNum">      77 </span>            :   static constexpr bool is_relativistic = IsRelativistic;
+<span class="lineNum">      78 </span>            :   static constexpr size_t thermodynamic_dim = ThermodynamicDim;
+<span class="lineNum">      79 </span>            :   using creatable_classes =
+<a name="80"><span class="lineNum">      80 </span>            :       typename detail::DerivedClasses&lt;IsRelativistic, ThermodynamicDim&gt;::type;</a>
+<span class="lineNum">      81 </span>            : 
+<span class="lineNum">      82 </span><span class="lineCov">         50 :   EquationOfState() = default;</span>
+<a name="83"><span class="lineNum">      83 </span>            :   EquationOfState(const EquationOfState&amp;) = default;</a>
+<span class="lineNum">      84 </span>            :   EquationOfState&amp; operator=(const EquationOfState&amp;) = default;
+<a name="85"><span class="lineNum">      85 </span><span class="lineCov">         50 :   EquationOfState(EquationOfState&amp;&amp;) = default;</span></a>
+<span class="lineNum">      86 </span>            :   EquationOfState&amp; operator=(EquationOfState&amp;&amp;) = default;
+<a name="87"><span class="lineNum">      87 </span><span class="lineCov">        100 :   ~EquationOfState() override = default;</span></a>
+<span class="lineNum">      88 </span>            : 
+<span class="lineNum">      89 </span><span class="lineCov">         60 :   WRAPPED_PUPable_abstract(EquationOfState);  // NOLINT</span>
+<span class="lineNum">      90 </span>            : 
+<span class="lineNum">      91 </span>            :   // @{
+<span class="lineNum">      92 </span>            :   /*!
+<span class="lineNum">      93 </span>            :    * Computes the pressure \f$p\f$ from:
+<span class="lineNum">      94 </span>            :    * - `ThermodynamicDim = 1`: the  rest mass density \f$\rho\f$
+<span class="lineNum">      95 </span>            :    * - `ThermodynamicDim = 2`: the  rest mass density \f$\rho\f$ and the
+<span class="lineNum">      96 </span>            :    * specific internal energy \f$\epsilon\f$
+<span class="lineNum">      97 </span>            :    * - `ThermodynamicDim = 3`: the  rest mass density \f$\rho\f$, the
+<span class="lineNum">      98 </span>            :    * specific internal energy \f$\epsilon\f$, and the electron fraction
+<span class="lineNum">      99 </span>            :    * \f$Y_e\f$
+<span class="lineNum">     100 </span>            :    */
+<span class="lineNum">     101 </span>            :   virtual Scalar&lt;double&gt; pressure_from_density(
+<span class="lineNum">     102 </span>            :       const Scalar&lt;tt::identity_t&lt;double, Is&gt;&gt;&amp;...) const noexcept = 0;
+<span class="lineNum">     103 </span>            :   virtual Scalar&lt;DataVector&gt; pressure_from_density(
+<span class="lineNum">     104 </span>            :       const Scalar&lt;tt::identity_t&lt;DataVector, Is&gt;&gt;&amp;...) const noexcept = 0;
+<span class="lineNum">     105 </span>            :   // @}
+<span class="lineNum">     106 </span>            : 
+<span class="lineNum">     107 </span>            :   // @{
+<span class="lineNum">     108 </span>            :   /*!
+<span class="lineNum">     109 </span>            :    * Computes the specific enthalpy \f$h\f$ from:
+<span class="lineNum">     110 </span>            :    * - `ThermodynamicDim = 1`: the  rest mass density \f$\rho\f$
+<span class="lineNum">     111 </span>            :    * - `ThermodynamicDim = 2`: the  rest mass density \f$\rho\f$ and the
+<span class="lineNum">     112 </span>            :    * specific internal energy \f$\epsilon\f$
+<span class="lineNum">     113 </span>            :    * - `ThermodynamicDim = 3`: the  rest mass density \f$\rho\f$, the
+<span class="lineNum">     114 </span>            :    * specific internal energy \f$\epsilon\f$, and the electron fraction
+<span class="lineNum">     115 </span>            :    * \f$Y_e\f$
+<span class="lineNum">     116 </span>            :    */
+<span class="lineNum">     117 </span>            :   virtual Scalar&lt;double&gt; specific_enthalpy_from_density(
+<span class="lineNum">     118 </span>            :       const Scalar&lt;tt::identity_t&lt;double, Is&gt;&gt;&amp;...) const noexcept = 0;
+<span class="lineNum">     119 </span>            :   virtual Scalar&lt;DataVector&gt; specific_enthalpy_from_density(
+<span class="lineNum">     120 </span>            :       const Scalar&lt;tt::identity_t&lt;DataVector, Is&gt;&gt;&amp;...) const noexcept = 0;
+<span class="lineNum">     121 </span>            :   // @}
+<span class="lineNum">     122 </span>            : 
+<span class="lineNum">     123 </span>            :   // @{
+<span class="lineNum">     124 </span>            :   /*!
+<span class="lineNum">     125 </span>            :    * Computes the specific internal energy \f$\epsilon\f$ from:
+<span class="lineNum">     126 </span>            :    * - `ThermodynamicDim = 1`: the  rest mass density \f$\rho\f$
+<span class="lineNum">     127 </span>            :    * - `ThermodynamicDim = 2`: the  rest mass density \f$\rho\f$ and the
+<span class="lineNum">     128 </span>            :    * specific internal energy \f$\epsilon\f$
+<span class="lineNum">     129 </span>            :    * - `ThermodynamicDim = 3`: the  rest mass density \f$\rho\f$, the
+<span class="lineNum">     130 </span>            :    * specific internal energy \f$\epsilon\f$, and the electron fraction
+<span class="lineNum">     131 </span>            :    * \f$Y_e\f$
+<span class="lineNum">     132 </span>            :    */
+<span class="lineNum">     133 </span>            :   virtual Scalar&lt;double&gt; specific_internal_energy_from_density(
+<span class="lineNum">     134 </span>            :       const Scalar&lt;tt::identity_t&lt;double, Is&gt;&gt;&amp;...) const noexcept = 0;
+<span class="lineNum">     135 </span>            : 
+<span class="lineNum">     136 </span>            :   virtual Scalar&lt;DataVector&gt; specific_internal_energy_from_density(
+<span class="lineNum">     137 </span>            :       const Scalar&lt;tt::identity_t&lt;DataVector, Is&gt;&gt;&amp;...) const noexcept = 0;
+<span class="lineNum">     138 </span>            :   // @}
+<span class="lineNum">     139 </span>            : 
+<span class="lineNum">     140 </span>            :   // @{
+<span class="lineNum">     141 </span>            :   /*!
+<span class="lineNum">     142 </span>            :    * Computes \f$\chi=\partial p / \partial \rho\f$ where \f$p\f$ is the
+<span class="lineNum">     143 </span>            :    * pressure and \f$\rho\f$ is the rest mass density, from:
+<span class="lineNum">     144 </span>            :    * - `ThermodynamicDim = 1`: the  rest mass density \f$\rho\f$
+<span class="lineNum">     145 </span>            :    * - `ThermodynamicDim = 2`: the  rest mass density \f$\rho\f$ and the
+<span class="lineNum">     146 </span>            :    * specific internal energy \f$\epsilon\f$
+<span class="lineNum">     147 </span>            :    * - `ThermodynamicDim = 3`: the  rest mass density \f$\rho\f$, the
+<span class="lineNum">     148 </span>            :    * specific internal energy \f$\epsilon\f$, and the electron fraction
+<span class="lineNum">     149 </span>            :    * \f$Y_e\f$
+<span class="lineNum">     150 </span>            :    */
+<span class="lineNum">     151 </span>            :   virtual Scalar&lt;double&gt; chi_from_density(
+<span class="lineNum">     152 </span>            :       const Scalar&lt;tt::identity_t&lt;double, Is&gt;&gt;&amp;...) const noexcept = 0;
+<span class="lineNum">     153 </span>            : 
+<span class="lineNum">     154 </span>            :   virtual Scalar&lt;DataVector&gt; chi_from_density(
+<span class="lineNum">     155 </span>            :       const Scalar&lt;tt::identity_t&lt;DataVector, Is&gt;&gt;&amp;...) const noexcept = 0;
+<span class="lineNum">     156 </span>            :   // @}
+<span class="lineNum">     157 </span>            : 
+<span class="lineNum">     158 </span>            :   // @{
+<span class="lineNum">     159 </span>            :   /*!
+<span class="lineNum">     160 </span>            :    * Computes \f$\kappa p/\rho^2=(p/\rho^2)\partial p / \partial \epsilon\f$
+<span class="lineNum">     161 </span>            :    * where \f$p\f$ is the pressure, \f$\rho\f$ is the rest mass density, and
+<span class="lineNum">     162 </span>            :    * \f$\epsilon\f$ is the specific internal energy from:
+<span class="lineNum">     163 </span>            :    * - `ThermodynamicDim = 1`: the  rest mass density \f$\rho\f$
+<span class="lineNum">     164 </span>            :    * - `ThermodynamicDim = 2`: the  rest mass density \f$\rho\f$ and the
+<span class="lineNum">     165 </span>            :    * specific internal energy \f$\epsilon\f$
+<span class="lineNum">     166 </span>            :    * - `ThermodynamicDim = 3`: the  rest mass density \f$\rho\f$, the
+<span class="lineNum">     167 </span>            :    * specific internal energy \f$\epsilon\f$, and the electron fraction
+<span class="lineNum">     168 </span>            :    * \f$Y_e\f$
+<span class="lineNum">     169 </span>            :    *
+<span class="lineNum">     170 </span>            :    * The reason for not returning just
+<span class="lineNum">     171 </span>            :    * \f$\kappa=\partial p / \partial \epsilon\f$ is to avoid division by zero
+<span class="lineNum">     172 </span>            :    * for small values of \f$\rho\f$ when assembling the speed of sound with
+<span class="lineNum">     173 </span>            :    * some equations of state.
+<span class="lineNum">     174 </span>            :    */
+<span class="lineNum">     175 </span>            :   virtual Scalar&lt;double&gt; kappa_times_p_over_rho_squared_from_density(
+<span class="lineNum">     176 </span>            :       const Scalar&lt;tt::identity_t&lt;double, Is&gt;&gt;&amp;...) const noexcept = 0;
+<span class="lineNum">     177 </span>            : 
+<span class="lineNum">     178 </span>            :   virtual Scalar&lt;DataVector&gt; kappa_times_p_over_rho_squared_from_density(
+<span class="lineNum">     179 </span>            :       const Scalar&lt;tt::identity_t&lt;DataVector, Is&gt;&gt;&amp;...) const noexcept = 0;
+<span class="lineNum">     180 </span>            :   // @}
+<span class="lineNum">     181 </span>            : };
+<span class="lineNum">     182 </span>            : 
+<a name="183"><span class="lineNum">     183 </span>            : /// \cond</a>
+<span class="lineNum">     184 </span>            : template &lt;bool IsRelativistic, size_t Is&gt;
+<span class="lineNum">     185 </span><span class="lineCov">          4 : class EquationOfState&lt;IsRelativistic, 1, std::index_sequence&lt;Is&gt;&gt;</span>
+<span class="lineNum">     186 </span>            :     : public PUP::able {
+<span class="lineNum">     187 </span>            :  public:
+<span class="lineNum">     188 </span>            :   static constexpr bool is_relativistic = IsRelativistic;
+<span class="lineNum">     189 </span>            :   static constexpr size_t thermodynamic_dim = 1;
+<span class="lineNum">     190 </span>            :   using creatable_classes =
+<a name="191"><span class="lineNum">     191 </span>            :       typename detail::DerivedClasses&lt;IsRelativistic, 1&gt;::type;</a>
+<span class="lineNum">     192 </span>            : 
+<span class="lineNum">     193 </span><span class="lineCov">         21 :   EquationOfState() = default;</span>
+<a name="194"><span class="lineNum">     194 </span>            :   EquationOfState(const EquationOfState&amp;) = default;</a>
+<span class="lineNum">     195 </span>            :   EquationOfState&amp; operator=(const EquationOfState&amp;) = default;
+<a name="196"><span class="lineNum">     196 </span><span class="lineCov">         20 :   EquationOfState(EquationOfState&amp;&amp;) = default;</span></a>
+<span class="lineNum">     197 </span>            :   EquationOfState&amp; operator=(EquationOfState&amp;&amp;) = default;
+<a name="198"><span class="lineNum">     198 </span><span class="lineCov">         41 :   ~EquationOfState() override = default;</span></a>
+<span class="lineNum">     199 </span>            : 
+<span class="lineNum">     200 </span><span class="lineCov">         24 :   WRAPPED_PUPable_abstract(EquationOfState);  // NOLINT</span>
+<span class="lineNum">     201 </span>            : 
+<span class="lineNum">     202 </span>            :   virtual Scalar&lt;double&gt; pressure_from_density(
+<span class="lineNum">     203 </span>            :       const Scalar&lt;double&gt;&amp; /*rest_mass_density*/) const noexcept = 0;
+<span class="lineNum">     204 </span>            :   virtual Scalar&lt;DataVector&gt; pressure_from_density(
+<span class="lineNum">     205 </span>            :       const Scalar&lt;DataVector&gt;&amp; /*rest_mass_density*/) const noexcept = 0;
+<span class="lineNum">     206 </span>            : 
+<span class="lineNum">     207 </span>            :   virtual Scalar&lt;double&gt; rest_mass_density_from_enthalpy(
+<span class="lineNum">     208 </span>            :       const Scalar&lt;double&gt;&amp; /*specific_enthalpy*/) const noexcept = 0;
+<span class="lineNum">     209 </span>            :   virtual Scalar&lt;DataVector&gt; rest_mass_density_from_enthalpy(
+<span class="lineNum">     210 </span>            :       const Scalar&lt;DataVector&gt;&amp; /*specific_enthalpy*/) const noexcept = 0;
+<span class="lineNum">     211 </span>            : 
+<span class="lineNum">     212 </span>            :   virtual Scalar&lt;double&gt; specific_enthalpy_from_density(
+<span class="lineNum">     213 </span>            :       const Scalar&lt;double&gt;&amp; /*rest_mass_density*/) const noexcept = 0;
+<span class="lineNum">     214 </span>            :   virtual Scalar&lt;DataVector&gt; specific_enthalpy_from_density(
+<span class="lineNum">     215 </span>            :       const Scalar&lt;DataVector&gt;&amp; /*rest_mass_density*/) const noexcept = 0;
+<span class="lineNum">     216 </span>            : 
+<span class="lineNum">     217 </span>            :   virtual Scalar&lt;double&gt; specific_internal_energy_from_density(
+<span class="lineNum">     218 </span>            :       const Scalar&lt;double&gt;&amp; /*rest_mass_density*/) const noexcept = 0;
+<span class="lineNum">     219 </span>            :   virtual Scalar&lt;DataVector&gt; specific_internal_energy_from_density(
+<span class="lineNum">     220 </span>            :       const Scalar&lt;DataVector&gt;&amp; /*rest_mass_density*/) const noexcept = 0;
+<span class="lineNum">     221 </span>            : 
+<span class="lineNum">     222 </span>            :   virtual Scalar&lt;double&gt; chi_from_density(
+<span class="lineNum">     223 </span>            :       const Scalar&lt;double&gt;&amp; /*rest_mass_density*/) const noexcept = 0;
+<span class="lineNum">     224 </span>            :   virtual Scalar&lt;DataVector&gt; chi_from_density(
+<span class="lineNum">     225 </span>            :       const Scalar&lt;DataVector&gt;&amp; /*rest_mass_density*/) const noexcept = 0;
+<span class="lineNum">     226 </span>            : 
+<span class="lineNum">     227 </span>            :   virtual Scalar&lt;double&gt; kappa_times_p_over_rho_squared_from_density(
+<span class="lineNum">     228 </span>            :       const Scalar&lt;double&gt;&amp; /*rest_mass_density*/) const noexcept = 0;
+<span class="lineNum">     229 </span>            :   virtual Scalar&lt;DataVector&gt; kappa_times_p_over_rho_squared_from_density(
+<span class="lineNum">     230 </span>            :       const Scalar&lt;DataVector&gt;&amp; /*rest_mass_density*/) const noexcept = 0;
+<span class="lineNum">     231 </span>            : };
+<span class="lineNum">     232 </span>            : /// \endcond
+<span class="lineNum">     233 </span>            : }  // namespace EquationsOfState
+<span class="lineNum">     234 </span>            : 
+<span class="lineNum">     235 </span>            : /// \cond
+<span class="lineNum">     236 </span>            : #define EQUATION_OF_STATE_ARGUMENTS_EXPAND(z, n, type) \
+<span class="lineNum">     237 </span>            :   BOOST_PP_COMMA_IF(n) const Scalar&lt;type&gt;&amp;
+<span class="lineNum">     238 </span>            : 
+<span class="lineNum">     239 </span>            : #define EQUATION_OF_STATE_FORWARD_DECLARE_MEMBERS_HELPER(DIM, FUNCTION_NAME) \
+<span class="lineNum">     240 </span>            :   Scalar&lt;double&gt; FUNCTION_NAME(                                              \
+<span class="lineNum">     241 </span>            :       BOOST_PP_REPEAT(DIM, EQUATION_OF_STATE_ARGUMENTS_EXPAND, double))      \
+<span class="lineNum">     242 </span>            :       const noexcept override;                                               \
+<span class="lineNum">     243 </span>            :   Scalar&lt;DataVector&gt; FUNCTION_NAME(                                          \
+<span class="lineNum">     244 </span>            :       BOOST_PP_REPEAT(DIM, EQUATION_OF_STATE_ARGUMENTS_EXPAND, DataVector))  \
+<span class="lineNum">     245 </span>            :       const noexcept override
+<span class="lineNum">     246 </span>            : /// \endcond
+<span class="lineNum">     247 </span>            : 
+<span class="lineNum">     248 </span>            : /*!
+<span class="lineNum">     249 </span>            :  * \ingroup EquationsOfStateGroup
+<span class="lineNum">     250 </span>            :  * \brief Macro used to generate forward declarations of member functions in
+<span class="lineNum">     251 </span>            :  * derived classes
+<span class="lineNum">     252 </span>            :  */
+<span class="lineNum">     253 </span>            : #define EQUATION_OF_STATE_FORWARD_DECLARE_MEMBERS(DERIVED, DIM)            \
+<span class="lineNum">     254 </span>            :   EQUATION_OF_STATE_FORWARD_DECLARE_MEMBERS_HELPER(DIM,                    \
+<span class="lineNum">     255 </span>            :                                                    pressure_from_density); \
+<span class="lineNum">     256 </span>            :   EQUATION_OF_STATE_FORWARD_DECLARE_MEMBERS_HELPER(                        \
+<span class="lineNum">     257 </span>            :       DIM, specific_enthalpy_from_density);                                \
+<span class="lineNum">     258 </span>            :   EQUATION_OF_STATE_FORWARD_DECLARE_MEMBERS_HELPER(                        \
+<span class="lineNum">     259 </span>            :       DIM, specific_internal_energy_from_density);                         \
+<span class="lineNum">     260 </span>            :   EQUATION_OF_STATE_FORWARD_DECLARE_MEMBERS_HELPER(DIM, chi_from_density); \
+<span class="lineNum">     261 </span>            :   EQUATION_OF_STATE_FORWARD_DECLARE_MEMBERS_HELPER(                        \
+<span class="lineNum">     262 </span>            :       DIM, kappa_times_p_over_rho_squared_from_density);                   \
+<span class="lineNum">     263 </span>            :                                                                            \
+<span class="lineNum">     264 </span>            :   /* clang-tidy: do not use non-const references */                        \
+<span class="lineNum">     265 </span>            :   void pup(PUP::er&amp; p) noexcept override; /* NOLINT */                     \
+<span class="lineNum">     266 </span>            :                                                                            \
+<span class="lineNum">     267 </span>            :   explicit DERIVED(CkMigrateMessage* /*unused*/) noexcept
+<span class="lineNum">     268 </span>            : 
+<span class="lineNum">     269 </span>            : /// \cond
+<span class="lineNum">     270 </span>            : #define EQUATION_OF_STATE_FORWARD_ARGUMENTS(z, n, unused) \
+<span class="lineNum">     271 </span>            :   BOOST_PP_COMMA_IF(n) arg##n
+<span class="lineNum">     272 </span>            : 
+<span class="lineNum">     273 </span>            : #define EQUATION_OF_STATE_ARGUMENTS_EXPAND_NAMED(z, n, type) \
+<span class="lineNum">     274 </span>            :   BOOST_PP_COMMA_IF(n) const Scalar&lt;type&gt;&amp; arg##n
+<span class="lineNum">     275 </span>            : 
+<span class="lineNum">     276 </span>            : #define EQUATION_OF_STATE_MEMBER_DEFINITIONS_HELPER(                        \
+<span class="lineNum">     277 </span>            :     TEMPLATE, DERIVED, DATA_TYPE, DIM, FUNCTION_NAME)                       \
+<span class="lineNum">     278 </span>            :   TEMPLATE                                                                  \
+<span class="lineNum">     279 </span>            :   Scalar&lt;DATA_TYPE&gt; DERIVED::FUNCTION_NAME(BOOST_PP_REPEAT(                 \
+<span class="lineNum">     280 </span>            :       DIM, EQUATION_OF_STATE_ARGUMENTS_EXPAND_NAMED, DATA_TYPE))            \
+<span class="lineNum">     281 </span>            :       const noexcept {                                                      \
+<span class="lineNum">     282 </span>            :     return FUNCTION_NAME##_impl(                                            \
+<span class="lineNum">     283 </span>            :         BOOST_PP_REPEAT(DIM, EQUATION_OF_STATE_FORWARD_ARGUMENTS, UNUSED)); \
+<span class="lineNum">     284 </span>            :   }
+<span class="lineNum">     285 </span>            : /// \endcond
+<span class="lineNum">     286 </span>            : 
+<span class="lineNum">     287 </span>            : #define EQUATION_OF_STATE_MEMBER_DEFINITIONS(TEMPLATE, DERIVED, DATA_TYPE,  \
+<span class="lineNum">     288 </span>            :                                              DIM)                           \
+<span class="lineNum">     289 </span>            :   EQUATION_OF_STATE_MEMBER_DEFINITIONS_HELPER(TEMPLATE, DERIVED, DATA_TYPE, \
+<span class="lineNum">     290 </span>            :                                               DIM, pressure_from_density)   \
+<span class="lineNum">     291 </span>            :   EQUATION_OF_STATE_MEMBER_DEFINITIONS_HELPER(                              \
+<span class="lineNum">     292 </span>            :       TEMPLATE, DERIVED, DATA_TYPE, DIM, specific_enthalpy_from_density)    \
+<span class="lineNum">     293 </span>            :   EQUATION_OF_STATE_MEMBER_DEFINITIONS_HELPER(                              \
+<span class="lineNum">     294 </span>            :       TEMPLATE, DERIVED, DATA_TYPE, DIM,                                    \
+<span class="lineNum">     295 </span>            :       specific_internal_energy_from_density)                                \
+<span class="lineNum">     296 </span>            :   EQUATION_OF_STATE_MEMBER_DEFINITIONS_HELPER(TEMPLATE, DERIVED, DATA_TYPE, \
+<span class="lineNum">     297 </span>            :                                               DIM, chi_from_density)        \
+<span class="lineNum">     298 </span>            :   EQUATION_OF_STATE_MEMBER_DEFINITIONS_HELPER(                              \
+<span class="lineNum">     299 </span>            :       TEMPLATE, DERIVED, DATA_TYPE, DIM,                                    \
+<span class="lineNum">     300 </span>            :       kappa_times_p_over_rho_squared_from_density)
+<span class="lineNum">     301 </span>            : 
+<span class="lineNum">     302 </span>            : /// \cond
+<span class="lineNum">     303 </span>            : #define EQUATION_OF_STATE_FORWARD_DECLARE_MEMBER_IMPLS_HELPER(DIM,           \
+<span class="lineNum">     304 </span>            :                                                               FUNCTION_NAME) \
+<span class="lineNum">     305 </span>            :   template &lt;class DataType&gt;                                                  \
+<span class="lineNum">     306 </span>            :   Scalar&lt;DataType&gt; FUNCTION_NAME(BOOST_PP_REPEAT(                            \
+<span class="lineNum">     307 </span>            :       DIM, EQUATION_OF_STATE_ARGUMENTS_EXPAND, DataType)) const noexcept
+<span class="lineNum">     308 </span>            : /// \endcond
+<span class="lineNum">     309 </span>            : 
+<span class="lineNum">     310 </span>            : #define EQUATION_OF_STATE_FORWARD_DECLARE_MEMBER_IMPLS(DIM) \
+<span class="lineNum">     311 </span>            :   EQUATION_OF_STATE_FORWARD_DECLARE_MEMBER_IMPLS_HELPER(    \
+<span class="lineNum">     312 </span>            :       DIM, pressure_from_density_impl);                     \
+<span class="lineNum">     313 </span>            :   EQUATION_OF_STATE_FORWARD_DECLARE_MEMBER_IMPLS_HELPER(    \
+<span class="lineNum">     314 </span>            :       DIM, specific_enthalpy_from_density_impl);            \
+<span class="lineNum">     315 </span>            :   EQUATION_OF_STATE_FORWARD_DECLARE_MEMBER_IMPLS_HELPER(    \
+<span class="lineNum">     316 </span>            :       DIM, specific_internal_energy_from_density_impl);     \
+<span class="lineNum">     317 </span>            :   EQUATION_OF_STATE_FORWARD_DECLARE_MEMBER_IMPLS_HELPER(    \
+<span class="lineNum">     318 </span>            :       DIM, chi_from_density_impl);                          \
+<span class="lineNum">     319 </span>            :   EQUATION_OF_STATE_FORWARD_DECLARE_MEMBER_IMPLS_HELPER(    \
+<span class="lineNum">     320 </span>            :       DIM, kappa_times_p_over_rho_squared_from_density_impl)
+<span class="lineNum">     321 </span>            : 
+<span class="lineNum">     322 </span>            : #include &quot;PointwiseFunctions/EquationsOfState/DarkEnergyFluid.hpp&quot;
+<span class="lineNum">     323 </span>            : #include &quot;PointwiseFunctions/EquationsOfState/IdealFluid.hpp&quot;
+<span class="lineNum">     324 </span>            : #include &quot;PointwiseFunctions/EquationsOfState/PolytropicFluid.hpp&quot;
+</pre>
+      </td>
+    </tr>
+  </table>
+  <br>
+
+  <table width="100%" border=0 cellspacing=0 cellpadding=0>
+    <tr><td class="ruler"><img src="../../glass.png" width=3 height=3 alt=""></td></tr>
+    <tr><td class="versionInfo">Generated by: <a href="http://ltp.sourceforge.net/coverage/lcov.php" target="_parent">LCOV version 1.13</a></td></tr>
+  </table>
+  <br>
+
+</body>
+</html>

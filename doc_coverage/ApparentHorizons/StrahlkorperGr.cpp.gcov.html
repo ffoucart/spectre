@@ -1,0 +1,376 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+
+<html lang="en">
+
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <title>LCOV - 4a100dde3b231e0ada6ff7b2b4c32892a30db7f6 - ApparentHorizons/StrahlkorperGr.cpp</title>
+  <link rel="stylesheet" type="text/css" href="../gcov.css">
+</head>
+
+<body>
+
+  <table width="100%" border=0 cellspacing=0 cellpadding=0>
+    <tr><td class="title"> SpECTRE Documentation Coverage Report</td></tr>
+    <tr><td class="ruler"><img src="../glass.png" width=3 height=3 alt=""></td></tr>
+
+    <tr>
+      <td width="100%">
+        <table cellpadding=1 border=0 width="100%">
+          <tr>
+            <td width="10%" class="headerItem">Current view:</td>
+            <td width="35%" class="headerValue"><a href="../index.html">top level</a> - <a href="index.html">ApparentHorizons</a> - StrahlkorperGr.cpp</td>
+            <td width="5%"></td>
+            <td width="15%"></td>
+            <td width="10%" class="headerCovTableHead">Hit</td>
+            <td width="10%" class="headerCovTableHead">Total</td>
+            <td width="15%" class="headerCovTableHead">Coverage</td>
+          </tr>
+          <tr>
+             <td class="headerItem">Commit:</td>
+             <td class="headerValue"><a target="_blank" href="https://github.com/sxs-collaboration/spectre/commit/4a100dde3b231e0ada6ff7b2b4c32892a30db7f6">4a100dde3b231e0ada6ff7b2b4c32892a30db7f6</a></td>
+            <td></td>
+            <td class="headerItem">Lines:</td>
+            <td class="headerCovTableEntry">8</td>
+            <td class="headerCovTableEntry">16</td>
+            <td class="headerCovTableEntryLo">50.0 %</td>
+          </tr>
+          <tr>
+            <td class="headerItem">Date:</td>
+            <td class="headerValue">2018-08-16 19:07:23</td>
+            <td></td>
+          </tr>
+          <tr>
+            <td class="headerItem">Legend:</td>
+            <td class="headerValueLeg">            Lines:
+            <span class="coverLegendCov">hit</span>
+            <span class="coverLegendNoCov">not hit</span>
+</td>
+            <td></td>
+          </tr>
+          <tr><td><img src="../glass.png" width=3 height=3 alt=""></td></tr>
+        </table>
+      </td>
+    </tr>
+
+    <tr><td class="ruler"><img src="../glass.png" width=3 height=3 alt=""></td></tr>
+  </table>
+
+  <table cellpadding=0 cellspacing=0 border=0>
+    <tr>
+      <td><br></td>
+    </tr>
+    <tr>
+      <td>
+<pre class="sourceHeading">          Line data    Source code</pre>
+<pre class="source">
+<span class="lineNum">       1 </span>            : // Distributed under the MIT License.
+<span class="lineNum">       2 </span>            : // See LICENSE.txt for details.
+<span class="lineNum">       3 </span>            : 
+<span class="lineNum">       4 </span>            : #include &quot;ApparentHorizons/StrahlkorperGr.hpp&quot;
+<span class="lineNum">       5 </span>            : 
+<span class="lineNum">       6 </span>            : #include &lt;array&gt;
+<span class="lineNum">       7 </span>            : #include &lt;cmath&gt;
+<span class="lineNum">       8 </span>            : #include &lt;cstddef&gt;
+<span class="lineNum">       9 </span>            : 
+<span class="lineNum">      10 </span>            : #include &quot;ApparentHorizons/YlmSpherepack.hpp&quot;
+<span class="lineNum">      11 </span>            : #include &quot;DataStructures/DataVector.hpp&quot;
+<span class="lineNum">      12 </span>            : #include &quot;DataStructures/Tensor/EagerMath/DotProduct.hpp&quot;
+<span class="lineNum">      13 </span>            : #include &quot;DataStructures/Tensor/Tensor.hpp&quot;
+<span class="lineNum">      14 </span>            : #include &quot;PointwiseFunctions/GeneralRelativity/IndexManipulation.hpp&quot;
+<span class="lineNum">      15 </span>            : #include &quot;Utilities/ConstantExpressions.hpp&quot;
+<span class="lineNum">      16 </span>            : #include &quot;Utilities/MakeWithValue.hpp&quot;
+<span class="lineNum">      17 </span>            : 
+<span class="lineNum">      18 </span>            : namespace StrahlkorperGr {
+<span class="lineNum">      19 </span>            : 
+<span class="lineNum">      20 </span>            : template &lt;typename Frame&gt;
+<span class="lineNum">      21 </span><span class="lineCov">          2 : tnsr::i&lt;DataVector, 3, Frame&gt; unit_normal_one_form(</span>
+<span class="lineNum">      22 </span>            :     const tnsr::i&lt;DataVector, 3, Frame&gt;&amp; normal_one_form,
+<span class="lineNum">      23 </span>            :     const DataVector&amp; one_over_one_form_magnitude) noexcept {
+<span class="lineNum">      24 </span>            :   auto unit_normal_one_form = normal_one_form;
+<span class="lineNum">      25 </span>            :   for (size_t i = 0; i &lt; 3; ++i) {
+<span class="lineNum">      26 </span>            :     unit_normal_one_form.get(i) *= one_over_one_form_magnitude;
+<span class="lineNum">      27 </span>            :   }
+<span class="lineNum">      28 </span>            :   return unit_normal_one_form;
+<span class="lineNum">      29 </span>            : }
+<span class="lineNum">      30 </span>            : 
+<span class="lineNum">      31 </span>            : template &lt;typename Frame&gt;
+<span class="lineNum">      32 </span><span class="lineCov">          2 : tnsr::ii&lt;DataVector, 3, Frame&gt; grad_unit_normal_one_form(</span>
+<span class="lineNum">      33 </span>            :     const tnsr::i&lt;DataVector, 3, Frame&gt;&amp; r_hat, const DataVector&amp; radius,
+<span class="lineNum">      34 </span>            :     const tnsr::i&lt;DataVector, 3, Frame&gt;&amp; unit_normal_one_form,
+<span class="lineNum">      35 </span>            :     const tnsr::ii&lt;DataVector, 3, Frame&gt;&amp; d2x_radius,
+<span class="lineNum">      36 </span>            :     const DataVector&amp; one_over_one_form_magnitude,
+<span class="lineNum">      37 </span>            :     const tnsr::Ijj&lt;DataVector, 3, Frame&gt;&amp; christoffel_2nd_kind) noexcept {
+<span class="lineNum">      38 </span>            :   const DataVector one_over_radius = 1.0 / radius;
+<span class="lineNum">      39 </span>            :   tnsr::ii&lt;DataVector, 3, Frame&gt; grad_normal(radius.size(), 0.0);
+<span class="lineNum">      40 </span>            :   for (size_t i = 0; i &lt; 3; ++i) {
+<span class="lineNum">      41 </span>            :     for (size_t j = i; j &lt; 3; ++j) {  // symmetry
+<span class="lineNum">      42 </span>            :       grad_normal.get(i, j) = -one_over_one_form_magnitude *
+<span class="lineNum">      43 </span>            :                               (r_hat.get(i) * r_hat.get(j) * one_over_radius +
+<span class="lineNum">      44 </span>            :                                d2x_radius.get(i, j));
+<span class="lineNum">      45 </span>            :       for (size_t k = 0; k &lt; 3; ++k) {
+<span class="lineNum">      46 </span>            :         grad_normal.get(i, j) -=
+<span class="lineNum">      47 </span>            :             unit_normal_one_form.get(k) * christoffel_2nd_kind.get(k, i, j);
+<span class="lineNum">      48 </span>            :       }
+<span class="lineNum">      49 </span>            :     }
+<span class="lineNum">      50 </span>            :     grad_normal.get(i, i) += one_over_radius * one_over_one_form_magnitude;
+<span class="lineNum">      51 </span>            :   }
+<span class="lineNum">      52 </span>            :   return grad_normal;
+<span class="lineNum">      53 </span>            : }
+<span class="lineNum">      54 </span>            : 
+<span class="lineNum">      55 </span>            : template &lt;typename Frame&gt;
+<span class="lineNum">      56 </span><span class="lineCov">          2 : tnsr::II&lt;DataVector, 3, Frame&gt; inverse_surface_metric(</span>
+<span class="lineNum">      57 </span>            :     const tnsr::I&lt;DataVector, 3, Frame&gt;&amp; unit_normal_vector,
+<span class="lineNum">      58 </span>            :     const tnsr::II&lt;DataVector, 3, Frame&gt;&amp; upper_spatial_metric) noexcept {
+<span class="lineNum">      59 </span>            :   auto inv_surf_metric = upper_spatial_metric;
+<span class="lineNum">      60 </span>            :   for (size_t i = 0; i &lt; 3; ++i) {
+<span class="lineNum">      61 </span>            :     for (size_t j = i; j &lt; 3; ++j) {  // Symmetry
+<span class="lineNum">      62 </span>            :       inv_surf_metric.get(i, j) -=
+<span class="lineNum">      63 </span>            :           unit_normal_vector.get(i) * unit_normal_vector.get(j);
+<span class="lineNum">      64 </span>            :     }
+<span class="lineNum">      65 </span>            :   }
+<span class="lineNum">      66 </span>            :   return inv_surf_metric;
+<span class="lineNum">      67 </span>            : }
+<span class="lineNum">      68 </span>            : 
+<span class="lineNum">      69 </span>            : template &lt;typename Frame&gt;
+<span class="lineNum">      70 </span><span class="lineCov">          2 : Scalar&lt;DataVector&gt; expansion(</span>
+<span class="lineNum">      71 </span>            :     const tnsr::ii&lt;DataVector, 3, Frame&gt;&amp; grad_normal,
+<span class="lineNum">      72 </span>            :     const tnsr::II&lt;DataVector, 3, Frame&gt;&amp; inverse_surface_metric,
+<span class="lineNum">      73 </span>            :     const tnsr::ii&lt;DataVector, 3, Frame&gt;&amp; extrinsic_curvature) noexcept {
+<span class="lineNum">      74 </span>            :   // If you want the future *ingoing* null expansion,
+<span class="lineNum">      75 </span>            :   // the formula is the same as here except you
+<span class="lineNum">      76 </span>            :   // change the sign on grad_normal just before you
+<span class="lineNum">      77 </span>            :   // subtract the extrinsic curvature.
+<span class="lineNum">      78 </span>            :   // That is, if GsBar is the value of grad_normal
+<span class="lineNum">      79 </span>            :   // at this point in the code, and S^i is the unit
+<span class="lineNum">      80 </span>            :   // spatial normal to the surface,
+<span class="lineNum">      81 </span>            :   // the outgoing expansion is
+<span class="lineNum">      82 </span>            :   // (g^ij - S^i S^j) (GsBar_ij - K_ij)
+<span class="lineNum">      83 </span>            :   // and the ingoing expansion is
+<span class="lineNum">      84 </span>            :   // (g^ij - S^i S^j) (-GsBar_ij - K_ij)
+<span class="lineNum">      85 </span>            : 
+<span class="lineNum">      86 </span>            :   Scalar&lt;DataVector&gt; expansion(get&lt;0, 0&gt;(grad_normal).size(), 0.0);
+<span class="lineNum">      87 </span>            :   for (size_t i = 0; i &lt; 3; ++i) {
+<span class="lineNum">      88 </span>            :     for (size_t j = 0; j &lt; 3; ++j) {
+<span class="lineNum">      89 </span>            :       get(expansion) += inverse_surface_metric.get(i, j) *
+<span class="lineNum">      90 </span>            :                         (grad_normal.get(i, j) - extrinsic_curvature.get(i, j));
+<span class="lineNum">      91 </span>            :     }
+<span class="lineNum">      92 </span>            :   }
+<span class="lineNum">      93 </span>            : 
+<span class="lineNum">      94 </span>            :   return expansion;
+<span class="lineNum">      95 </span>            : }
+<span class="lineNum">      96 </span>            : 
+<span class="lineNum">      97 </span>            : template &lt;typename Frame&gt;
+<span class="lineNum">      98 </span><span class="lineCov">          2 : tnsr::ii&lt;DataVector, 3, Frame&gt; extrinsic_curvature(</span>
+<span class="lineNum">      99 </span>            :     const tnsr::ii&lt;DataVector, 3, Frame&gt;&amp; grad_normal,
+<span class="lineNum">     100 </span>            :     const tnsr::i&lt;DataVector, 3, Frame&gt;&amp; unit_normal_one_form,
+<span class="lineNum">     101 </span>            :     const tnsr::I&lt;DataVector, 3, Frame&gt;&amp; unit_normal_vector) noexcept {
+<span class="lineNum">     102 </span>            :   Scalar&lt;DataVector&gt; nI_nJ_gradnij(get&lt;0, 0&gt;(grad_normal).size(), 0.0);
+<span class="lineNum">     103 </span>            :   for (size_t i = 0; i &lt; 3; ++i) {
+<span class="lineNum">     104 </span>            :     for (size_t j = 0; j &lt; 3; ++j) {
+<span class="lineNum">     105 </span>            :       get(nI_nJ_gradnij) += unit_normal_vector.get(i) *
+<span class="lineNum">     106 </span>            :                             unit_normal_vector.get(j) * grad_normal.get(i, j);
+<span class="lineNum">     107 </span>            :     }
+<span class="lineNum">     108 </span>            :   }
+<span class="lineNum">     109 </span>            : 
+<span class="lineNum">     110 </span>            :   auto extrinsic_curvature(grad_normal);
+<span class="lineNum">     111 </span>            : 
+<span class="lineNum">     112 </span>            :   for (size_t i = 0; i &lt; 3; ++i) {
+<span class="lineNum">     113 </span>            :     for (size_t j = i; j &lt; 3; ++j) {
+<span class="lineNum">     114 </span>            :       extrinsic_curvature.get(i, j) += unit_normal_one_form.get(i) *
+<span class="lineNum">     115 </span>            :                                        unit_normal_one_form.get(j) *
+<span class="lineNum">     116 </span>            :                                        get(nI_nJ_gradnij);
+<span class="lineNum">     117 </span>            :       for (size_t k = 0; k &lt; 3; ++k) {
+<span class="lineNum">     118 </span>            :         extrinsic_curvature.get(i, j) -=
+<span class="lineNum">     119 </span>            :             unit_normal_vector.get(k) *
+<span class="lineNum">     120 </span>            :             (unit_normal_one_form.get(i) * grad_normal.get(j, k) +
+<span class="lineNum">     121 </span>            :              unit_normal_one_form.get(j) * grad_normal.get(i, k));
+<span class="lineNum">     122 </span>            :       }
+<span class="lineNum">     123 </span>            :     }
+<span class="lineNum">     124 </span>            :   }
+<span class="lineNum">     125 </span>            :   return extrinsic_curvature;
+<span class="lineNum">     126 </span>            : }
+<span class="lineNum">     127 </span>            : 
+<span class="lineNum">     128 </span>            : template &lt;typename Frame&gt;
+<span class="lineNum">     129 </span><span class="lineCov">          2 : Scalar&lt;DataVector&gt; ricci_scalar(</span>
+<span class="lineNum">     130 </span>            :     const tnsr::ii&lt;DataVector, 3, Frame&gt;&amp; spatial_ricci_tensor,
+<span class="lineNum">     131 </span>            :     const tnsr::I&lt;DataVector, 3, Frame&gt;&amp; unit_normal_vector,
+<span class="lineNum">     132 </span>            :     const tnsr::ii&lt;DataVector, 3, Frame&gt;&amp; extrinsic_curvature,
+<span class="lineNum">     133 </span>            :     const tnsr::II&lt;DataVector, 3, Frame&gt;&amp; upper_spatial_metric) noexcept {
+<span class="lineNum">     134 </span>            :   auto ricci_scalar = trace(spatial_ricci_tensor, upper_spatial_metric);
+<span class="lineNum">     135 </span>            : 
+<span class="lineNum">     136 </span>            :   for (size_t i = 0; i &lt; 3; ++i) {
+<span class="lineNum">     137 </span>            :     for (size_t j = 0; j &lt; 3; ++j) {
+<span class="lineNum">     138 </span>            :       get(ricci_scalar) -= 2.0 * spatial_ricci_tensor.get(i, j) *
+<span class="lineNum">     139 </span>            :                            unit_normal_vector.get(i) *
+<span class="lineNum">     140 </span>            :                            unit_normal_vector.get(j);
+<span class="lineNum">     141 </span>            : 
+<span class="lineNum">     142 </span>            :       for (size_t k = 0; k &lt; 3; ++k) {
+<span class="lineNum">     143 </span>            :         for (size_t l = 0; l &lt; 3; ++l) {
+<span class="lineNum">     144 </span>            :           // K^{ij} K_{ij} = g^{ik} g^{jl} K_{kl} K_{ij}
+<span class="lineNum">     145 </span>            :           get(ricci_scalar) -=
+<span class="lineNum">     146 </span>            :               upper_spatial_metric.get(i, k) * upper_spatial_metric.get(j, l) *
+<span class="lineNum">     147 </span>            :               extrinsic_curvature.get(k, l) * extrinsic_curvature.get(i, j);
+<span class="lineNum">     148 </span>            :         }
+<span class="lineNum">     149 </span>            :       }
+<span class="lineNum">     150 </span>            :     }
+<span class="lineNum">     151 </span>            :   }
+<span class="lineNum">     152 </span>            : 
+<span class="lineNum">     153 </span>            :   get(ricci_scalar) +=
+<span class="lineNum">     154 </span>            :       square(get(trace(extrinsic_curvature, upper_spatial_metric)));
+<span class="lineNum">     155 </span>            : 
+<span class="lineNum">     156 </span>            :   return ricci_scalar;
+<span class="lineNum">     157 </span>            : }
+<span class="lineNum">     158 </span>            : 
+<span class="lineNum">     159 </span>            : template &lt;typename Frame&gt;
+<span class="lineNum">     160 </span><span class="lineCov">          2 : Scalar&lt;DataVector&gt; area_element(</span>
+<span class="lineNum">     161 </span>            :     const tnsr::ii&lt;DataVector, 3, Frame&gt;&amp; spatial_metric,
+<span class="lineNum">     162 </span>            :     const StrahlkorperTags::StrahlkorperTags_detail::Jacobian&lt;Frame&gt;&amp; jacobian,
+<span class="lineNum">     163 </span>            :     const tnsr::i&lt;DataVector, 3, Frame&gt;&amp; normal_one_form,
+<span class="lineNum">     164 </span>            :     const DataVector&amp; radius,
+<span class="lineNum">     165 </span>            :     const tnsr::i&lt;DataVector, 3, Frame&gt;&amp; r_hat) noexcept {
+<span class="lineNum">     166 </span>            :   auto cap_theta = make_with_value&lt;tnsr::I&lt;DataVector, 3, Frame&gt;&gt;(r_hat, 0.0);
+<span class="lineNum">     167 </span>            :   auto cap_phi = make_with_value&lt;tnsr::I&lt;DataVector, 3, Frame&gt;&gt;(r_hat, 0.0);
+<span class="lineNum">     168 </span>            : 
+<span class="lineNum">     169 </span>            :   for (size_t i = 0; i &lt; 3; ++i) {
+<span class="lineNum">     170 </span>            :     cap_theta.get(i) = jacobian.get(i, 0);
+<span class="lineNum">     171 </span>            :     cap_phi.get(i) = jacobian.get(i, 1);
+<span class="lineNum">     172 </span>            :     for (size_t j = 0; j &lt; 3; ++j) {
+<span class="lineNum">     173 </span>            :       cap_theta.get(i) += r_hat.get(i) *
+<span class="lineNum">     174 </span>            :                           (r_hat.get(j) - normal_one_form.get(j)) *
+<span class="lineNum">     175 </span>            :                           jacobian.get(j, 0);
+<span class="lineNum">     176 </span>            :       cap_phi.get(i) += r_hat.get(i) * (r_hat.get(j) - normal_one_form.get(j)) *
+<span class="lineNum">     177 </span>            :                         jacobian.get(j, 1);
+<span class="lineNum">     178 </span>            :     }
+<span class="lineNum">     179 </span>            :   }
+<span class="lineNum">     180 </span>            : 
+<span class="lineNum">     181 </span>            :   auto area_element = Scalar&lt;DataVector&gt;{square(radius)};
+<span class="lineNum">     182 </span>            :   get(area_element) *=
+<span class="lineNum">     183 </span>            :       sqrt(get(dot_product(cap_theta, cap_theta, spatial_metric)) *
+<span class="lineNum">     184 </span>            :                get(dot_product(cap_phi, cap_phi, spatial_metric)) -
+<span class="lineNum">     185 </span>            :            square(get(dot_product(cap_theta, cap_phi, spatial_metric))));
+<span class="lineNum">     186 </span>            :   return area_element;
+<span class="lineNum">     187 </span>            : }
+<span class="lineNum">     188 </span>            : 
+<span class="lineNum">     189 </span>            : template &lt;typename Frame&gt;
+<span class="lineNum">     190 </span><span class="lineCov">          2 : Scalar&lt;DataVector&gt; spin_function(</span>
+<span class="lineNum">     191 </span>            :     const StrahlkorperTags::StrahlkorperTags_detail::Jacobian&lt;Frame&gt;&amp; tangents,
+<span class="lineNum">     192 </span>            :     const YlmSpherepack&amp; ylm,
+<span class="lineNum">     193 </span>            :     const tnsr::I&lt;DataVector, 3, Frame&gt;&amp; unit_normal_vector,
+<span class="lineNum">     194 </span>            :     const Scalar&lt;DataVector&gt;&amp; area_element,
+<span class="lineNum">     195 </span>            :     const tnsr::ii&lt;DataVector, 3, Frame&gt;&amp; extrinsic_curvature) noexcept {
+<span class="lineNum">     196 </span>            :   auto temp = make_with_value&lt;Scalar&lt;DataVector&gt;&gt;(area_element, 0.0);
+<span class="lineNum">     197 </span>            :   auto extrinsic_curvature_theta_normal_sin_theta =
+<span class="lineNum">     198 </span>            :       make_with_value&lt;Scalar&lt;DataVector&gt;&gt;(area_element, 0.0);
+<span class="lineNum">     199 </span>            :   auto extrinsic_curvature_phi_normal =
+<span class="lineNum">     200 </span>            :       make_with_value&lt;Scalar&lt;DataVector&gt;&gt;(area_element, 0.0);
+<span class="lineNum">     201 </span>            : 
+<span class="lineNum">     202 </span>            :   DataVector&amp; extrinsic_curvature_dot_normal = get(temp);
+<span class="lineNum">     203 </span>            :   for (size_t i = 0; i &lt; 3; ++i) {
+<span class="lineNum">     204 </span>            :     extrinsic_curvature_dot_normal =
+<span class="lineNum">     205 </span>            :         extrinsic_curvature.get(i, 0) * get&lt;0&gt;(unit_normal_vector);
+<span class="lineNum">     206 </span>            :     for (size_t j = 1; j &lt; 3; ++j) {
+<span class="lineNum">     207 </span>            :       extrinsic_curvature_dot_normal +=
+<span class="lineNum">     208 </span>            :           extrinsic_curvature.get(i, j) * unit_normal_vector.get(j);
+<span class="lineNum">     209 </span>            :     }
+<span class="lineNum">     210 </span>            : 
+<span class="lineNum">     211 </span>            :     // Note: I must multiply by sin_theta because
+<span class="lineNum">     212 </span>            :     // I take the phi derivative of this term by using
+<span class="lineNum">     213 </span>            :     // the spherepack gradient, which includes a
+<span class="lineNum">     214 </span>            :     // sin_theta in the denominator of the phi derivative.
+<span class="lineNum">     215 </span>            :     // Will do this outside the i,j loops.
+<span class="lineNum">     216 </span>            :     get(extrinsic_curvature_theta_normal_sin_theta) +=
+<span class="lineNum">     217 </span>            :         extrinsic_curvature_dot_normal * tangents.get(i, 0);
+<span class="lineNum">     218 </span>            : 
+<span class="lineNum">     219 </span>            :     // Note: I must multiply by sin_theta because tangents.get(i,1)
+<span class="lineNum">     220 </span>            :     // actually contains \partial_\phi / sin(theta), but I want just
+<span class="lineNum">     221 </span>            :     //\partial_\phi. Will do this outside the i,j loops.
+<span class="lineNum">     222 </span>            :     get(extrinsic_curvature_phi_normal) +=
+<span class="lineNum">     223 </span>            :         extrinsic_curvature_dot_normal * tangents.get(i, 1);
+<span class="lineNum">     224 </span>            :   }
+<span class="lineNum">     225 </span>            : 
+<span class="lineNum">     226 </span>            :   DataVector&amp; sin_theta = get(temp);
+<span class="lineNum">     227 </span>            :   sin_theta = sin(ylm.theta_phi_points()[0]);
+<span class="lineNum">     228 </span>            :   get(extrinsic_curvature_theta_normal_sin_theta) *= sin_theta;
+<span class="lineNum">     229 </span>            :   get(extrinsic_curvature_phi_normal) *= sin_theta;
+<span class="lineNum">     230 </span>            : 
+<span class="lineNum">     231 </span>            :   Scalar&lt;DataVector&gt;&amp; spin_function = temp;
+<span class="lineNum">     232 </span>            :   get(spin_function) =
+<span class="lineNum">     233 </span>            :       (get&lt;0&gt;(ylm.gradient(get(extrinsic_curvature_phi_normal))) -
+<span class="lineNum">     234 </span>            :        get&lt;1&gt;(ylm.gradient(get(extrinsic_curvature_theta_normal_sin_theta)))) /
+<span class="lineNum">     235 </span>            :       (sin_theta * get(area_element));
+<span class="lineNum">     236 </span>            : 
+<span class="lineNum">     237 </span>            :   return temp;
+<span class="lineNum">     238 </span>            : }
+<span class="lineNum">     239 </span>            : }  // namespace StrahlkorperGr
+<span class="lineNum">     240 </span>            : 
+<span class="lineNum">     241 </span><span class="lineNoCov">          0 : template tnsr::i&lt;DataVector, 3, Frame::Inertial&gt;</span>
+<span class="lineNum">     242 </span>            : StrahlkorperGr::unit_normal_one_form&lt;Frame::Inertial&gt;(
+<span class="lineNum">     243 </span>            :     const tnsr::i&lt;DataVector, 3, Frame::Inertial&gt;&amp; normal_one_form,
+<span class="lineNum">     244 </span>            :     const DataVector&amp; one_over_one_form_magnitude) noexcept;
+<span class="lineNum">     245 </span>            : 
+<span class="lineNum">     246 </span><span class="lineNoCov">          0 : template tnsr::ii&lt;DataVector, 3, Frame::Inertial&gt;</span>
+<span class="lineNum">     247 </span>            : StrahlkorperGr::grad_unit_normal_one_form&lt;Frame::Inertial&gt;(
+<span class="lineNum">     248 </span>            :     const tnsr::i&lt;DataVector, 3, Frame::Inertial&gt;&amp; r_hat,
+<span class="lineNum">     249 </span>            :     const DataVector&amp; radius,
+<span class="lineNum">     250 </span>            :     const tnsr::i&lt;DataVector, 3, Frame::Inertial&gt;&amp; unit_normal_one_form,
+<span class="lineNum">     251 </span>            :     const tnsr::ii&lt;DataVector, 3, Frame::Inertial&gt;&amp; d2x_radius,
+<span class="lineNum">     252 </span>            :     const DataVector&amp; one_over_one_form_magnitude,
+<span class="lineNum">     253 </span>            :     const tnsr::Ijj&lt;DataVector, 3, Frame::Inertial&gt;&amp;
+<span class="lineNum">     254 </span>            :         christoffel_2nd_kind) noexcept;
+<span class="lineNum">     255 </span>            : 
+<span class="lineNum">     256 </span><span class="lineNoCov">          0 : template tnsr::II&lt;DataVector, 3, Frame::Inertial&gt;</span>
+<span class="lineNum">     257 </span>            : StrahlkorperGr::inverse_surface_metric&lt;Frame::Inertial&gt;(
+<span class="lineNum">     258 </span>            :     const tnsr::I&lt;DataVector, 3, Frame::Inertial&gt;&amp; unit_normal_vector,
+<span class="lineNum">     259 </span>            :     const tnsr::II&lt;DataVector, 3, Frame::Inertial&gt;&amp;
+<span class="lineNum">     260 </span>            :         upper_spatial_metric) noexcept;
+<span class="lineNum">     261 </span>            : 
+<span class="lineNum">     262 </span><span class="lineNoCov">          0 : template Scalar&lt;DataVector&gt; StrahlkorperGr::expansion&lt;Frame::Inertial&gt;(</span>
+<span class="lineNum">     263 </span>            :     const tnsr::ii&lt;DataVector, 3, Frame::Inertial&gt;&amp; grad_normal,
+<span class="lineNum">     264 </span>            :     const tnsr::II&lt;DataVector, 3, Frame::Inertial&gt;&amp; inverse_surface_metric,
+<span class="lineNum">     265 </span>            :     const tnsr::ii&lt;DataVector, 3, Frame::Inertial&gt;&amp;
+<span class="lineNum">     266 </span>            :         extrinsic_curvature) noexcept;
+<span class="lineNum">     267 </span>            : 
+<span class="lineNum">     268 </span><span class="lineNoCov">          0 : template tnsr::ii&lt;DataVector, 3, Frame::Inertial&gt;</span>
+<span class="lineNum">     269 </span>            : StrahlkorperGr::extrinsic_curvature&lt;Frame::Inertial&gt;(
+<span class="lineNum">     270 </span>            :     const tnsr::ii&lt;DataVector, 3, Frame::Inertial&gt;&amp; grad_normal,
+<span class="lineNum">     271 </span>            :     const tnsr::i&lt;DataVector, 3, Frame::Inertial&gt;&amp; unit_normal_one_form,
+<span class="lineNum">     272 </span>            :     const tnsr::I&lt;DataVector, 3, Frame::Inertial&gt;&amp; unit_normal_vector) noexcept;
+<span class="lineNum">     273 </span>            : 
+<span class="lineNum">     274 </span><span class="lineNoCov">          0 : template Scalar&lt;DataVector&gt; StrahlkorperGr::ricci_scalar&lt;Frame::Inertial&gt;(</span>
+<span class="lineNum">     275 </span>            :     const tnsr::ii&lt;DataVector, 3, Frame::Inertial&gt;&amp; spatial_ricci_tensor,
+<span class="lineNum">     276 </span>            :     const tnsr::I&lt;DataVector, 3, Frame::Inertial&gt;&amp; unit_normal_vector,
+<span class="lineNum">     277 </span>            :     const tnsr::ii&lt;DataVector, 3, Frame::Inertial&gt;&amp; extrinsic_curvature,
+<span class="lineNum">     278 </span>            :     const tnsr::II&lt;DataVector, 3, Frame::Inertial&gt;&amp;
+<span class="lineNum">     279 </span>            :         upper_spatial_metric) noexcept;
+<span class="lineNum">     280 </span>            : 
+<span class="lineNum">     281 </span><span class="lineNoCov">          0 : template Scalar&lt;DataVector&gt; StrahlkorperGr::area_element&lt;Frame::Inertial&gt;(</span>
+<span class="lineNum">     282 </span>            :     const tnsr::ii&lt;DataVector, 3, Frame::Inertial&gt;&amp; spatial_metric,
+<span class="lineNum">     283 </span>            :     const StrahlkorperTags::StrahlkorperTags_detail::Jacobian&lt;Frame::Inertial&gt;&amp;
+<span class="lineNum">     284 </span>            :         jacobian,
+<span class="lineNum">     285 </span>            :     const tnsr::i&lt;DataVector, 3, Frame::Inertial&gt;&amp; normal_one_form,
+<span class="lineNum">     286 </span>            :     const DataVector&amp; radius,
+<span class="lineNum">     287 </span>            :     const tnsr::i&lt;DataVector, 3, Frame::Inertial&gt;&amp; r_hat) noexcept;
+<span class="lineNum">     288 </span>            : 
+<span class="lineNum">     289 </span><span class="lineNoCov">          0 : template Scalar&lt;DataVector&gt; StrahlkorperGr::spin_function&lt;Frame::Inertial&gt;(</span>
+<span class="lineNum">     290 </span>            :     const StrahlkorperTags::StrahlkorperTags_detail::Jacobian&lt;Frame::Inertial&gt;&amp;
+<span class="lineNum">     291 </span>            :         tangents,
+<span class="lineNum">     292 </span>            :     const YlmSpherepack&amp; ylm,
+<span class="lineNum">     293 </span>            :     const tnsr::I&lt;DataVector, 3, Frame::Inertial&gt;&amp; unit_normal_vector,
+<span class="lineNum">     294 </span>            :     const Scalar&lt;DataVector&gt;&amp; area_element,
+<span class="lineNum">     295 </span>            :     const tnsr::ii&lt;DataVector, 3, Frame::Inertial&gt;&amp;
+<span class="lineNum">     296 </span>            :         extrinsic_curvature) noexcept;
+</pre>
+      </td>
+    </tr>
+  </table>
+  <br>
+
+  <table width="100%" border=0 cellspacing=0 cellpadding=0>
+    <tr><td class="ruler"><img src="../glass.png" width=3 height=3 alt=""></td></tr>
+    <tr><td class="versionInfo">Generated by: <a href="http://ltp.sourceforge.net/coverage/lcov.php" target="_parent">LCOV version 1.13</a></td></tr>
+  </table>
+  <br>
+
+</body>
+</html>

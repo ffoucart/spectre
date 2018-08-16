@@ -1,0 +1,405 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+
+<html lang="en">
+
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <title>LCOV - 4a100dde3b231e0ada6ff7b2b4c32892a30db7f6 - NumericalAlgorithms/Spectral/Projection.cpp</title>
+  <link rel="stylesheet" type="text/css" href="../../gcov.css">
+</head>
+
+<body>
+
+  <table width="100%" border=0 cellspacing=0 cellpadding=0>
+    <tr><td class="title">SpECTRE Unit Test Code Coverage Report</td></tr>
+    <tr><td class="ruler"><img src="../../glass.png" width=3 height=3 alt=""></td></tr>
+
+    <tr>
+      <td width="100%">
+        <table cellpadding=1 border=0 width="100%">
+          <tr>
+            <td width="10%" class="headerItem">Current view:</td>
+            <td width="35%" class="headerValue"><a href="../../index.html">top level</a> - <a href="index.html">NumericalAlgorithms/Spectral</a> - Projection.cpp<span style="font-size: 80%;"> (source / <a href="Projection.cpp.func-sort-c.html">functions</a>)</span></td>
+            <td width="5%"></td>
+            <td width="15%"></td>
+            <td width="10%" class="headerCovTableHead">Hit</td>
+            <td width="10%" class="headerCovTableHead">Total</td>
+            <td width="15%" class="headerCovTableHead">Coverage</td>
+          </tr>
+          <tr>
+            <td class="headerItem">Commit:</td>
+             <td class="headerValue"><a target="_blank" href="https://github.com/sxs-collaboration/spectre/commit/4a100dde3b231e0ada6ff7b2b4c32892a30db7f6">4a100dde3b231e0ada6ff7b2b4c32892a30db7f6</a></td>
+            <td></td>
+            <td class="headerItem">Lines:</td>
+            <td class="headerCovTableEntry">118</td>
+            <td class="headerCovTableEntry">122</td>
+            <td class="headerCovTableEntryHi">96.7 %</td>
+          </tr>
+          <tr>
+            <td class="headerItem">Date:</td>
+            <td class="headerValue">2018-08-16 19:06:01</td>
+            <td></td>
+            <td class="headerItem">Functions:</td>
+            <td class="headerCovTableEntry">20</td>
+            <td class="headerCovTableEntry">20</td>
+            <td class="headerCovTableEntryHi">100.0 %</td>
+          </tr>
+          <tr>
+            <td class="headerItem">Legend:</td>
+            <td class="headerValueLeg">            Lines:
+            <span class="coverLegendCov">hit</span>
+            <span class="coverLegendNoCov">not hit</span>
+</td>
+            <td></td>
+          </tr>
+          <tr><td><img src="../../glass.png" width=3 height=3 alt=""></td></tr>
+        </table>
+      </td>
+    </tr>
+
+    <tr><td class="ruler"><img src="../../glass.png" width=3 height=3 alt=""></td></tr>
+  </table>
+
+  <table cellpadding=0 cellspacing=0 border=0>
+    <tr>
+      <td><br></td>
+    </tr>
+    <tr>
+      <td>
+<pre class="sourceHeading">          Line data    Source code</pre>
+<pre class="source">
+<a name="1"><span class="lineNum">       1 </span>            : // Distributed under the MIT License.</a>
+<span class="lineNum">       2 </span>            : // See LICENSE.txt for details.
+<span class="lineNum">       3 </span>            : 
+<span class="lineNum">       4 </span>            : #include &quot;NumericalAlgorithms/Spectral/Projection.hpp&quot;
+<span class="lineNum">       5 </span>            : 
+<span class="lineNum">       6 </span>            : #include &lt;algorithm&gt;
+<span class="lineNum">       7 </span>            : #include &lt;cmath&gt;
+<span class="lineNum">       8 </span>            : #include &lt;initializer_list&gt;
+<span class="lineNum">       9 </span>            : #include &lt;ostream&gt;
+<span class="lineNum">      10 </span>            : 
+<span class="lineNum">      11 </span>            : #include &quot;DataStructures/DataVector.hpp&quot;
+<span class="lineNum">      12 </span>            : #include &quot;DataStructures/Matrix.hpp&quot;
+<span class="lineNum">      13 </span>            : #include &quot;Domain/Mesh.hpp&quot;
+<span class="lineNum">      14 </span>            : #include &quot;ErrorHandling/Assert.hpp&quot;
+<span class="lineNum">      15 </span>            : #include &quot;ErrorHandling/Error.hpp&quot;
+<span class="lineNum">      16 </span>            : #include &quot;NumericalAlgorithms/Spectral/Spectral.hpp&quot;
+<span class="lineNum">      17 </span>            : #include &quot;Utilities/StaticCache.hpp&quot;
+<span class="lineNum">      18 </span>            : 
+<span class="lineNum">      19 </span>            : namespace Spectral {
+<span class="lineNum">      20 </span>            : 
+<span class="lineNum">      21 </span>            : namespace {
+<span class="lineNum">      22 </span>            : constexpr auto supported_quadratures = {Quadrature::Gauss,
+<a name="23"><span class="lineNum">      23 </span>            :                                         Quadrature::GaussLobatto};</a>
+<span class="lineNum">      24 </span>            : 
+<span class="lineNum">      25 </span><span class="lineCov">       9904 : size_t encode_quadrature(const Quadrature quadrature) noexcept {</span>
+<span class="lineNum">      26 </span><span class="lineCov">       9904 :   return static_cast&lt;size_t&gt;(std::find(supported_quadratures.begin(),</span>
+<span class="lineNum">      27 </span>            :                                        supported_quadratures.end(),
+<span class="lineNum">      28 </span><span class="lineCov">      19808 :                                        quadrature) -</span>
+<span class="lineNum">      29 </span><span class="lineCov">      19808 :                              supported_quadratures.begin());</span>
+<a name="30"><span class="lineNum">      30 </span>            : }</a>
+<span class="lineNum">      31 </span>            : 
+<span class="lineNum">      32 </span><span class="lineCov">      13728 : Quadrature decode_quadrature(const size_t encoded) noexcept {</span>
+<span class="lineNum">      33 </span><span class="lineCov">      13728 :   return *(supported_quadratures.begin() + encoded);</span>
+<a name="34"><span class="lineNum">      34 </span>            : }</a>
+<span class="lineNum">      35 </span>            : 
+<span class="lineNum">      36 </span><span class="lineCov">       9904 : void check_quadrature_supported(const Quadrature quadrature) noexcept {</span>
+<span class="lineNum">      37 </span><span class="lineCov">       9904 :   ASSERT(std::find(supported_quadratures.begin(), supported_quadratures.end(),</span>
+<span class="lineNum">      38 </span>            :                    quadrature) != supported_quadratures.end(),
+<span class="lineNum">      39 </span>            :          &quot;Unsupported quadrature: &quot; &lt;&lt; quadrature);
+<span class="lineNum">      40 </span><span class="lineCov">       9904 : }</span>
+<a name="41"><span class="lineNum">      41 </span>            : }  // namespace</a>
+<span class="lineNum">      42 </span>            : 
+<span class="lineNum">      43 </span><span class="lineCov">       1792 : const Matrix&amp; projection_matrix_mortar_to_element(</span>
+<span class="lineNum">      44 </span>            :     const MortarSize size, const Mesh&lt;1&gt;&amp; element_mesh,
+<span class="lineNum">      45 </span>            :     const Mesh&lt;1&gt;&amp; mortar_mesh) noexcept {
+<span class="lineNum">      46 </span><span class="lineCov">       1792 :   ASSERT(element_mesh.basis(0) == Basis::Legendre and</span>
+<span class="lineNum">      47 </span>            :              mortar_mesh.basis(0) == Basis::Legendre,
+<span class="lineNum">      48 </span>            :          &quot;Projections only implemented on Legendre basis&quot;);
+<span class="lineNum">      49 </span><span class="lineCov">       1792 :   check_quadrature_supported(element_mesh.quadrature(0));</span>
+<span class="lineNum">      50 </span><span class="lineCov">       1792 :   check_quadrature_supported(mortar_mesh.quadrature(0));</span>
+<span class="lineNum">      51 </span><span class="lineCov">       1792 :   ASSERT(</span>
+<span class="lineNum">      52 </span>            :       element_mesh.extents(0) &lt;= maximum_number_of_points&lt;Basis::Legendre&gt; and
+<span class="lineNum">      53 </span>            :           mortar_mesh.extents(0) &lt;= maximum_number_of_points&lt;Basis::Legendre&gt;,
+<span class="lineNum">      54 </span>            :       &quot;Mesh has more points than supported by its quadrature.&quot;);
+<span class="lineNum">      55 </span><span class="lineCov">       1792 :   ASSERT(element_mesh.extents(0) &lt;= mortar_mesh.extents(0),</span>
+<span class="lineNum">      56 </span>            :          &quot;Requested projection matrix from mortar with fewer points (&quot;
+<span class="lineNum">      57 </span>            :          &lt;&lt; mortar_mesh.extents(0) &lt;&lt; &quot;) than the element (&quot;
+<span class="lineNum">      58 </span>            :          &lt;&lt; element_mesh.extents(0) &lt;&lt; &quot;)&quot;);
+<span class="lineNum">      59 </span>            : 
+<span class="lineNum">      60 </span><span class="lineCov">       1792 :   switch (size) {</span>
+<span class="lineNum">      61 </span><span class="lineCov">        277 :     case MortarSize::Full: {</span>
+<span class="lineNum">      62 </span>            :       const static StaticCache&lt;
+<span class="lineNum">      63 </span>            :           Matrix, CacheRange&lt;0, supported_quadratures.size()&gt;,
+<span class="lineNum">      64 </span>            :           CacheRange&lt;2, maximum_number_of_points&lt;Basis::Legendre&gt; + 1&gt;,
+<span class="lineNum">      65 </span>            :           CacheRange&lt;0, supported_quadratures.size()&gt;,
+<span class="lineNum">      66 </span>            :           CacheRange&lt;2, maximum_number_of_points&lt;Basis::Legendre&gt; + 1&gt;&gt;
+<span class="lineNum">      67 </span>            :           cache([](const size_t encoded_quadrature_element,
+<a name="68"><span class="lineNum">      68 </span>            :                    const size_t extents_element,</a>
+<span class="lineNum">      69 </span>            :                    const size_t encoded_quadrature_mortar,
+<span class="lineNum">      70 </span><span class="lineCov">       1936 :                    const size_t extents_mortar) noexcept {</span>
+<span class="lineNum">      71 </span><span class="lineCov">       1936 :             if (extents_element &gt; extents_mortar) {</span>
+<span class="lineNum">      72 </span><span class="lineCov">        880 :               return Matrix{};</span>
+<span class="lineNum">      73 </span>            :             }
+<span class="lineNum">      74 </span>            :             const Mesh&lt;1&gt; mesh_element(
+<span class="lineNum">      75 </span>            :                 extents_element, Basis::Legendre,
+<span class="lineNum">      76 </span><span class="lineCov">       1056 :                 decode_quadrature(encoded_quadrature_element));</span>
+<span class="lineNum">      77 </span>            :             const Mesh&lt;1&gt; mesh_mortar(
+<span class="lineNum">      78 </span>            :                 extents_mortar, Basis::Legendre,
+<span class="lineNum">      79 </span><span class="lineCov">       1056 :                 decode_quadrature(encoded_quadrature_mortar));</span>
+<span class="lineNum">      80 </span>            : 
+<span class="lineNum">      81 </span>            :             // The projection in spectral space is just a truncation
+<span class="lineNum">      82 </span>            :             // of the modes.
+<span class="lineNum">      83 </span>            :             const auto&amp; spectral_to_grid_element =
+<span class="lineNum">      84 </span><span class="lineCov">       1056 :                 spectral_to_grid_points_matrix(mesh_element);</span>
+<span class="lineNum">      85 </span>            :             const auto&amp; grid_to_spectral_mortar =
+<span class="lineNum">      86 </span><span class="lineCov">       1056 :                 grid_points_to_spectral_matrix(mesh_mortar);</span>
+<span class="lineNum">      87 </span><span class="lineCov">       2112 :             Matrix projection(extents_element, extents_mortar, 0.);</span>
+<span class="lineNum">      88 </span><span class="lineCov">       6688 :             for (size_t i = 0; i &lt; extents_element; ++i) {</span>
+<span class="lineNum">      89 </span><span class="lineCov">      58256 :               for (size_t j = 0; j &lt; extents_mortar; ++j) {</span>
+<span class="lineNum">      90 </span><span class="lineCov">     425568 :                 for (size_t k = 0; k &lt; extents_element; ++k) {</span>
+<span class="lineNum">      91 </span><span class="lineCov">     745888 :                   projection(i, j) += spectral_to_grid_element(i, k) *</span>
+<span class="lineNum">      92 </span><span class="lineCov">     372944 :                                       grid_to_spectral_mortar(k, j);</span>
+<span class="lineNum">      93 </span>            :                 }
+<span class="lineNum">      94 </span>            :               }
+<span class="lineNum">      95 </span>            :             }
+<span class="lineNum">      96 </span>            : 
+<span class="lineNum">      97 </span><span class="lineCov">       1056 :             return projection;</span>
+<span class="lineNum">      98 </span><span class="lineCov">        277 :           });</span>
+<span class="lineNum">      99 </span>            :       return cache(encode_quadrature(element_mesh.quadrature(0)),
+<span class="lineNum">     100 </span>            :                    element_mesh.extents(0),
+<span class="lineNum">     101 </span>            :                    encode_quadrature(mortar_mesh.quadrature(0)),
+<span class="lineNum">     102 </span><span class="lineCov">        277 :                    mortar_mesh.extents(0));</span>
+<span class="lineNum">     103 </span>            :     }
+<span class="lineNum">     104 </span>            : 
+<span class="lineNum">     105 </span><span class="lineCov">       1285 :     case MortarSize::UpperHalf: {</span>
+<span class="lineNum">     106 </span>            :       const static StaticCache&lt;
+<span class="lineNum">     107 </span>            :           Matrix, CacheRange&lt;0, supported_quadratures.size()&gt;,
+<span class="lineNum">     108 </span>            :           CacheRange&lt;2, maximum_number_of_points&lt;Basis::Legendre&gt; + 1&gt;,
+<span class="lineNum">     109 </span>            :           CacheRange&lt;0, supported_quadratures.size()&gt;,
+<span class="lineNum">     110 </span>            :           CacheRange&lt;2, maximum_number_of_points&lt;Basis::Legendre&gt; + 1&gt;&gt;
+<span class="lineNum">     111 </span>            :           cache([](const size_t encoded_quadrature_element,
+<a name="112"><span class="lineNum">     112 </span>            :                    const size_t extents_element,</a>
+<span class="lineNum">     113 </span>            :                    const size_t encoded_quadrature_mortar,
+<span class="lineNum">     114 </span><span class="lineCov">       1936 :                    const size_t extents_mortar) noexcept {</span>
+<span class="lineNum">     115 </span><span class="lineCov">       1936 :             if (extents_element &gt; extents_mortar) {</span>
+<span class="lineNum">     116 </span><span class="lineCov">        880 :               return Matrix{};</span>
+<span class="lineNum">     117 </span>            :             }
+<span class="lineNum">     118 </span>            :             const Mesh&lt;1&gt; mesh_element(
+<span class="lineNum">     119 </span>            :                 extents_element, Basis::Legendre,
+<span class="lineNum">     120 </span><span class="lineCov">       1056 :                 decode_quadrature(encoded_quadrature_element));</span>
+<span class="lineNum">     121 </span>            :             const Mesh&lt;1&gt; mesh_mortar(
+<span class="lineNum">     122 </span>            :                 extents_mortar, Basis::Legendre,
+<span class="lineNum">     123 </span><span class="lineCov">       1056 :                 decode_quadrature(encoded_quadrature_mortar));</span>
+<span class="lineNum">     124 </span>            : 
+<span class="lineNum">     125 </span>            :             // The transformation from the small interval to the large
+<span class="lineNum">     126 </span>            :             // interval in spectral space.  This is a rearranged
+<span class="lineNum">     127 </span>            :             // version of the equation given in the header.  This form
+<a name="128"><span class="lineNum">     128 </span>            :             // was easier to code.</a>
+<span class="lineNum">     129 </span>            :             const auto spectral_transformation = [](
+<span class="lineNum">     130 </span><span class="lineCov">      21648 :                 const size_t large_index, const size_t small_index) noexcept {</span>
+<span class="lineNum">     131 </span><span class="lineCov">      21648 :               ASSERT(large_index &gt;= small_index,</span>
+<span class="lineNum">     132 </span>            :                      &quot;Above-diagonal entries are zero.  Don't use them.&quot;);
+<span class="lineNum">     133 </span><span class="lineCov">      21648 :               double result = 1.;</span>
+<span class="lineNum">     134 </span><span class="lineCov">      41024 :               for (size_t i = (large_index - small_index) / 2; i &gt; 0; --i) {</span>
+<span class="lineNum">     135 </span><span class="lineCov">      38752 :                 result = 1 - result *</span>
+<span class="lineNum">     136 </span><span class="lineCov">      38752 :                                  ((large_index + small_index + 3 - 2 * i) *</span>
+<span class="lineNum">     137 </span><span class="lineCov">      38752 :                                   (large_index + small_index + 2 - 2 * i) *</span>
+<span class="lineNum">     138 </span><span class="lineCov">      38752 :                                   (large_index - small_index + 2 - 2 * i) *</span>
+<span class="lineNum">     139 </span><span class="lineCov">      38752 :                                   (large_index - small_index + 1 - 2 * i)) /</span>
+<span class="lineNum">     140 </span><span class="lineCov">      38752 :                                  (2 * i * (2 * large_index + 1 - 2 * i) *</span>
+<span class="lineNum">     141 </span><span class="lineCov">      38752 :                                   (large_index + 2 - 2 * i) *</span>
+<span class="lineNum">     142 </span><span class="lineCov">      19376 :                                   (large_index + 1 - 2 * i));</span>
+<span class="lineNum">     143 </span>            :               }
+<span class="lineNum">     144 </span>            : 
+<span class="lineNum">     145 </span><span class="lineCov">      69696 :               for (size_t i = 1; i &lt;= large_index - small_index; ++i) {</span>
+<span class="lineNum">     146 </span><span class="lineCov">      48048 :                 result *= 1. + (large_index + small_index + 1.) / i;</span>
+<span class="lineNum">     147 </span>            :               }
+<span class="lineNum">     148 </span><span class="lineCov">      21648 :               result /= pow(2., large_index + 1);</span>
+<span class="lineNum">     149 </span><span class="lineCov">      21648 :               return result;</span>
+<span class="lineNum">     150 </span>            :             };
+<span class="lineNum">     151 </span>            : 
+<span class="lineNum">     152 </span>            :             const auto&amp; spectral_to_grid_element =
+<span class="lineNum">     153 </span><span class="lineCov">       1056 :                 spectral_to_grid_points_matrix(mesh_element);</span>
+<span class="lineNum">     154 </span>            :             const auto&amp; grid_to_spectral_mortar =
+<span class="lineNum">     155 </span><span class="lineCov">       1056 :                 grid_points_to_spectral_matrix(mesh_mortar);</span>
+<span class="lineNum">     156 </span>            : 
+<span class="lineNum">     157 </span><span class="lineCov">       2112 :             Matrix temp(extents_element, extents_element, 0.);</span>
+<span class="lineNum">     158 </span><span class="lineCov">       6688 :             for (size_t j = 0; j &lt; extents_element; ++j) {</span>
+<span class="lineNum">     159 </span><span class="lineCov">      27280 :               for (size_t k = j; k &lt; extents_element; ++k) {</span>
+<span class="lineNum">     160 </span>            :                 const double transformation_entry =
+<span class="lineNum">     161 </span><span class="lineCov">      21648 :                     spectral_transformation(k, j);</span>
+<span class="lineNum">     162 </span><span class="lineCov">     187440 :                 for (size_t i = 0; i &lt; extents_element; ++i) {</span>
+<span class="lineNum">     163 </span><span class="lineCov">     165792 :                   temp(i, j) +=</span>
+<span class="lineNum">     164 </span><span class="lineCov">     165792 :                       spectral_to_grid_element(i, k) * transformation_entry;</span>
+<span class="lineNum">     165 </span>            :                 }
+<span class="lineNum">     166 </span>            :               }
+<span class="lineNum">     167 </span>            :             }
+<span class="lineNum">     168 </span>            : 
+<span class="lineNum">     169 </span><span class="lineCov">       2112 :             Matrix projection(extents_element, extents_mortar, 0.);</span>
+<span class="lineNum">     170 </span><span class="lineCov">       6688 :             for (size_t i = 0; i &lt; extents_element; ++i) {</span>
+<span class="lineNum">     171 </span><span class="lineCov">      58256 :               for (size_t j = 0; j &lt; extents_mortar; ++j) {</span>
+<span class="lineNum">     172 </span><span class="lineCov">     425568 :                 for (size_t k = 0; k &lt; extents_element; ++k) {</span>
+<span class="lineNum">     173 </span><span class="lineCov">     372944 :                   projection(i, j) +=</span>
+<span class="lineNum">     174 </span><span class="lineCov">     372944 :                       temp(i, k) * grid_to_spectral_mortar(k, j);</span>
+<span class="lineNum">     175 </span>            :                 }
+<span class="lineNum">     176 </span>            :               }
+<span class="lineNum">     177 </span>            :             }
+<span class="lineNum">     178 </span>            : 
+<span class="lineNum">     179 </span><span class="lineCov">       1056 :             return projection;</span>
+<span class="lineNum">     180 </span><span class="lineCov">       1285 :           });</span>
+<span class="lineNum">     181 </span>            :       return cache(encode_quadrature(element_mesh.quadrature(0)),
+<span class="lineNum">     182 </span>            :                    element_mesh.extents(0),
+<span class="lineNum">     183 </span>            :                    encode_quadrature(mortar_mesh.quadrature(0)),
+<span class="lineNum">     184 </span><span class="lineCov">       1285 :                    mortar_mesh.extents(0));</span>
+<span class="lineNum">     185 </span>            :     }
+<span class="lineNum">     186 </span>            : 
+<span class="lineNum">     187 </span><span class="lineCov">        230 :     case MortarSize::LowerHalf: {</span>
+<span class="lineNum">     188 </span>            :       const static StaticCache&lt;
+<span class="lineNum">     189 </span>            :           Matrix, CacheRange&lt;0, supported_quadratures.size()&gt;,
+<span class="lineNum">     190 </span>            :           CacheRange&lt;2, maximum_number_of_points&lt;Basis::Legendre&gt; + 1&gt;,
+<span class="lineNum">     191 </span>            :           CacheRange&lt;0, supported_quadratures.size()&gt;,
+<span class="lineNum">     192 </span>            :           CacheRange&lt;2, maximum_number_of_points&lt;Basis::Legendre&gt; + 1&gt;&gt;
+<span class="lineNum">     193 </span>            :           cache([](const size_t encoded_quadrature_element,
+<a name="194"><span class="lineNum">     194 </span>            :                    const size_t extents_element,</a>
+<span class="lineNum">     195 </span>            :                    const size_t encoded_quadrature_mortar,
+<span class="lineNum">     196 </span><span class="lineCov">       1936 :                    const size_t extents_mortar) noexcept {</span>
+<span class="lineNum">     197 </span><span class="lineCov">       1936 :             if (extents_element &gt; extents_mortar) {</span>
+<span class="lineNum">     198 </span><span class="lineCov">        880 :               return Matrix{};</span>
+<span class="lineNum">     199 </span>            :             }
+<span class="lineNum">     200 </span>            :             const Mesh&lt;1&gt; mesh_element(
+<span class="lineNum">     201 </span>            :                 extents_element, Basis::Legendre,
+<span class="lineNum">     202 </span><span class="lineCov">       1056 :                 decode_quadrature(encoded_quadrature_element));</span>
+<span class="lineNum">     203 </span>            :             const Mesh&lt;1&gt; mesh_mortar(
+<span class="lineNum">     204 </span>            :                 extents_mortar, Basis::Legendre,
+<span class="lineNum">     205 </span><span class="lineCov">       1056 :                 decode_quadrature(encoded_quadrature_mortar));</span>
+<span class="lineNum">     206 </span>            : 
+<span class="lineNum">     207 </span>            :             // The lower-half matrices are generated from the upper-half
+<span class="lineNum">     208 </span>            :             // matrices using symmetry.
+<span class="lineNum">     209 </span>            :             const auto&amp; projection_upper_half =
+<span class="lineNum">     210 </span>            :                 projection_matrix_mortar_to_element(MortarSize::UpperHalf,
+<span class="lineNum">     211 </span><span class="lineCov">       1056 :                                                     mesh_element, mesh_mortar);</span>
+<span class="lineNum">     212 </span>            : 
+<span class="lineNum">     213 </span><span class="lineCov">       2112 :             Matrix projection_lower_half(extents_element, extents_mortar);</span>
+<span class="lineNum">     214 </span><span class="lineCov">       6688 :             for (size_t i = 0; i &lt; extents_element; ++i) {</span>
+<span class="lineNum">     215 </span><span class="lineCov">      58256 :               for (size_t j = 0; j &lt; extents_mortar; ++j) {</span>
+<span class="lineNum">     216 </span><span class="lineCov">      52624 :                 projection_lower_half(i, j) = projection_upper_half(</span>
+<span class="lineNum">     217 </span><span class="lineCov">      52624 :                     extents_element - i - 1, extents_mortar - j - 1);</span>
+<span class="lineNum">     218 </span>            :               }
+<span class="lineNum">     219 </span>            :             }
+<span class="lineNum">     220 </span>            : 
+<span class="lineNum">     221 </span><span class="lineCov">       1056 :             return projection_lower_half;</span>
+<span class="lineNum">     222 </span><span class="lineCov">        230 :           });</span>
+<span class="lineNum">     223 </span>            :       return cache(encode_quadrature(element_mesh.quadrature(0)),
+<span class="lineNum">     224 </span>            :                    element_mesh.extents(0),
+<span class="lineNum">     225 </span>            :                    encode_quadrature(mortar_mesh.quadrature(0)),
+<span class="lineNum">     226 </span><span class="lineCov">        230 :                    mortar_mesh.extents(0));</span>
+<span class="lineNum">     227 </span>            :     }
+<span class="lineNum">     228 </span>            : 
+<span class="lineNum">     229 </span><span class="lineNoCov">          0 :     default:</span>
+<span class="lineNum">     230 </span><span class="lineNoCov">          0 :       ERROR(&quot;Invalid MortarSize&quot;);</span>
+<span class="lineNum">     231 </span>            :   }
+<a name="232"><span class="lineNum">     232 </span>            : }</a>
+<span class="lineNum">     233 </span>            : 
+<span class="lineNum">     234 </span><span class="lineCov">       3160 : const Matrix&amp; projection_matrix_element_to_mortar(</span>
+<span class="lineNum">     235 </span>            :     const MortarSize size, const Mesh&lt;1&gt;&amp; mortar_mesh,
+<span class="lineNum">     236 </span>            :     const Mesh&lt;1&gt;&amp; element_mesh) noexcept {
+<span class="lineNum">     237 </span><span class="lineCov">       3160 :   ASSERT(mortar_mesh.basis(0) == Basis::Legendre and</span>
+<span class="lineNum">     238 </span>            :              element_mesh.basis(0) == Basis::Legendre,
+<span class="lineNum">     239 </span>            :          &quot;Projections only implemented on Legendre basis&quot;);
+<span class="lineNum">     240 </span><span class="lineCov">       3160 :   check_quadrature_supported(mortar_mesh.quadrature(0));</span>
+<span class="lineNum">     241 </span><span class="lineCov">       3160 :   check_quadrature_supported(element_mesh.quadrature(0));</span>
+<span class="lineNum">     242 </span><span class="lineCov">       3160 :   ASSERT(</span>
+<span class="lineNum">     243 </span>            :       mortar_mesh.extents(0) &lt;= maximum_number_of_points&lt;Basis::Legendre&gt; and
+<span class="lineNum">     244 </span>            :           element_mesh.extents(0) &lt;= maximum_number_of_points&lt;Basis::Legendre&gt;,
+<span class="lineNum">     245 </span>            :       &quot;Mesh has more points than supported by its quadrature.&quot;);
+<span class="lineNum">     246 </span><span class="lineCov">       3160 :   ASSERT(mortar_mesh.extents(0) &gt;= element_mesh.extents(0),</span>
+<span class="lineNum">     247 </span>            :          &quot;Requested projection matrix to mortar with fewer points (&quot;
+<span class="lineNum">     248 </span>            :          &lt;&lt; mortar_mesh.extents(0) &lt;&lt; &quot;) than the element (&quot;
+<span class="lineNum">     249 </span>            :          &lt;&lt; element_mesh.extents(0) &lt;&lt; &quot;)&quot;);
+<a name="250"><span class="lineNum">     250 </span>            : </a>
+<span class="lineNum">     251 </span>            :   // Element-to-mortar projections are always interpolations.
+<span class="lineNum">     252 </span><span class="lineCov">         14 :   const auto make_interpolators = [](auto interval_transform) noexcept {</span>
+<span class="lineNum">     253 </span>            :     return [interval_transform = std::move(interval_transform)](
+<span class="lineNum">     254 </span>            :         const size_t encoded_quadrature_mortar,
+<a name="255"><span class="lineNum">     255 </span>            :         const size_t extents_mortar,</a>
+<span class="lineNum">     256 </span>            :         const size_t encoded_quadrature_element,
+<span class="lineNum">     257 </span><span class="lineCov">       6776 :         const size_t extents_element) noexcept {</span>
+<span class="lineNum">     258 </span><span class="lineCov">       6776 :       if (extents_mortar &lt; extents_element) {</span>
+<span class="lineNum">     259 </span><span class="lineCov">       3080 :         return Matrix{};</span>
+<span class="lineNum">     260 </span>            :       }
+<span class="lineNum">     261 </span><span class="lineCov">       3696 :       const Mesh&lt;1&gt; mesh_element(extents_element, Basis::Legendre,</span>
+<span class="lineNum">     262 </span>            :                                  decode_quadrature(encoded_quadrature_element));
+<span class="lineNum">     263 </span><span class="lineCov">       3696 :       const Mesh&lt;1&gt; mesh_mortar(extents_mortar, Basis::Legendre,</span>
+<span class="lineNum">     264 </span>            :                                 decode_quadrature(encoded_quadrature_mortar));
+<span class="lineNum">     265 </span>            :       return interpolation_matrix(
+<span class="lineNum">     266 </span><span class="lineCov">       3696 :           mesh_element, interval_transform(collocation_points(mesh_mortar)));</span>
+<span class="lineNum">     267 </span>            :     };
+<span class="lineNum">     268 </span><span class="lineCov">         14 :   };</span>
+<span class="lineNum">     269 </span>            : 
+<span class="lineNum">     270 </span><span class="lineCov">       3160 :   switch (size) {</span>
+<span class="lineNum">     271 </span><span class="lineCov">        283 :     case MortarSize::Full: {</span>
+<span class="lineNum">     272 </span>            :       const static StaticCache&lt;
+<span class="lineNum">     273 </span>            :           Matrix, CacheRange&lt;0, supported_quadratures.size()&gt;,
+<span class="lineNum">     274 </span>            :           CacheRange&lt;2, maximum_number_of_points&lt;Basis::Legendre&gt; + 1&gt;,
+<a name="275"><span class="lineNum">     275 </span>            :           CacheRange&lt;0, supported_quadratures.size()&gt;,</a>
+<span class="lineNum">     276 </span>            :           CacheRange&lt;2, maximum_number_of_points&lt;Basis::Legendre&gt; + 1&gt;&gt;
+<span class="lineNum">     277 </span><span class="lineCov">       1060 :           cache(make_interpolators([](const DataVector&amp; x) noexcept {</span>
+<span class="lineNum">     278 </span>            :             return x;
+<span class="lineNum">     279 </span><span class="lineCov">       1343 :           }));</span>
+<span class="lineNum">     280 </span>            :       return cache(encode_quadrature(mortar_mesh.quadrature(0)),
+<span class="lineNum">     281 </span>            :                    mortar_mesh.extents(0),
+<span class="lineNum">     282 </span>            :                    encode_quadrature(element_mesh.quadrature(0)),
+<span class="lineNum">     283 </span><span class="lineCov">        283 :                    element_mesh.extents(0));</span>
+<span class="lineNum">     284 </span>            :     }
+<span class="lineNum">     285 </span>            : 
+<span class="lineNum">     286 </span><span class="lineCov">       1438 :     case MortarSize::UpperHalf: {</span>
+<span class="lineNum">     287 </span>            :       const static StaticCache&lt;
+<span class="lineNum">     288 </span>            :           Matrix, CacheRange&lt;0, supported_quadratures.size()&gt;,
+<span class="lineNum">     289 </span>            :           CacheRange&lt;2, maximum_number_of_points&lt;Basis::Legendre&gt; + 1&gt;,
+<a name="290"><span class="lineNum">     290 </span>            :           CacheRange&lt;0, supported_quadratures.size()&gt;,</a>
+<span class="lineNum">     291 </span>            :           CacheRange&lt;2, maximum_number_of_points&lt;Basis::Legendre&gt; + 1&gt;&gt;
+<span class="lineNum">     292 </span><span class="lineCov">       1325 :           cache(make_interpolators([](const DataVector&amp; x) noexcept {</span>
+<span class="lineNum">     293 </span><span class="lineCov">       2640 :             return DataVector(0.5 * (x + 1.));</span>
+<span class="lineNum">     294 </span><span class="lineCov">       4083 :           }));</span>
+<span class="lineNum">     295 </span>            :       return cache(encode_quadrature(mortar_mesh.quadrature(0)),
+<span class="lineNum">     296 </span>            :                    mortar_mesh.extents(0),
+<span class="lineNum">     297 </span>            :                    encode_quadrature(element_mesh.quadrature(0)),
+<span class="lineNum">     298 </span><span class="lineCov">       1438 :                    element_mesh.extents(0));</span>
+<span class="lineNum">     299 </span>            :     }
+<span class="lineNum">     300 </span>            : 
+<span class="lineNum">     301 </span><span class="lineCov">       1439 :     case MortarSize::LowerHalf: {</span>
+<span class="lineNum">     302 </span>            :       const static StaticCache&lt;
+<span class="lineNum">     303 </span>            :           Matrix, CacheRange&lt;0, supported_quadratures.size()&gt;,
+<span class="lineNum">     304 </span>            :           CacheRange&lt;2, maximum_number_of_points&lt;Basis::Legendre&gt; + 1&gt;,
+<a name="305"><span class="lineNum">     305 </span>            :           CacheRange&lt;0, supported_quadratures.size()&gt;,</a>
+<span class="lineNum">     306 </span>            :           CacheRange&lt;2, maximum_number_of_points&lt;Basis::Legendre&gt; + 1&gt;&gt;
+<span class="lineNum">     307 </span><span class="lineCov">       1325 :           cache(make_interpolators([](const DataVector&amp; x) noexcept {</span>
+<span class="lineNum">     308 </span><span class="lineCov">       2640 :             return DataVector(0.5 * (x - 1.));</span>
+<span class="lineNum">     309 </span><span class="lineCov">       4084 :           }));</span>
+<span class="lineNum">     310 </span>            :       return cache(encode_quadrature(mortar_mesh.quadrature(0)),
+<span class="lineNum">     311 </span>            :                    mortar_mesh.extents(0),
+<span class="lineNum">     312 </span>            :                    encode_quadrature(element_mesh.quadrature(0)),
+<span class="lineNum">     313 </span><span class="lineCov">       1439 :                    element_mesh.extents(0));</span>
+<span class="lineNum">     314 </span>            :     }
+<span class="lineNum">     315 </span>            : 
+<span class="lineNum">     316 </span><span class="lineNoCov">          0 :     default:</span>
+<span class="lineNum">     317 </span><span class="lineNoCov">          0 :       ERROR(&quot;Invalid MortarSize&quot;);</span>
+<span class="lineNum">     318 </span>            :   }
+<a name="319"><span class="lineNum">     319 </span>            : }</a>
+<span class="lineNum">     320 </span>            : 
+<span class="lineNum">     321 </span><span class="lineCov">       2295 : }  // namespace Spectral</span>
+</pre>
+      </td>
+    </tr>
+  </table>
+  <br>
+
+  <table width="100%" border=0 cellspacing=0 cellpadding=0>
+    <tr><td class="ruler"><img src="../../glass.png" width=3 height=3 alt=""></td></tr>
+    <tr><td class="versionInfo">Generated by: <a href="http://ltp.sourceforge.net/coverage/lcov.php" target="_parent">LCOV version 1.13</a></td></tr>
+  </table>
+  <br>
+
+</body>
+</html>

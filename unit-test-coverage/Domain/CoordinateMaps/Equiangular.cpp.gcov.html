@@ -1,0 +1,215 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+
+<html lang="en">
+
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <title>LCOV - 4a100dde3b231e0ada6ff7b2b4c32892a30db7f6 - Domain/CoordinateMaps/Equiangular.cpp</title>
+  <link rel="stylesheet" type="text/css" href="../../gcov.css">
+</head>
+
+<body>
+
+  <table width="100%" border=0 cellspacing=0 cellpadding=0>
+    <tr><td class="title">SpECTRE Unit Test Code Coverage Report</td></tr>
+    <tr><td class="ruler"><img src="../../glass.png" width=3 height=3 alt=""></td></tr>
+
+    <tr>
+      <td width="100%">
+        <table cellpadding=1 border=0 width="100%">
+          <tr>
+            <td width="10%" class="headerItem">Current view:</td>
+            <td width="35%" class="headerValue"><a href="../../index.html">top level</a> - <a href="index.html">Domain/CoordinateMaps</a> - Equiangular.cpp<span style="font-size: 80%;"> (source / <a href="Equiangular.cpp.func-sort-c.html">functions</a>)</span></td>
+            <td width="5%"></td>
+            <td width="15%"></td>
+            <td width="10%" class="headerCovTableHead">Hit</td>
+            <td width="10%" class="headerCovTableHead">Total</td>
+            <td width="15%" class="headerCovTableHead">Coverage</td>
+          </tr>
+          <tr>
+            <td class="headerItem">Commit:</td>
+             <td class="headerValue"><a target="_blank" href="https://github.com/sxs-collaboration/spectre/commit/4a100dde3b231e0ada6ff7b2b4c32892a30db7f6">4a100dde3b231e0ada6ff7b2b4c32892a30db7f6</a></td>
+            <td></td>
+            <td class="headerItem">Lines:</td>
+            <td class="headerCovTableEntry">63</td>
+            <td class="headerCovTableEntry">63</td>
+            <td class="headerCovTableEntryHi">100.0 %</td>
+          </tr>
+          <tr>
+            <td class="headerItem">Date:</td>
+            <td class="headerValue">2018-08-16 19:06:01</td>
+            <td></td>
+            <td class="headerItem">Functions:</td>
+            <td class="headerCovTableEntry">21</td>
+            <td class="headerCovTableEntry">21</td>
+            <td class="headerCovTableEntryHi">100.0 %</td>
+          </tr>
+          <tr>
+            <td class="headerItem">Legend:</td>
+            <td class="headerValueLeg">            Lines:
+            <span class="coverLegendCov">hit</span>
+            <span class="coverLegendNoCov">not hit</span>
+</td>
+            <td></td>
+          </tr>
+          <tr><td><img src="../../glass.png" width=3 height=3 alt=""></td></tr>
+        </table>
+      </td>
+    </tr>
+
+    <tr><td class="ruler"><img src="../../glass.png" width=3 height=3 alt=""></td></tr>
+  </table>
+
+  <table cellpadding=0 cellspacing=0 border=0>
+    <tr>
+      <td><br></td>
+    </tr>
+    <tr>
+      <td>
+<pre class="sourceHeading">          Line data    Source code</pre>
+<pre class="source">
+<a name="1"><span class="lineNum">       1 </span>            : // Distributed under the MIT License.</a>
+<span class="lineNum">       2 </span>            : // See LICENSE.txt for details.
+<span class="lineNum">       3 </span>            : 
+<span class="lineNum">       4 </span>            : #include &quot;Domain/CoordinateMaps/Equiangular.hpp&quot;
+<span class="lineNum">       5 </span>            : 
+<span class="lineNum">       6 </span>            : #include &lt;cmath&gt;
+<span class="lineNum">       7 </span>            : #include &lt;pup.h&gt;
+<span class="lineNum">       8 </span>            : 
+<span class="lineNum">       9 </span>            : #include &quot;DataStructures/DataVector.hpp&quot;     // IWYU pragma: keep
+<span class="lineNum">      10 </span>            : #include &quot;DataStructures/Tensor/Tensor.hpp&quot;  // IWYU pragma: keep
+<span class="lineNum">      11 </span>            : #include &quot;Utilities/ConstantExpressions.hpp&quot;
+<span class="lineNum">      12 </span>            : #include &quot;Utilities/DereferenceWrapper.hpp&quot;
+<span class="lineNum">      13 </span>            : #include &quot;Utilities/GenerateInstantiations.hpp&quot;
+<span class="lineNum">      14 </span>            : #include &quot;Utilities/MakeWithValue.hpp&quot;
+<span class="lineNum">      15 </span>            : 
+<a name="16"><span class="lineNum">      16 </span>            : namespace CoordinateMaps {</a>
+<span class="lineNum">      17 </span>            : 
+<span class="lineNum">      18 </span><span class="lineCov">         94 : Equiangular::Equiangular(const double A, const double B, const double a,</span>
+<span class="lineNum">      19 </span><span class="lineCov">         94 :                          const double b) noexcept</span>
+<span class="lineNum">      20 </span>            :     : A_(A),
+<span class="lineNum">      21 </span>            :       B_(B),
+<span class="lineNum">      22 </span>            :       a_(a),
+<span class="lineNum">      23 </span>            :       b_(b),
+<span class="lineNum">      24 </span><span class="lineCov">         94 :       length_of_domain_over_m_pi_4_((B - A) / M_PI_4),</span>
+<span class="lineNum">      25 </span><span class="lineCov">         94 :       length_of_range_(b - a),</span>
+<span class="lineNum">      26 </span><span class="lineCov">         94 :       m_pi_4_over_length_of_domain_(1.0 / length_of_domain_over_m_pi_4_),</span>
+<span class="lineNum">      27 </span><span class="lineCov">         94 :       one_over_length_of_range_(1.0 / length_of_range_),</span>
+<span class="lineNum">      28 </span><span class="lineCov">        188 :       linear_jacobian_times_m_pi_4_(length_of_range_ /</span>
+<span class="lineNum">      29 </span><span class="lineCov">         94 :                                     length_of_domain_over_m_pi_4_),</span>
+<span class="lineNum">      30 </span><span class="lineCov">        188 :       linear_inverse_jacobian_over_m_pi_4_(length_of_domain_over_m_pi_4_ /</span>
+<span class="lineNum">      31 </span><span class="lineCov">        752 :                                            length_of_range_) {}</span>
+<a name="32"><span class="lineNum">      32 </span>            : </a>
+<span class="lineNum">      33 </span>            : template &lt;typename T&gt;
+<span class="lineNum">      34 </span><span class="lineCov">        824 : std::array&lt;tt::remove_cvref_wrap_t&lt;T&gt;, 1&gt; Equiangular::operator()(</span>
+<span class="lineNum">      35 </span>            :     const std::array&lt;T, 1&gt;&amp; source_coords) const noexcept {
+<span class="lineNum">      36 </span>            :   return {
+<span class="lineNum">      37 </span><span class="lineCov">       1648 :       {0.5 * (a_ + b_ +</span>
+<span class="lineNum">      38 </span><span class="lineCov">       1648 :               length_of_range_ * tan(m_pi_4_over_length_of_domain_ *</span>
+<span class="lineNum">      39 </span><span class="lineCov">       2460 :                                      (-B_ - A_ + 2.0 * source_coords[0])))}};</span>
+<span class="lineNum">      40 </span>            : }
+<a name="41"><span class="lineNum">      41 </span>            : </a>
+<span class="lineNum">      42 </span>            : template &lt;typename T&gt;
+<span class="lineNum">      43 </span><span class="lineCov">         18 : std::array&lt;tt::remove_cvref_wrap_t&lt;T&gt;, 1&gt; Equiangular::inverse(</span>
+<span class="lineNum">      44 </span>            :     const std::array&lt;T, 1&gt;&amp; target_coords) const noexcept {
+<span class="lineNum">      45 </span><span class="lineCov">         36 :   return {{0.5 * (A_ + B_ +</span>
+<span class="lineNum">      46 </span><span class="lineCov">         36 :                   length_of_domain_over_m_pi_4_ *</span>
+<span class="lineNum">      47 </span><span class="lineCov">         36 :                       atan(one_over_length_of_range_ *</span>
+<span class="lineNum">      48 </span><span class="lineCov">         48 :                            (-a_ - b_ + 2.0 * target_coords[0])))}};</span>
+<span class="lineNum">      49 </span>            : }
+<a name="50"><span class="lineNum">      50 </span>            : </a>
+<span class="lineNum">      51 </span>            : template &lt;typename T&gt;
+<span class="lineNum">      52 </span><span class="lineCov">        377 : tnsr::Ij&lt;tt::remove_cvref_wrap_t&lt;T&gt;, 1, Frame::NoFrame&gt; Equiangular::jacobian(</span>
+<span class="lineNum">      53 </span>            :     const std::array&lt;T, 1&gt;&amp; source_coords) const noexcept {
+<span class="lineNum">      54 </span><span class="lineCov">        383 :   const tt::remove_cvref_wrap_t&lt;T&gt; tan_variable =</span>
+<span class="lineNum">      55 </span><span class="lineCov">       1112 :       tan(m_pi_4_over_length_of_domain_ * (-B_ - A_ + 2.0 * source_coords[0]));</span>
+<span class="lineNum">      56 </span><span class="lineCov">        377 :   auto jacobian_matrix =</span>
+<span class="lineNum">      57 </span><span class="lineCov">        371 :       make_with_value&lt;tnsr::Ij&lt;tt::remove_cvref_wrap_t&lt;T&gt;, 1, Frame::NoFrame&gt;&gt;(</span>
+<span class="lineNum">      58 </span><span class="lineCov">        377 :           dereference_wrapper(source_coords[0]), 0.0);</span>
+<span class="lineNum">      59 </span><span class="lineCov">        748 :   get&lt;0, 0&gt;(jacobian_matrix) =</span>
+<span class="lineNum">      60 </span><span class="lineCov">       1125 :       linear_jacobian_times_m_pi_4_ * (1.0 + square(tan_variable));</span>
+<span class="lineNum">      61 </span><span class="lineCov">        383 :   return jacobian_matrix;</span>
+<span class="lineNum">      62 </span>            : }
+<span class="lineNum">      63 </span>            : 
+<a name="64"><span class="lineNum">      64 </span>            : template &lt;typename T&gt;</a>
+<span class="lineNum">      65 </span>            : tnsr::Ij&lt;tt::remove_cvref_wrap_t&lt;T&gt;, 1, Frame::NoFrame&gt;
+<span class="lineNum">      66 </span><span class="lineCov">        376 : Equiangular::inv_jacobian(const std::array&lt;T, 1&gt;&amp; source_coords) const</span>
+<span class="lineNum">      67 </span>            :     noexcept {
+<span class="lineNum">      68 </span><span class="lineCov">        382 :   const tt::remove_cvref_wrap_t&lt;T&gt; tan_variable =</span>
+<span class="lineNum">      69 </span><span class="lineCov">       1111 :       tan(m_pi_4_over_length_of_domain_ * (-B_ - A_ + 2.0 * source_coords[0]));</span>
+<span class="lineNum">      70 </span><span class="lineCov">        376 :   auto inv_jacobian_matrix =</span>
+<span class="lineNum">      71 </span><span class="lineCov">        370 :       make_with_value&lt;tnsr::Ij&lt;tt::remove_cvref_wrap_t&lt;T&gt;, 1, Frame::NoFrame&gt;&gt;(</span>
+<span class="lineNum">      72 </span><span class="lineCov">        376 :           dereference_wrapper(source_coords[0]), 0.0);</span>
+<span class="lineNum">      73 </span><span class="lineCov">        746 :   get&lt;0, 0&gt;(inv_jacobian_matrix) =</span>
+<span class="lineNum">      74 </span><span class="lineCov">       1122 :       linear_inverse_jacobian_over_m_pi_4_ / (1.0 + square(tan_variable));</span>
+<span class="lineNum">      75 </span><span class="lineCov">        382 :   return inv_jacobian_matrix;</span>
+<a name="76"><span class="lineNum">      76 </span>            : }</a>
+<span class="lineNum">      77 </span>            : 
+<span class="lineNum">      78 </span><span class="lineCov">         57 : void Equiangular::pup(PUP::er&amp; p) noexcept {</span>
+<span class="lineNum">      79 </span><span class="lineCov">         57 :   p | A_;</span>
+<span class="lineNum">      80 </span><span class="lineCov">         57 :   p | B_;</span>
+<span class="lineNum">      81 </span><span class="lineCov">         57 :   p | a_;</span>
+<span class="lineNum">      82 </span><span class="lineCov">         57 :   p | b_;</span>
+<span class="lineNum">      83 </span><span class="lineCov">         57 :   p | length_of_domain_over_m_pi_4_;</span>
+<span class="lineNum">      84 </span><span class="lineCov">         57 :   p | length_of_range_;</span>
+<span class="lineNum">      85 </span><span class="lineCov">         57 :   p | m_pi_4_over_length_of_domain_;</span>
+<span class="lineNum">      86 </span><span class="lineCov">         57 :   p | one_over_length_of_range_;</span>
+<span class="lineNum">      87 </span><span class="lineCov">         57 :   p | linear_jacobian_times_m_pi_4_;</span>
+<span class="lineNum">      88 </span><span class="lineCov">         57 :   p | linear_inverse_jacobian_over_m_pi_4_;</span>
+<a name="89"><span class="lineNum">      89 </span><span class="lineCov">         57 : }</span></a>
+<span class="lineNum">      90 </span>            : 
+<span class="lineNum">      91 </span><span class="lineCov">         59 : bool operator==(const CoordinateMaps::Equiangular&amp; lhs,</span>
+<span class="lineNum">      92 </span>            :                 const CoordinateMaps::Equiangular&amp; rhs) noexcept {
+<span class="lineNum">      93 </span><span class="lineCov">        177 :   return lhs.A_ == rhs.A_ and lhs.B_ == rhs.B_ and lhs.a_ == rhs.a_ and</span>
+<span class="lineNum">      94 </span><span class="lineCov">        118 :          lhs.b_ == rhs.b_ and</span>
+<span class="lineNum">      95 </span><span class="lineCov">         59 :          lhs.length_of_domain_over_m_pi_4_ ==</span>
+<span class="lineNum">      96 </span><span class="lineCov">        118 :              rhs.length_of_domain_over_m_pi_4_ and</span>
+<span class="lineNum">      97 </span><span class="lineCov">        118 :          lhs.length_of_range_ == rhs.length_of_range_ and</span>
+<span class="lineNum">      98 </span><span class="lineCov">         59 :          lhs.m_pi_4_over_length_of_domain_ ==</span>
+<span class="lineNum">      99 </span><span class="lineCov">        118 :              rhs.m_pi_4_over_length_of_domain_ and</span>
+<span class="lineNum">     100 </span><span class="lineCov">        118 :          lhs.one_over_length_of_range_ == rhs.one_over_length_of_range_ and</span>
+<span class="lineNum">     101 </span><span class="lineCov">         59 :          lhs.linear_jacobian_times_m_pi_4_ ==</span>
+<span class="lineNum">     102 </span><span class="lineCov">        177 :              rhs.linear_jacobian_times_m_pi_4_ and</span>
+<span class="lineNum">     103 </span><span class="lineCov">         59 :          lhs.linear_inverse_jacobian_over_m_pi_4_ ==</span>
+<span class="lineNum">     104 </span><span class="lineCov">        118 :              rhs.linear_inverse_jacobian_over_m_pi_4_;</span>
+<span class="lineNum">     105 </span>            : }
+<span class="lineNum">     106 </span>            : 
+<span class="lineNum">     107 </span>            : // Explicit instantiations
+<span class="lineNum">     108 </span>            : /// \cond
+<span class="lineNum">     109 </span>            : #define DTYPE(data) BOOST_PP_TUPLE_ELEM(0, data)
+<span class="lineNum">     110 </span>            : 
+<span class="lineNum">     111 </span>            : #define INSTANTIATE(_, data)                                                  \
+<span class="lineNum">     112 </span>            :   template std::array&lt;tt::remove_cvref_wrap_t&lt;DTYPE(data)&gt;, 1&gt; Equiangular::  \
+<span class="lineNum">     113 </span>            :   operator()(const std::array&lt;DTYPE(data), 1&gt;&amp; source_coords) const noexcept; \
+<span class="lineNum">     114 </span>            :   template std::array&lt;tt::remove_cvref_wrap_t&lt;DTYPE(data)&gt;, 1&gt;                \
+<span class="lineNum">     115 </span>            :   Equiangular::inverse(const std::array&lt;DTYPE(data), 1&gt;&amp; target_coords)       \
+<span class="lineNum">     116 </span>            :       const noexcept;                                                         \
+<span class="lineNum">     117 </span>            :   template tnsr::Ij&lt;tt::remove_cvref_wrap_t&lt;DTYPE(data)&gt;, 1, Frame::NoFrame&gt;  \
+<span class="lineNum">     118 </span>            :   Equiangular::jacobian(const std::array&lt;DTYPE(data), 1&gt;&amp; source_coords)      \
+<span class="lineNum">     119 </span>            :       const noexcept;                                                         \
+<span class="lineNum">     120 </span>            :   template tnsr::Ij&lt;tt::remove_cvref_wrap_t&lt;DTYPE(data)&gt;, 1, Frame::NoFrame&gt;  \
+<span class="lineNum">     121 </span>            :   Equiangular::inv_jacobian(const std::array&lt;DTYPE(data), 1&gt;&amp; source_coords)  \
+<span class="lineNum">     122 </span>            :       const noexcept;
+<span class="lineNum">     123 </span>            : 
+<span class="lineNum">     124 </span>            : GENERATE_INSTANTIATIONS(INSTANTIATE, (double, DataVector,
+<span class="lineNum">     125 </span>            :                                       std::reference_wrapper&lt;const double&gt;,
+<span class="lineNum">     126 </span>            :                                       std::reference_wrapper&lt;const DataVector&gt;))
+<span class="lineNum">     127 </span>            : 
+<span class="lineNum">     128 </span>            : #undef DTYPE
+<a name="129"><span class="lineNum">     129 </span>            : #undef INSTANTIATE</a>
+<span class="lineNum">     130 </span>            : /// \endcond
+<span class="lineNum">     131 </span><span class="lineCov">       2307 : }  // namespace CoordinateMaps</span>
+</pre>
+      </td>
+    </tr>
+  </table>
+  <br>
+
+  <table width="100%" border=0 cellspacing=0 cellpadding=0>
+    <tr><td class="ruler"><img src="../../glass.png" width=3 height=3 alt=""></td></tr>
+    <tr><td class="versionInfo">Generated by: <a href="http://ltp.sourceforge.net/coverage/lcov.php" target="_parent">LCOV version 1.13</a></td></tr>
+  </table>
+  <br>
+
+</body>
+</html>

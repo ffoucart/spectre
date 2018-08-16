@@ -1,0 +1,256 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+
+<html lang="en">
+
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <title>LCOV - 4a100dde3b231e0ada6ff7b2b4c32892a30db7f6 - IO/VolumeDataFile.hpp</title>
+  <link rel="stylesheet" type="text/css" href="../gcov.css">
+</head>
+
+<body>
+
+  <table width="100%" border=0 cellspacing=0 cellpadding=0>
+    <tr><td class="title">SpECTRE Unit Test Code Coverage Report</td></tr>
+    <tr><td class="ruler"><img src="../glass.png" width=3 height=3 alt=""></td></tr>
+
+    <tr>
+      <td width="100%">
+        <table cellpadding=1 border=0 width="100%">
+          <tr>
+            <td width="10%" class="headerItem">Current view:</td>
+            <td width="35%" class="headerValue"><a href="../index.html">top level</a> - <a href="index.html">IO</a> - VolumeDataFile.hpp<span style="font-size: 80%;"> (source / <a href="VolumeDataFile.hpp.func-sort-c.html">functions</a>)</span></td>
+            <td width="5%"></td>
+            <td width="15%"></td>
+            <td width="10%" class="headerCovTableHead">Hit</td>
+            <td width="10%" class="headerCovTableHead">Total</td>
+            <td width="15%" class="headerCovTableHead">Coverage</td>
+          </tr>
+          <tr>
+            <td class="headerItem">Commit:</td>
+             <td class="headerValue"><a target="_blank" href="https://github.com/sxs-collaboration/spectre/commit/4a100dde3b231e0ada6ff7b2b4c32892a30db7f6">4a100dde3b231e0ada6ff7b2b4c32892a30db7f6</a></td>
+            <td></td>
+            <td class="headerItem">Lines:</td>
+            <td class="headerCovTableEntry">26</td>
+            <td class="headerCovTableEntry">26</td>
+            <td class="headerCovTableEntryHi">100.0 %</td>
+          </tr>
+          <tr>
+            <td class="headerItem">Date:</td>
+            <td class="headerValue">2018-08-16 19:06:01</td>
+            <td></td>
+            <td class="headerItem">Functions:</td>
+            <td class="headerCovTableEntry">6</td>
+            <td class="headerCovTableEntry">6</td>
+            <td class="headerCovTableEntryHi">100.0 %</td>
+          </tr>
+          <tr>
+            <td class="headerItem">Legend:</td>
+            <td class="headerValueLeg">            Lines:
+            <span class="coverLegendCov">hit</span>
+            <span class="coverLegendNoCov">not hit</span>
+</td>
+            <td></td>
+          </tr>
+          <tr><td><img src="../glass.png" width=3 height=3 alt=""></td></tr>
+        </table>
+      </td>
+    </tr>
+
+    <tr><td class="ruler"><img src="../glass.png" width=3 height=3 alt=""></td></tr>
+  </table>
+
+  <table cellpadding=0 cellspacing=0 border=0>
+    <tr>
+      <td><br></td>
+    </tr>
+    <tr>
+      <td>
+<pre class="sourceHeading">          Line data    Source code</pre>
+<pre class="source">
+<a name="1"><span class="lineNum">       1 </span>            : // Distributed under the MIT License.</a>
+<span class="lineNum">       2 </span>            : // See LICENSE.txt for details.
+<span class="lineNum">       3 </span>            : 
+<span class="lineNum">       4 </span>            : /// \file
+<span class="lineNum">       5 </span>            : /// Defines VolumeFile used to write volume data to disk
+<span class="lineNum">       6 </span>            : 
+<span class="lineNum">       7 </span>            : #pragma once
+<span class="lineNum">       8 </span>            : 
+<span class="lineNum">       9 </span>            : #include &lt;cstdio&gt;
+<span class="lineNum">      10 </span>            : #include &lt;hdf5.h&gt;
+<span class="lineNum">      11 </span>            : #include &lt;ostream&gt;
+<span class="lineNum">      12 </span>            : #include &lt;string&gt;
+<span class="lineNum">      13 </span>            : #include &lt;unordered_map&gt;
+<span class="lineNum">      14 </span>            : #include &lt;utility&gt;
+<span class="lineNum">      15 </span>            : #include &lt;vector&gt;
+<span class="lineNum">      16 </span>            : 
+<span class="lineNum">      17 </span>            : #include &quot;DataStructures/Tensor/TypeAliases.hpp&quot;
+<span class="lineNum">      18 </span>            : #include &quot;IO/H5/AccessType.hpp&quot;
+<span class="lineNum">      19 </span>            : #include &quot;IO/H5/Helpers.hpp&quot;
+<span class="lineNum">      20 </span>            : #include &quot;IO/H5/OpenGroup.hpp&quot;
+<span class="lineNum">      21 </span>            : 
+<span class="lineNum">      22 </span>            : /// \cond
+<span class="lineNum">      23 </span>            : class DataVector;
+<span class="lineNum">      24 </span>            : template &lt;size_t Dim&gt;
+<span class="lineNum">      25 </span>            : class Index;
+<span class="lineNum">      26 </span>            : /// \endcond
+<span class="lineNum">      27 </span>            : 
+<span class="lineNum">      28 </span>            : namespace vis {
+<span class="lineNum">      29 </span>            : 
+<span class="lineNum">      30 </span>            : /// \ingroup HDF5Group
+<span class="lineNum">      31 </span>            : /// Writes out volume data as an HDF5 file and an XDMF file to be visualized in
+<span class="lineNum">      32 </span>            : /// ParaView or VisIt
+<span class="lineNum">      33 </span>            : class VolumeFile {
+<span class="lineNum">      34 </span>            :  public:
+<span class="lineNum">      35 </span>            :   /// Open a file for volume data output
+<span class="lineNum">      36 </span>            :   VolumeFile(std::string file_name, int format_id);
+<span class="lineNum">      37 </span>            :   VolumeFile(const VolumeFile&amp; /*rhs*/) = delete;
+<span class="lineNum">      38 </span>            :   VolumeFile&amp; operator=(const VolumeFile&amp; /*rhs*/) = delete;
+<span class="lineNum">      39 </span>            :   VolumeFile(VolumeFile&amp;&amp; /*rhs*/) = delete;
+<span class="lineNum">      40 </span>            :   VolumeFile&amp; operator=(VolumeFile&amp;&amp; /*rhs*/) = delete;
+<span class="lineNum">      41 </span>            :   ~VolumeFile();
+<span class="lineNum">      42 </span>            : 
+<span class="lineNum">      43 </span>            :   /*!
+<span class="lineNum">      44 </span>            :    * Writes the current time into the XDMF file and must only be called once
+<span class="lineNum">      45 </span>            :    * per time step. `write_xdmf_time()` must also be called before looping
+<span class="lineNum">      46 </span>            :    * over the elements and calling
+<span class="lineNum">      47 </span>            :    * `write_element_connectivity_and_coordinates()`
+<span class="lineNum">      48 </span>            :    *
+<span class="lineNum">      49 </span>            :    * \param time the coordinate time
+<span class="lineNum">      50 </span>            :    */
+<span class="lineNum">      51 </span>            :   void write_xdmf_time(double time);
+<span class="lineNum">      52 </span>            : 
+<span class="lineNum">      53 </span>            :   /*!
+<span class="lineNum">      54 </span>            :    * Write the time, extents, connectivity and grid coordinates into the volume
+<span class="lineNum">      55 </span>            :    * HDF5 file for the specific element.
+<span class="lineNum">      56 </span>            :    *
+<span class="lineNum">      57 </span>            :    * \param time the coordinate time
+<span class="lineNum">      58 </span>            :    * \param grid_coordinates the coordinates of the grid
+<span class="lineNum">      59 </span>            :    * \param extents the extents of the element
+<span class="lineNum">      60 </span>            :    * \param element_id the name/ID of the element
+<span class="lineNum">      61 </span>            :    * \param coordinate_names the names of the grid coordinates
+<span class="lineNum">      62 </span>            :    */
+<span class="lineNum">      63 </span>            :   template &lt;size_t Dim, typename Fr&gt;
+<span class="lineNum">      64 </span>            :   void write_element_connectivity_and_coordinates(
+<span class="lineNum">      65 </span>            :       double time, const tnsr::I&lt;DataVector, Dim, Fr&gt;&amp; grid_coordinates,
+<span class="lineNum">      66 </span>            :       const Index&lt;Dim&gt;&amp; extents, const std::string&amp; element_id,
+<span class="lineNum">      67 </span>            :       const std::vector&lt;std::string&gt;&amp; coordinate_names = {&quot;x-coord&quot;, &quot;y-coord&quot;,
+<span class="lineNum">      68 </span>            :                                                           &quot;z-coord&quot;});
+<span class="lineNum">      69 </span>            : 
+<span class="lineNum">      70 </span>            :   /// Write the extents into the volume HDF5 file for the specific element
+<span class="lineNum">      71 </span>            :   /// \param vars_map the map storing all the variables to be written
+<span class="lineNum">      72 </span>            :   /// \param extents the extents of the element
+<span class="lineNum">      73 </span>            :   /// \param element_id the name/ID of the element
+<span class="lineNum">      74 </span>            :   template &lt;size_t Dim&gt;
+<span class="lineNum">      75 </span>            :   void write_element_data(
+<span class="lineNum">      76 </span>            :       std::unordered_map&lt;std::string, std::pair&lt;std::vector&lt;std::string&gt;,
+<span class="lineNum">      77 </span>            :                                                 std::vector&lt;DataVector&gt;&gt;&gt;
+<span class="lineNum">      78 </span>            :           vars_map,
+<span class="lineNum">      79 </span>            :       const Index&lt;Dim&gt;&amp; extents, const std::string&amp; element_id);
+<span class="lineNum">      80 </span>            : 
+<span class="lineNum">      81 </span>            :  private:
+<span class="lineNum">      82 </span>            :   void create_file();
+<span class="lineNum">      83 </span>            : 
+<span class="lineNum">      84 </span>            :   /// Write the time into the volume HDF5 file for the specific element
+<span class="lineNum">      85 </span>            :   /// \param element_id the name/ID of the element
+<span class="lineNum">      86 </span>            :   void write_element_time(double time, const std::string&amp; element_id);
+<span class="lineNum">      87 </span>            : 
+<span class="lineNum">      88 </span>            :   /// Write the extents into the volume HDF5 file for the specific element
+<span class="lineNum">      89 </span>            :   /// \param extents the extents of the element
+<span class="lineNum">      90 </span>            :   /// \param element_id the name/ID of the element
+<span class="lineNum">      91 </span>            :   template &lt;size_t Dim&gt;
+<span class="lineNum">      92 </span>            :   void write_element_extents(const Index&lt;Dim&gt;&amp; extents,
+<span class="lineNum">      93 </span>            :                              const std::string&amp; element_id);
+<span class="lineNum">      94 </span>            : 
+<span class="lineNum">      95 </span>            :   /// Write the connectivity into the volume HDF5 file for the specific element
+<span class="lineNum">      96 </span>            :   /// \param extents the extents of the element
+<span class="lineNum">      97 </span>            :   /// \param element_id the name/ID of the element
+<span class="lineNum">      98 </span>            :   template &lt;size_t Dim&gt;
+<span class="lineNum">      99 </span>            :   void write_element_connectivity(const Index&lt;Dim&gt;&amp; extents,
+<span class="lineNum">     100 </span>            :                                   const std::string&amp; element_id);
+<span class="lineNum">     101 </span>            : 
+<span class="lineNum">     102 </span>            :   /// Write the coordinates into the volume HDF5 file for the specific element
+<span class="lineNum">     103 </span>            :   /// \param grid_coordinates the coordinates of the grid
+<span class="lineNum">     104 </span>            :   /// \param extents the extents of the element
+<span class="lineNum">     105 </span>            :   /// \param element_id the name/ID of the element
+<span class="lineNum">     106 </span>            :   /// \param coordinate_names the names of the grid coordinates
+<span class="lineNum">     107 </span>            :   template &lt;size_t Dim, typename Fr&gt;
+<span class="lineNum">     108 </span>            :   void write_element_coordinates(
+<span class="lineNum">     109 </span>            :       const tnsr::I&lt;DataVector, Dim, Fr&gt;&amp; grid_coordinates,
+<span class="lineNum">     110 </span>            :       const Index&lt;Dim&gt;&amp; extents, const std::string&amp; element_id,
+<span class="lineNum">     111 </span>            :       const std::vector&lt;std::string&gt;&amp; coordinate_names = {&quot;x-coord&quot;, &quot;y-coord&quot;,
+<span class="lineNum">     112 </span>            :                                                           &quot;z-coord&quot;});
+<span class="lineNum">     113 </span>            : 
+<span class="lineNum">     114 </span>            :   std::string h5_file_name_, xml_file_name_;
+<span class="lineNum">     115 </span>            :   int format_id_{1};
+<span class="lineNum">     116 </span>            :   int precision_{8};
+<span class="lineNum">     117 </span>            :   hid_t file_id_{-1};
+<span class="lineNum">     118 </span>            :   FILE* xml_{nullptr};
+<span class="lineNum">     119 </span>            : };
+<span class="lineNum">     120 </span>            : 
+<span class="lineNum">     121 </span>            : // ======================================================================
+<span class="lineNum">     122 </span>            : // Template Definitions
+<span class="lineNum">     123 </span>            : // ======================================================================
+<a name="124"><span class="lineNum">     124 </span>            : </a>
+<span class="lineNum">     125 </span>            : template &lt;size_t Dim, typename Fr&gt;
+<span class="lineNum">     126 </span><span class="lineCov">          3 : void VolumeFile::write_element_connectivity_and_coordinates(</span>
+<span class="lineNum">     127 </span>            :     const double time, const tnsr::I&lt;DataVector, Dim, Fr&gt;&amp; grid_coordinates,
+<span class="lineNum">     128 </span>            :     const Index&lt;Dim&gt;&amp; extents, const std::string&amp; element_id,
+<span class="lineNum">     129 </span>            :     const std::vector&lt;std::string&gt;&amp; coordinate_names) {
+<span class="lineNum">     130 </span><span class="lineCov">          3 :   write_element_time(time, element_id);</span>
+<span class="lineNum">     131 </span><span class="lineCov">          3 :   write_element_extents(extents, element_id);</span>
+<span class="lineNum">     132 </span><span class="lineCov">          3 :   write_element_connectivity(extents, element_id);</span>
+<span class="lineNum">     133 </span><span class="lineCov">          3 :   write_element_coordinates(grid_coordinates, extents, element_id,</span>
+<span class="lineNum">     134 </span>            :                             coordinate_names);
+<span class="lineNum">     135 </span><span class="lineCov">          3 : }</span>
+<a name="136"><span class="lineNum">     136 </span>            : </a>
+<span class="lineNum">     137 </span>            : template &lt;size_t Dim, typename Fr&gt;
+<span class="lineNum">     138 </span><span class="lineCov">          3 : void VolumeFile::write_element_coordinates(</span>
+<span class="lineNum">     139 </span>            :     const tnsr::I&lt;DataVector, Dim, Fr&gt;&amp; grid_coordinates,
+<span class="lineNum">     140 </span>            :     const Index&lt;Dim&gt;&amp; extents, const std::string&amp; element_id,
+<span class="lineNum">     141 </span>            :     const std::vector&lt;std::string&gt;&amp; coordinate_names) {
+<span class="lineNum">     142 </span><span class="lineCov">          6 :   h5::detail::OpenGroup group(file_id_, &quot;/&quot; + element_id,</span>
+<span class="lineNum">     143 </span>            :                               h5::AccessType::ReadWrite);
+<span class="lineNum">     144 </span><span class="lineCov">          9 :   for (size_t d = 0; d &lt; Dim; ++d) {</span>
+<span class="lineNum">     145 </span><span class="lineCov">          6 :     h5::write_data(group.id(), grid_coordinates.get(d), extents,</span>
+<span class="lineNum">     146 </span>            :                    coordinate_names[d]);
+<span class="lineNum">     147 </span>            :   }
+<span class="lineNum">     148 </span><span class="lineCov">          6 :   std::stringstream ss;</span>
+<span class="lineNum">     149 </span><span class="lineCov">          3 :   ss &lt;&lt; &quot;  &lt;Geometry Type=\&quot;X&quot;;</span>
+<span class="lineNum">     150 </span>            :   if (Dim &gt; 1) {
+<span class="lineNum">     151 </span><span class="lineCov">          2 :     ss &lt;&lt; &quot;_Y&quot;;</span>
+<span class="lineNum">     152 </span>            :   }
+<span class="lineNum">     153 </span>            :   if (Dim &gt; 2) {
+<span class="lineNum">     154 </span><span class="lineCov">          1 :     ss &lt;&lt; &quot;_Z&quot;;</span>
+<span class="lineNum">     155 </span>            :   }
+<span class="lineNum">     156 </span><span class="lineCov">          3 :   ss &lt;&lt; &quot;\&quot;&gt;\n&quot;;</span>
+<span class="lineNum">     157 </span><span class="lineCov">          6 :   std::stringstream extents_in_dims;</span>
+<span class="lineNum">     158 </span><span class="lineCov">          3 :   extents_in_dims &lt;&lt; extents[0];</span>
+<span class="lineNum">     159 </span><span class="lineCov">          6 :   for (size_t k = 1; k &lt; Dim; ++k) {</span>
+<span class="lineNum">     160 </span><span class="lineCov">          3 :     extents_in_dims &lt;&lt; &quot; &quot; &lt;&lt; extents[k];</span>
+<span class="lineNum">     161 </span>            :   }
+<span class="lineNum">     162 </span><span class="lineCov">          9 :   for (size_t d = 0; d &lt; Dim; ++d) {</span>
+<span class="lineNum">     163 </span><span class="lineCov">          6 :     ss &lt;&lt; &quot;    &lt;DataItem Dimensions=\&quot;&quot; &lt;&lt; extents_in_dims.str()</span>
+<span class="lineNum">     164 </span><span class="lineCov">         12 :        &lt;&lt; &quot;\&quot; NumberType=\&quot;Double\&quot; Precision=\&quot;&quot; &lt;&lt; precision_</span>
+<span class="lineNum">     165 </span>            :        &lt;&lt; &quot;\&quot; Format=\&quot;HDF5\&quot;&gt;\n&quot;
+<span class="lineNum">     166 </span>            :        &lt;&lt; &quot;      &quot; &lt;&lt; h5_file_name_ &lt;&lt; &quot;:/&quot; &lt;&lt; element_id &lt;&lt; &quot;/&quot;
+<span class="lineNum">     167 </span><span class="lineCov">          6 :        &lt;&lt; coordinate_names[d] &lt;&lt; &quot;\n    &lt;/DataItem&gt;\n&quot;;</span>
+<span class="lineNum">     168 </span>            :   }
+<span class="lineNum">     169 </span><span class="lineCov">          3 :   ss &lt;&lt; &quot;  &lt;/Geometry&gt;\n&quot;;</span>
+<span class="lineNum">     170 </span><span class="lineCov">          3 :   std::fprintf(xml_, &quot;%s&quot;, ss.str().c_str());  // NOLINT</span>
+<span class="lineNum">     171 </span><span class="lineCov">          3 : }</span>
+<span class="lineNum">     172 </span>            : }  // namespace vis
+</pre>
+      </td>
+    </tr>
+  </table>
+  <br>
+
+  <table width="100%" border=0 cellspacing=0 cellpadding=0>
+    <tr><td class="ruler"><img src="../glass.png" width=3 height=3 alt=""></td></tr>
+    <tr><td class="versionInfo">Generated by: <a href="http://ltp.sourceforge.net/coverage/lcov.php" target="_parent">LCOV version 1.13</a></td></tr>
+  </table>
+  <br>
+
+</body>
+</html>

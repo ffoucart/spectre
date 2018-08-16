@@ -1,0 +1,151 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+
+<html lang="en">
+
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <title>LCOV - 4a100dde3b231e0ada6ff7b2b4c32892a30db7f6 - Domain/DomainCreators/Interval.cpp</title>
+  <link rel="stylesheet" type="text/css" href="../../gcov.css">
+</head>
+
+<body>
+
+  <table width="100%" border=0 cellspacing=0 cellpadding=0>
+    <tr><td class="title">SpECTRE Unit Test Code Coverage Report</td></tr>
+    <tr><td class="ruler"><img src="../../glass.png" width=3 height=3 alt=""></td></tr>
+
+    <tr>
+      <td width="100%">
+        <table cellpadding=1 border=0 width="100%">
+          <tr>
+            <td width="10%" class="headerItem">Current view:</td>
+            <td width="35%" class="headerValue"><a href="../../index.html">top level</a> - <a href="index.html">Domain/DomainCreators</a> - Interval.cpp<span style="font-size: 80%;"> (source / <a href="Interval.cpp.func-sort-c.html">functions</a>)</span></td>
+            <td width="5%"></td>
+            <td width="15%"></td>
+            <td width="10%" class="headerCovTableHead">Hit</td>
+            <td width="10%" class="headerCovTableHead">Total</td>
+            <td width="15%" class="headerCovTableHead">Coverage</td>
+          </tr>
+          <tr>
+            <td class="headerItem">Commit:</td>
+             <td class="headerValue"><a target="_blank" href="https://github.com/sxs-collaboration/spectre/commit/4a100dde3b231e0ada6ff7b2b4c32892a30db7f6">4a100dde3b231e0ada6ff7b2b4c32892a30db7f6</a></td>
+            <td></td>
+            <td class="headerItem">Lines:</td>
+            <td class="headerCovTableEntry">15</td>
+            <td class="headerCovTableEntry">15</td>
+            <td class="headerCovTableEntryHi">100.0 %</td>
+          </tr>
+          <tr>
+            <td class="headerItem">Date:</td>
+            <td class="headerValue">2018-08-16 19:06:01</td>
+            <td></td>
+            <td class="headerItem">Functions:</td>
+            <td class="headerCovTableEntry">7</td>
+            <td class="headerCovTableEntry">11</td>
+            <td class="headerCovTableEntryLo">63.6 %</td>
+          </tr>
+          <tr>
+            <td class="headerItem">Legend:</td>
+            <td class="headerValueLeg">            Lines:
+            <span class="coverLegendCov">hit</span>
+            <span class="coverLegendNoCov">not hit</span>
+</td>
+            <td></td>
+          </tr>
+          <tr><td><img src="../../glass.png" width=3 height=3 alt=""></td></tr>
+        </table>
+      </td>
+    </tr>
+
+    <tr><td class="ruler"><img src="../../glass.png" width=3 height=3 alt=""></td></tr>
+  </table>
+
+  <table cellpadding=0 cellspacing=0 border=0>
+    <tr>
+      <td><br></td>
+    </tr>
+    <tr>
+      <td>
+<pre class="sourceHeading">          Line data    Source code</pre>
+<pre class="source">
+<a name="1"><span class="lineNum">       1 </span>            : // Distributed under the MIT License.</a>
+<span class="lineNum">       2 </span>            : // See LICENSE.txt for details.
+<span class="lineNum">       3 </span>            : 
+<span class="lineNum">       4 </span>            : #include &quot;Domain/DomainCreators/Interval.hpp&quot;
+<span class="lineNum">       5 </span>            : 
+<span class="lineNum">       6 </span>            : #include &lt;array&gt;
+<span class="lineNum">       7 </span>            : #include &lt;vector&gt;
+<span class="lineNum">       8 </span>            : 
+<span class="lineNum">       9 </span>            : #include &quot;Domain/Block.hpp&quot;          // IWYU pragma: keep
+<span class="lineNum">      10 </span>            : #include &quot;Domain/BlockNeighbor.hpp&quot;  // IWYU pragma: keep
+<span class="lineNum">      11 </span>            : #include &quot;Domain/CoordinateMaps/Affine.hpp&quot;
+<span class="lineNum">      12 </span>            : #include &quot;Domain/CoordinateMaps/CoordinateMap.hpp&quot;
+<span class="lineNum">      13 </span>            : #include &quot;Domain/Domain.hpp&quot;
+<span class="lineNum">      14 </span>            : #include &quot;Domain/DomainCreators/DomainCreator.hpp&quot;  // IWYU pragma: keep
+<span class="lineNum">      15 </span>            : #include &quot;Domain/DomainHelpers.hpp&quot;
+<span class="lineNum">      16 </span>            : 
+<span class="lineNum">      17 </span>            : /// \cond
+<span class="lineNum">      18 </span>            : namespace Frame {
+<span class="lineNum">      19 </span>            : struct Grid;
+<span class="lineNum">      20 </span>            : struct Inertial;
+<span class="lineNum">      21 </span>            : struct Logical;
+<span class="lineNum">      22 </span>            : }  // namespace Frame
+<span class="lineNum">      23 </span>            : /// \endcond
+<span class="lineNum">      24 </span>            : 
+<span class="lineNum">      25 </span>            : namespace DomainCreators {
+<a name="26"><span class="lineNum">      26 </span>            : </a>
+<span class="lineNum">      27 </span>            : template &lt;typename TargetFrame&gt;
+<span class="lineNum">      28 </span><span class="lineCov">          8 : Interval&lt;TargetFrame&gt;::Interval(</span>
+<span class="lineNum">      29 </span>            :     typename LowerBound::type lower_x, typename UpperBound::type upper_x,
+<span class="lineNum">      30 </span>            :     typename IsPeriodicIn::type is_periodic_in_x,
+<span class="lineNum">      31 </span>            :     typename InitialRefinement::type initial_refinement_level_x,
+<span class="lineNum">      32 </span>            :     typename InitialGridPoints::type
+<span class="lineNum">      33 </span>            :         initial_number_of_grid_points_in_x) noexcept
+<span class="lineNum">      34 </span>            :     // clang-tidy: trivially copyable
+<span class="lineNum">      35 </span><span class="lineCov">          8 :     : lower_x_(std::move(lower_x)),                          // NOLINT</span>
+<span class="lineNum">      36 </span><span class="lineCov">          8 :       upper_x_(std::move(upper_x)),                          // NOLINT</span>
+<span class="lineNum">      37 </span><span class="lineCov">          8 :       is_periodic_in_x_(std::move(is_periodic_in_x)),        // NOLINT</span>
+<span class="lineNum">      38 </span>            :       initial_refinement_level_x_(                           // NOLINT
+<span class="lineNum">      39 </span><span class="lineCov">          8 :           std::move(initial_refinement_level_x)),            // NOLINT</span>
+<span class="lineNum">      40 </span>            :       initial_number_of_grid_points_in_x_(                   // NOLINT
+<span class="lineNum">      41 </span><span class="lineCov">         40 :           std::move(initial_number_of_grid_points_in_x)) {}  // NOLINT</span>
+<a name="42"><span class="lineNum">      42 </span>            : </a>
+<span class="lineNum">      43 </span>            : template &lt;typename TargetFrame&gt;
+<span class="lineNum">      44 </span><span class="lineCov">          7 : Domain&lt;1, TargetFrame&gt; Interval&lt;TargetFrame&gt;::create_domain() const noexcept {</span>
+<span class="lineNum">      45 </span>            :   return Domain&lt;1, TargetFrame&gt;{
+<span class="lineNum">      46 </span>            :       make_vector_coordinate_map_base&lt;Frame::Logical, TargetFrame&gt;(
+<span class="lineNum">      47 </span><span class="lineCov">         14 :           CoordinateMaps::Affine{-1., 1., lower_x_[0], upper_x_[0]}),</span>
+<span class="lineNum">      48 </span>            :       std::vector&lt;std::array&lt;size_t, 2&gt;&gt;{{{1, 2}}},
+<span class="lineNum">      49 </span><span class="lineCov">         14 :       is_periodic_in_x_[0] ? std::vector&lt;PairOfFaces&gt;{{{1}, {2}}}</span>
+<span class="lineNum">      50 </span><span class="lineCov">         28 :                            : std::vector&lt;PairOfFaces&gt;{}};</span>
+<span class="lineNum">      51 </span>            : }
+<a name="52"><span class="lineNum">      52 </span>            : </a>
+<span class="lineNum">      53 </span>            : template &lt;typename TargetFrame&gt;
+<span class="lineNum">      54 </span><span class="lineCov">          7 : std::vector&lt;std::array&lt;size_t, 1&gt;&gt; Interval&lt;TargetFrame&gt;::initial_extents()</span>
+<span class="lineNum">      55 </span>            :     const noexcept {
+<span class="lineNum">      56 </span><span class="lineCov">          7 :   return {{{initial_number_of_grid_points_in_x_}}};</span>
+<span class="lineNum">      57 </span>            : }
+<span class="lineNum">      58 </span>            : 
+<a name="59"><span class="lineNum">      59 </span>            : template &lt;typename TargetFrame&gt;</a>
+<span class="lineNum">      60 </span>            : std::vector&lt;std::array&lt;size_t, 1&gt;&gt;
+<span class="lineNum">      61 </span><span class="lineCov">          8 : Interval&lt;TargetFrame&gt;::initial_refinement_levels() const noexcept {</span>
+<span class="lineNum">      62 </span><span class="lineCov">          8 :   return {{{initial_refinement_level_x_}}};</span>
+<span class="lineNum">      63 </span>            : }
+<span class="lineNum">      64 </span>            : }  // namespace DomainCreators
+<a name="65"><span class="lineNum">      65 </span>            : </a>
+<span class="lineNum">      66 </span>            : template class DomainCreators::Interval&lt;Frame::Inertial&gt;;
+<span class="lineNum">      67 </span><span class="lineCov">       3825 : template class DomainCreators::Interval&lt;Frame::Grid&gt;;</span>
+</pre>
+      </td>
+    </tr>
+  </table>
+  <br>
+
+  <table width="100%" border=0 cellspacing=0 cellpadding=0>
+    <tr><td class="ruler"><img src="../../glass.png" width=3 height=3 alt=""></td></tr>
+    <tr><td class="versionInfo">Generated by: <a href="http://ltp.sourceforge.net/coverage/lcov.php" target="_parent">LCOV version 1.13</a></td></tr>
+  </table>
+  <br>
+
+</body>
+</html>

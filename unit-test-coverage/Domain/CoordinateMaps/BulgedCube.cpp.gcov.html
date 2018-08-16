@@ -1,0 +1,384 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+
+<html lang="en">
+
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <title>LCOV - 4a100dde3b231e0ada6ff7b2b4c32892a30db7f6 - Domain/CoordinateMaps/BulgedCube.cpp</title>
+  <link rel="stylesheet" type="text/css" href="../../gcov.css">
+</head>
+
+<body>
+
+  <table width="100%" border=0 cellspacing=0 cellpadding=0>
+    <tr><td class="title">SpECTRE Unit Test Code Coverage Report</td></tr>
+    <tr><td class="ruler"><img src="../../glass.png" width=3 height=3 alt=""></td></tr>
+
+    <tr>
+      <td width="100%">
+        <table cellpadding=1 border=0 width="100%">
+          <tr>
+            <td width="10%" class="headerItem">Current view:</td>
+            <td width="35%" class="headerValue"><a href="../../index.html">top level</a> - <a href="index.html">Domain/CoordinateMaps</a> - BulgedCube.cpp<span style="font-size: 80%;"> (source / <a href="BulgedCube.cpp.func-sort-c.html">functions</a>)</span></td>
+            <td width="5%"></td>
+            <td width="15%"></td>
+            <td width="10%" class="headerCovTableHead">Hit</td>
+            <td width="10%" class="headerCovTableHead">Total</td>
+            <td width="15%" class="headerCovTableHead">Coverage</td>
+          </tr>
+          <tr>
+            <td class="headerItem">Commit:</td>
+             <td class="headerValue"><a target="_blank" href="https://github.com/sxs-collaboration/spectre/commit/4a100dde3b231e0ada6ff7b2b4c32892a30db7f6">4a100dde3b231e0ada6ff7b2b4c32892a30db7f6</a></td>
+            <td></td>
+            <td class="headerItem">Lines:</td>
+            <td class="headerCovTableEntry">161</td>
+            <td class="headerCovTableEntry">163</td>
+            <td class="headerCovTableEntryHi">98.8 %</td>
+          </tr>
+          <tr>
+            <td class="headerItem">Date:</td>
+            <td class="headerValue">2018-08-16 19:06:01</td>
+            <td></td>
+            <td class="headerItem">Functions:</td>
+            <td class="headerCovTableEntry">46</td>
+            <td class="headerCovTableEntry">46</td>
+            <td class="headerCovTableEntryHi">100.0 %</td>
+          </tr>
+          <tr>
+            <td class="headerItem">Legend:</td>
+            <td class="headerValueLeg">            Lines:
+            <span class="coverLegendCov">hit</span>
+            <span class="coverLegendNoCov">not hit</span>
+</td>
+            <td></td>
+          </tr>
+          <tr><td><img src="../../glass.png" width=3 height=3 alt=""></td></tr>
+        </table>
+      </td>
+    </tr>
+
+    <tr><td class="ruler"><img src="../../glass.png" width=3 height=3 alt=""></td></tr>
+  </table>
+
+  <table cellpadding=0 cellspacing=0 border=0>
+    <tr>
+      <td><br></td>
+    </tr>
+    <tr>
+      <td>
+<pre class="sourceHeading">          Line data    Source code</pre>
+<pre class="source">
+<a name="1"><span class="lineNum">       1 </span>            : // Distributed under the MIT License.</a>
+<span class="lineNum">       2 </span>            : // See LICENSE.txt for details.
+<span class="lineNum">       3 </span>            : 
+<span class="lineNum">       4 </span>            : #include &quot;Domain/CoordinateMaps/BulgedCube.hpp&quot;
+<span class="lineNum">       5 </span>            : 
+<span class="lineNum">       6 </span>            : #include &lt;cmath&gt;
+<span class="lineNum">       7 </span>            : #include &lt;exception&gt;
+<span class="lineNum">       8 </span>            : #include &lt;functional&gt;  // for std::reference_wrapper
+<span class="lineNum">       9 </span>            : #include &lt;limits&gt;
+<span class="lineNum">      10 </span>            : #include &lt;ostream&gt;
+<span class="lineNum">      11 </span>            : #include &lt;pup.h&gt;
+<span class="lineNum">      12 </span>            : 
+<span class="lineNum">      13 </span>            : #include &quot;DataStructures/Tensor/EagerMath/DeterminantAndInverse.hpp&quot;
+<span class="lineNum">      14 </span>            : #include &quot;DataStructures/Tensor/Tensor.hpp&quot;
+<span class="lineNum">      15 </span>            : #include &quot;ErrorHandling/Assert.hpp&quot;
+<span class="lineNum">      16 </span>            : #include &quot;ErrorHandling/Error.hpp&quot;
+<span class="lineNum">      17 </span>            : #include &quot;NumericalAlgorithms/RootFinding/TOMS748.hpp&quot;
+<span class="lineNum">      18 </span>            : #include &quot;Utilities/ConstantExpressions.hpp&quot;
+<span class="lineNum">      19 </span>            : #include &quot;Utilities/ContainerHelpers.hpp&quot;
+<span class="lineNum">      20 </span>            : #include &quot;Utilities/DereferenceWrapper.hpp&quot;
+<span class="lineNum">      21 </span>            : #include &quot;Utilities/EqualWithinRoundoff.hpp&quot;
+<span class="lineNum">      22 </span>            : #include &quot;Utilities/GenerateInstantiations.hpp&quot;
+<span class="lineNum">      23 </span>            : #include &quot;Utilities/MakeWithValue.hpp&quot;
+<span class="lineNum">      24 </span>            : 
+<span class="lineNum">      25 </span>            : namespace {
+<span class="lineNum">      26 </span>            : template &lt;typename DType&gt;
+<a name="27"><span class="lineNum">      27 </span>            : class RootFunction {</a>
+<span class="lineNum">      28 </span>            :  public:
+<span class="lineNum">      29 </span><span class="lineCov">         24 :   RootFunction(const double radius, const double sphericity,</span>
+<span class="lineNum">      30 </span>            :                const DType&amp; physical_r_squared, const DType&amp; x_sq,
+<span class="lineNum">      31 </span>            :                const DType&amp; y_sq, const DType&amp; z_sq) noexcept
+<span class="lineNum">      32 </span>            :       : radius_(radius),
+<span class="lineNum">      33 </span>            :         sphericity_(sphericity),
+<span class="lineNum">      34 </span>            :         physical_r_squared_(physical_r_squared),
+<span class="lineNum">      35 </span>            :         x_sq_(x_sq),
+<span class="lineNum">      36 </span>            :         y_sq_(y_sq),
+<a name="37"><span class="lineNum">      37 </span><span class="lineCov">         24 :         z_sq_(z_sq) {}</span></a>
+<span class="lineNum">      38 </span>            : 
+<span class="lineNum">      39 </span><span class="lineCov">        326 :   double operator()(const double rho, const size_t i = 0) const noexcept {</span>
+<span class="lineNum">      40 </span><span class="lineCov">        978 :     if (not(equal_within_roundoff(get_element(physical_r_squared_, i), 0.0))) {</span>
+<span class="lineNum">      41 </span><span class="lineCov">        314 :       const double x_sq_over_r_sq =</span>
+<span class="lineNum">      42 </span><span class="lineCov">        942 :           get_element(x_sq_, i) / get_element(physical_r_squared_, i);</span>
+<span class="lineNum">      43 </span><span class="lineCov">        314 :       const double y_sq_over_r_sq =</span>
+<span class="lineNum">      44 </span><span class="lineCov">        942 :           get_element(y_sq_, i) / get_element(physical_r_squared_, i);</span>
+<span class="lineNum">      45 </span><span class="lineCov">        314 :       const double z_sq_over_r_sq =</span>
+<span class="lineNum">      46 </span><span class="lineCov">        942 :           get_element(z_sq_, i) / get_element(physical_r_squared_, i);</span>
+<span class="lineNum">      47 </span><span class="lineCov">        628 :       return sqrt(get_element(physical_r_squared_, i)) -</span>
+<span class="lineNum">      48 </span><span class="lineCov">        628 :              radius_ * rho *</span>
+<span class="lineNum">      49 </span><span class="lineCov">        314 :                  (1.0 / sqrt(3.0) +</span>
+<span class="lineNum">      50 </span><span class="lineCov">        628 :                   sphericity_ *</span>
+<span class="lineNum">      51 </span><span class="lineCov">        628 :                       (1.0 / sqrt(1.0 + square(rho) *</span>
+<span class="lineNum">      52 </span><span class="lineCov">        628 :                                             (x_sq_over_r_sq + y_sq_over_r_sq)) +</span>
+<span class="lineNum">      53 </span><span class="lineCov">        628 :                        1.0 / sqrt(1.0 + square(rho) *</span>
+<span class="lineNum">      54 </span><span class="lineCov">        628 :                                             (x_sq_over_r_sq + z_sq_over_r_sq)) +</span>
+<span class="lineNum">      55 </span><span class="lineCov">        628 :                        1.0 / sqrt(1.0 + square(rho) *</span>
+<span class="lineNum">      56 </span><span class="lineCov">        628 :                                             (y_sq_over_r_sq + z_sq_over_r_sq)) -</span>
+<span class="lineNum">      57 </span><span class="lineCov">        628 :                        1.0 / sqrt(2.0 + square(rho) * x_sq_over_r_sq) -</span>
+<span class="lineNum">      58 </span><span class="lineCov">        628 :                        1.0 / sqrt(2.0 + square(rho) * y_sq_over_r_sq) -</span>
+<span class="lineNum">      59 </span><span class="lineCov">        628 :                        1.0 / sqrt(2.0 + square(rho) * z_sq_over_r_sq)));</span>
+<span class="lineNum">      60 </span>            :     } else {
+<span class="lineNum">      61 </span><span class="lineCov">         12 :       return 0.0;</span>
+<a name="62"><span class="lineNum">      62 </span>            :     }</a>
+<a name="63"><span class="lineNum">      63 </span>            :   }</a>
+<span class="lineNum">      64 </span><span class="lineCov">         24 :   const DType&amp; get_x_sq() noexcept { return x_sq_; }</span>
+<span class="lineNum">      65 </span><span class="lineCov">         24 :   const DType&amp; get_r_sq() noexcept { return physical_r_squared_; }</span>
+<span class="lineNum">      66 </span>            : 
+<span class="lineNum">      67 </span>            :  private:
+<span class="lineNum">      68 </span>            :   const double radius_;
+<span class="lineNum">      69 </span>            :   const double sphericity_;
+<span class="lineNum">      70 </span>            :   const DType&amp; physical_r_squared_;
+<span class="lineNum">      71 </span>            :   const DType&amp; x_sq_;
+<span class="lineNum">      72 </span>            :   const DType&amp; y_sq_;
+<span class="lineNum">      73 </span>            :   const DType&amp; z_sq_;
+<span class="lineNum">      74 </span>            : };
+<a name="75"><span class="lineNum">      75 </span>            : </a>
+<span class="lineNum">      76 </span>            : template &lt;typename DType&gt;
+<span class="lineNum">      77 </span><span class="lineCov">         24 : DType scaling_factor(RootFunction&lt;DType&gt;&amp;&amp; rootfunction) noexcept {</span>
+<span class="lineNum">      78 </span><span class="lineCov">         24 :   const DType&amp; x_sq = rootfunction.get_x_sq();</span>
+<span class="lineNum">      79 </span><span class="lineCov">         24 :   const DType&amp; physical_r_squared = rootfunction.get_r_sq();</span>
+<span class="lineNum">      80 </span>            :   try {
+<span class="lineNum">      81 </span><span class="lineCov">         24 :     const double tol = 10.0 * std::numeric_limits&lt;double&gt;::epsilon();</span>
+<span class="lineNum">      82 </span><span class="lineCov">         48 :     DType rho = RootFinder::toms748(</span>
+<span class="lineNum">      83 </span>            :         rootfunction, make_with_value&lt;DType&gt;(x_sq, 0.0),
+<span class="lineNum">      84 </span>            :         make_with_value&lt;DType&gt;(x_sq, sqrt(3.0) + tol), tol, tol);
+<span class="lineNum">      85 </span><span class="lineCov">        144 :     for (size_t i = 0; i &lt; get_size(rho); i++) {</span>
+<span class="lineNum">      86 </span><span class="lineCov">        144 :       if (not(equal_within_roundoff(get_element(physical_r_squared, i), 0.0))) {</span>
+<span class="lineNum">      87 </span><span class="lineCov">         84 :         get_element(rho, i) /= sqrt(get_element(physical_r_squared, i));</span>
+<span class="lineNum">      88 </span>            :       } else {
+<span class="lineNum">      89 </span><span class="lineCov">         18 :         ASSERT(equal_within_roundoff(get_element(rho, i), 0.0),</span>
+<span class="lineNum">      90 </span>            :                &quot;r == 0 must imply rho == 0. This has failed.&quot;);
+<span class="lineNum">      91 </span>            :       }
+<span class="lineNum">      92 </span>            :     }
+<span class="lineNum">      93 </span><span class="lineCov">         34 :     return rho;</span>
+<span class="lineNum">      94 </span><span class="lineNoCov">          0 :   } catch (std::exception&amp; exception) {</span>
+<span class="lineNum">      95 </span><span class="lineNoCov">          0 :     ERROR(&quot;Error in BulgedCube root find:&quot; &lt;&lt; exception.what());</span>
+<span class="lineNum">      96 </span>            :   }
+<span class="lineNum">      97 </span>            : }
+<span class="lineNum">      98 </span>            : }  // namespace
+<a name="99"><span class="lineNum">      99 </span>            : </a>
+<span class="lineNum">     100 </span>            : namespace CoordinateMaps {
+<span class="lineNum">     101 </span><span class="lineCov">          3 : BulgedCube::BulgedCube(const double radius, const double sphericity,</span>
+<span class="lineNum">     102 </span><span class="lineCov">          3 :                        const bool use_equiangular_map) noexcept</span>
+<span class="lineNum">     103 </span>            :     : radius_(radius),
+<span class="lineNum">     104 </span>            :       sphericity_(sphericity),
+<span class="lineNum">     105 </span><span class="lineCov">          3 :       use_equiangular_map_(use_equiangular_map) {</span>
+<span class="lineNum">     106 </span><span class="lineCov">          3 :   ASSERT(radius &gt; 0.0, &quot;The radius of the cube must be greater than zero&quot;);</span>
+<span class="lineNum">     107 </span><span class="lineCov">          3 :   ASSERT(sphericity &gt;= 0.0 and sphericity &lt; 1.0,</span>
+<span class="lineNum">     108 </span>            :          &quot;The sphericity must be strictly less than one.&quot;);
+<span class="lineNum">     109 </span><span class="lineCov">          3 : }</span>
+<a name="110"><span class="lineNum">     110 </span>            : </a>
+<span class="lineNum">     111 </span>            : template &lt;typename T&gt;
+<span class="lineNum">     112 </span><span class="lineCov">        257 : std::array&lt;tt::remove_cvref_wrap_t&lt;T&gt;, 3&gt; BulgedCube::operator()(</span>
+<span class="lineNum">     113 </span>            :     const std::array&lt;T, 3&gt;&amp; source_coords) const noexcept {
+<span class="lineNum">     114 </span>            :   using ReturnType = tt::remove_cvref_wrap_t&lt;T&gt;;
+<a name="115"><span class="lineNum">     115 </span><span class="lineCov">        257 :   const auto physical_coordinates = [this](</span></a>
+<span class="lineNum">     116 </span>            :       const ReturnType&amp; cap_xi, const ReturnType&amp; cap_eta,
+<span class="lineNum">     117 </span><span class="lineCov">        771 :       const ReturnType&amp; cap_zeta) noexcept {</span>
+<span class="lineNum">     118 </span><span class="lineCov">        267 :     const auto one_over_rho_xi = 1.0 / sqrt(2.0 + square(cap_xi));</span>
+<span class="lineNum">     119 </span><span class="lineCov">        267 :     const auto one_over_rho_eta = 1.0 / sqrt(2.0 + square(cap_eta));</span>
+<span class="lineNum">     120 </span><span class="lineCov">        267 :     const auto one_over_rho_zeta = 1.0 / sqrt(2.0 + square(cap_zeta));</span>
+<span class="lineNum">     121 </span><span class="lineCov">        247 :     const auto one_over_rho_xi_eta =</span>
+<span class="lineNum">     122 </span><span class="lineCov">        524 :         1.0 / sqrt(1.0 + square(cap_xi) + square(cap_eta));</span>
+<span class="lineNum">     123 </span><span class="lineCov">        247 :     const auto one_over_rho_xi_zeta =</span>
+<span class="lineNum">     124 </span><span class="lineCov">        524 :         1.0 / sqrt(1.0 + square(cap_xi) + square(cap_zeta));</span>
+<span class="lineNum">     125 </span><span class="lineCov">        247 :     const auto one_over_rho_eta_zeta =</span>
+<span class="lineNum">     126 </span><span class="lineCov">        524 :         1.0 / sqrt(1.0 + square(cap_eta) + square(cap_zeta));</span>
+<span class="lineNum">     127 </span><span class="lineCov">        267 :     const ReturnType radial_scaling_factor =</span>
+<span class="lineNum">     128 </span><span class="lineCov">        524 :         radius_ * (1.0 / sqrt(3.0) +</span>
+<span class="lineNum">     129 </span><span class="lineCov">        534 :                    sphericity_ * (one_over_rho_eta_zeta + one_over_rho_xi_zeta +</span>
+<span class="lineNum">     130 </span><span class="lineCov">        267 :                                   one_over_rho_xi_eta - one_over_rho_xi -</span>
+<span class="lineNum">     131 </span><span class="lineCov">        267 :                                   one_over_rho_eta - one_over_rho_zeta));</span>
+<span class="lineNum">     132 </span>            : 
+<span class="lineNum">     133 </span><span class="lineCov">        267 :     ReturnType physical_x = radial_scaling_factor * cap_xi;</span>
+<span class="lineNum">     134 </span><span class="lineCov">        267 :     ReturnType physical_y = radial_scaling_factor * cap_eta;</span>
+<span class="lineNum">     135 </span><span class="lineCov">        267 :     ReturnType physical_z = radial_scaling_factor * cap_zeta;</span>
+<span class="lineNum">     136 </span>            :     return std::array&lt;ReturnType, 3&gt;{
+<span class="lineNum">     137 </span><span class="lineCov">        267 :         {std::move(physical_x), std::move(physical_y), std::move(physical_z)}};</span>
+<span class="lineNum">     138 </span>            :   };
+<span class="lineNum">     139 </span>            : 
+<span class="lineNum">     140 </span><span class="lineCov">        257 :   if (use_equiangular_map_) {</span>
+<span class="lineNum">     141 </span>            :     return physical_coordinates(
+<span class="lineNum">     142 </span><span class="lineCov">        188 :         tan(M_PI_4 * dereference_wrapper(source_coords[0])),</span>
+<span class="lineNum">     143 </span><span class="lineCov">        188 :         tan(M_PI_4 * dereference_wrapper(source_coords[1])),</span>
+<span class="lineNum">     144 </span><span class="lineCov">        290 :         tan(M_PI_4 * dereference_wrapper(source_coords[2])));</span>
+<span class="lineNum">     145 </span>            :   }
+<span class="lineNum">     146 </span><span class="lineCov">        163 :   return physical_coordinates(dereference_wrapper(source_coords[0]),</span>
+<span class="lineNum">     147 </span><span class="lineCov">        163 :                               dereference_wrapper(source_coords[1]),</span>
+<span class="lineNum">     148 </span><span class="lineCov">        326 :                               dereference_wrapper(source_coords[2]));</span>
+<span class="lineNum">     149 </span>            : }
+<a name="150"><span class="lineNum">     150 </span>            : </a>
+<span class="lineNum">     151 </span>            : template &lt;typename T&gt;
+<span class="lineNum">     152 </span><span class="lineCov">         24 : std::array&lt;tt::remove_cvref_wrap_t&lt;T&gt;, 3&gt; BulgedCube::inverse(</span>
+<span class="lineNum">     153 </span>            :     const std::array&lt;T, 3&gt;&amp; target_coords) const noexcept {
+<span class="lineNum">     154 </span>            :   using ReturnType = tt::remove_cvref_wrap_t&lt;T&gt;;
+<span class="lineNum">     155 </span><span class="lineCov">         24 :   const ReturnType&amp; physical_x = target_coords[0];</span>
+<span class="lineNum">     156 </span><span class="lineCov">         24 :   const ReturnType&amp; physical_y = target_coords[1];</span>
+<span class="lineNum">     157 </span><span class="lineCov">         24 :   const ReturnType&amp; physical_z = target_coords[2];</span>
+<span class="lineNum">     158 </span><span class="lineCov">         34 :   const ReturnType x_sq = square(physical_x);</span>
+<span class="lineNum">     159 </span><span class="lineCov">         34 :   const ReturnType y_sq = square(physical_y);</span>
+<span class="lineNum">     160 </span><span class="lineCov">         34 :   const ReturnType z_sq = square(physical_z);</span>
+<span class="lineNum">     161 </span><span class="lineCov">         34 :   const ReturnType physical_r_squared = x_sq + y_sq + z_sq;</span>
+<span class="lineNum">     162 </span><span class="lineCov">         34 :   const auto scaling_factor =</span>
+<span class="lineNum">     163 </span><span class="lineCov">         28 :       ::scaling_factor&lt;ReturnType&gt;(RootFunction&lt;ReturnType&gt;{</span>
+<span class="lineNum">     164 </span><span class="lineCov">         24 :           radius_, sphericity_, physical_r_squared, x_sq, y_sq, z_sq});</span>
+<span class="lineNum">     165 </span><span class="lineCov">         24 :   if (use_equiangular_map_) {</span>
+<span class="lineNum">     166 </span><span class="lineCov">         14 :     return {{2.0 * M_2_PI * atan(physical_x * scaling_factor),</span>
+<span class="lineNum">     167 </span><span class="lineCov">         14 :              2.0 * M_2_PI * atan(physical_y * scaling_factor),</span>
+<span class="lineNum">     168 </span><span class="lineCov">         24 :              2.0 * M_2_PI * atan(physical_z * scaling_factor)}};</span>
+<span class="lineNum">     169 </span>            :   }
+<span class="lineNum">     170 </span><span class="lineCov">         34 :   return {{physical_x * scaling_factor, physical_y * scaling_factor,</span>
+<span class="lineNum">     171 </span><span class="lineCov">         34 :            physical_z * scaling_factor}};</span>
+<span class="lineNum">     172 </span>            : }
+<a name="173"><span class="lineNum">     173 </span>            : </a>
+<span class="lineNum">     174 </span>            : template &lt;typename T&gt;
+<span class="lineNum">     175 </span><span class="lineCov">        495 : std::array&lt;tt::remove_cvref_wrap_t&lt;T&gt;, 3&gt; BulgedCube::xi_derivative(</span>
+<span class="lineNum">     176 </span>            :     const std::array&lt;T, 3&gt;&amp; source_coords) const noexcept {
+<span class="lineNum">     177 </span>            :   using ReturnType = tt::remove_cvref_wrap_t&lt;T&gt;;
+<span class="lineNum">     178 </span><span class="lineCov">        495 :   const auto derivative_lambda = [this](const ReturnType&amp; cap_xi,</span>
+<a name="179"><span class="lineNum">     179 </span>            :                                         const ReturnType&amp; cap_eta,</a>
+<span class="lineNum">     180 </span>            :                                         const ReturnType&amp; cap_zeta,
+<span class="lineNum">     181 </span><span class="lineCov">       2475 :                                         const auto&amp; cap_xi_deriv) {</span>
+<span class="lineNum">     182 </span><span class="lineCov">        531 :     const ReturnType one_over_rho_xi_cubed =</span>
+<span class="lineNum">     183 </span><span class="lineCov">        990 :         pow&lt;3&gt;(1.0 / sqrt(2.0 + square(cap_xi)));</span>
+<span class="lineNum">     184 </span><span class="lineCov">        567 :     const ReturnType one_over_rho_eta = 1.0 / sqrt(2.0 + square(cap_eta));</span>
+<span class="lineNum">     185 </span><span class="lineCov">        567 :     const ReturnType one_over_rho_zeta = 1.0 / sqrt(2.0 + square(cap_zeta));</span>
+<span class="lineNum">     186 </span><span class="lineCov">        531 :     const ReturnType one_over_rho_xi_eta_cubed =</span>
+<span class="lineNum">     187 </span><span class="lineCov">       1485 :         pow&lt;3&gt;(1.0 / sqrt(1.0 + square(cap_xi) + square(cap_eta)));</span>
+<span class="lineNum">     188 </span><span class="lineCov">        531 :     const ReturnType one_over_rho_xi_zeta_cubed =</span>
+<span class="lineNum">     189 </span><span class="lineCov">       1485 :         pow&lt;3&gt;(1.0 / sqrt(1.0 + square(cap_xi) + square(cap_zeta)));</span>
+<span class="lineNum">     190 </span><span class="lineCov">        531 :     const ReturnType one_over_rho_eta_zeta =</span>
+<span class="lineNum">     191 </span><span class="lineCov">       1026 :         1.0 / sqrt(1.0 + square(cap_eta) + square(cap_zeta));</span>
+<span class="lineNum">     192 </span><span class="lineCov">        531 :     const ReturnType common_factor =</span>
+<span class="lineNum">     193 </span><span class="lineCov">       1050 :         sphericity_ * radius_ * cap_xi * cap_xi_deriv *</span>
+<span class="lineNum">     194 </span><span class="lineCov">        531 :         (one_over_rho_xi_cubed - one_over_rho_xi_eta_cubed -</span>
+<span class="lineNum">     195 </span>            :          one_over_rho_xi_zeta_cubed);
+<span class="lineNum">     196 </span>            : 
+<span class="lineNum">     197 </span><span class="lineCov">        531 :     const ReturnType physical_x =</span>
+<span class="lineNum">     198 </span><span class="lineCov">        531 :         radius_ * cap_xi_deriv *</span>
+<span class="lineNum">     199 </span><span class="lineCov">        531 :         (1.0 / sqrt(3.0) +</span>
+<span class="lineNum">     200 </span><span class="lineCov">        990 :          sphericity_ *</span>
+<span class="lineNum">     201 </span><span class="lineCov">        990 :              (((1.0 + square(cap_eta)) * one_over_rho_xi_eta_cubed +</span>
+<span class="lineNum">     202 </span><span class="lineCov">       1062 :                (1.0 + square(cap_zeta)) * one_over_rho_xi_zeta_cubed -</span>
+<span class="lineNum">     203 </span><span class="lineCov">       1062 :                2.0 * one_over_rho_xi_cubed) +</span>
+<span class="lineNum">     204 </span><span class="lineCov">        531 :               one_over_rho_eta_zeta - one_over_rho_eta - one_over_rho_zeta));</span>
+<span class="lineNum">     205 </span><span class="lineCov">        531 :     const ReturnType physical_y = cap_eta * common_factor;</span>
+<span class="lineNum">     206 </span><span class="lineCov">        531 :     const ReturnType physical_z = cap_zeta * common_factor;</span>
+<span class="lineNum">     207 </span>            : 
+<span class="lineNum">     208 </span><span class="lineCov">        531 :     return std::array&lt;ReturnType, 3&gt;{{physical_x, physical_y, physical_z}};</span>
+<span class="lineNum">     209 </span>            :   };
+<span class="lineNum">     210 </span><span class="lineCov">        495 :   if (use_equiangular_map_) {</span>
+<span class="lineNum">     211 </span>            :     return derivative_lambda(
+<span class="lineNum">     212 </span><span class="lineCov">        336 :         tan(M_PI_4 * dereference_wrapper(source_coords[0])),</span>
+<span class="lineNum">     213 </span><span class="lineCov">        336 :         tan(M_PI_4 * dereference_wrapper(source_coords[1])),</span>
+<span class="lineNum">     214 </span><span class="lineCov">        336 :         tan(M_PI_4 * dereference_wrapper(source_coords[2])),</span>
+<span class="lineNum">     215 </span><span class="lineCov">        336 :         ReturnType{M_PI_4 *</span>
+<span class="lineNum">     216 </span><span class="lineCov">        504 :                    (1.0 + square(tan(M_PI_4 *</span>
+<span class="lineNum">     217 </span><span class="lineCov">        408 :                                      dereference_wrapper(source_coords[0]))))});</span>
+<span class="lineNum">     218 </span>            :   }
+<span class="lineNum">     219 </span><span class="lineCov">        933 :   return derivative_lambda(dereference_wrapper(source_coords[0]),</span>
+<span class="lineNum">     220 </span><span class="lineCov">        327 :                            dereference_wrapper(source_coords[1]),</span>
+<span class="lineNum">     221 </span><span class="lineCov">        654 :                            dereference_wrapper(source_coords[2]), 1.0);</span>
+<span class="lineNum">     222 </span>            : }
+<a name="223"><span class="lineNum">     223 </span>            : </a>
+<span class="lineNum">     224 </span>            : template &lt;typename T&gt;
+<span class="lineNum">     225 </span><span class="lineCov">        165 : tnsr::Ij&lt;tt::remove_cvref_wrap_t&lt;T&gt;, 3, Frame::NoFrame&gt; BulgedCube::jacobian(</span>
+<span class="lineNum">     226 </span>            :     const std::array&lt;T, 3&gt;&amp; source_coords) const noexcept {
+<span class="lineNum">     227 </span><span class="lineCov">        177 :   const auto dX_dxi = xi_derivative(source_coords);</span>
+<span class="lineNum">     228 </span><span class="lineCov">        507 :   const auto dX_deta = xi_derivative(</span>
+<span class="lineNum">     229 </span>            :       std::array&lt;std::reference_wrapper&lt;const tt::remove_cvref_wrap_t&lt;T&gt;&gt;, 3&gt;{
+<span class="lineNum">     230 </span><span class="lineCov">        165 :           {std::cref(dereference_wrapper(source_coords[1])),</span>
+<span class="lineNum">     231 </span><span class="lineCov">        165 :            std::cref(dereference_wrapper(source_coords[0])),</span>
+<span class="lineNum">     232 </span><span class="lineCov">        165 :            std::cref(dereference_wrapper(source_coords[2]))}});</span>
+<span class="lineNum">     233 </span><span class="lineCov">        507 :   const auto dX_dzeta = xi_derivative(</span>
+<span class="lineNum">     234 </span>            :       std::array&lt;std::reference_wrapper&lt;const tt::remove_cvref_wrap_t&lt;T&gt;&gt;, 3&gt;{
+<span class="lineNum">     235 </span><span class="lineCov">        165 :           {std::cref(dereference_wrapper(source_coords[2])),</span>
+<span class="lineNum">     236 </span><span class="lineCov">        165 :            std::cref(dereference_wrapper(source_coords[1])),</span>
+<span class="lineNum">     237 </span><span class="lineCov">        165 :            std::cref(dereference_wrapper(source_coords[0]))}});</span>
+<span class="lineNum">     238 </span><span class="lineCov">         12 :   auto jacobian_matrix =</span>
+<span class="lineNum">     239 </span><span class="lineCov">        153 :       make_with_value&lt;tnsr::Ij&lt;tt::remove_cvref_wrap_t&lt;T&gt;, 3, Frame::NoFrame&gt;&gt;(</span>
+<span class="lineNum">     240 </span><span class="lineCov">        165 :           dereference_wrapper(source_coords[0]), 0.0);</span>
+<span class="lineNum">     241 </span>            : 
+<span class="lineNum">     242 </span><span class="lineCov">        330 :   get&lt;0, 0&gt;(jacobian_matrix) = dX_dxi[0];</span>
+<span class="lineNum">     243 </span><span class="lineCov">        330 :   get&lt;0, 1&gt;(jacobian_matrix) = dX_deta[1];</span>
+<span class="lineNum">     244 </span><span class="lineCov">        330 :   get&lt;0, 2&gt;(jacobian_matrix) = dX_dzeta[2];</span>
+<span class="lineNum">     245 </span><span class="lineCov">        330 :   get&lt;1, 0&gt;(jacobian_matrix) = dX_dxi[1];</span>
+<span class="lineNum">     246 </span><span class="lineCov">        330 :   get&lt;1, 1&gt;(jacobian_matrix) = dX_deta[0];</span>
+<span class="lineNum">     247 </span><span class="lineCov">        330 :   get&lt;1, 2&gt;(jacobian_matrix) = dX_dzeta[1];</span>
+<span class="lineNum">     248 </span><span class="lineCov">        330 :   get&lt;2, 0&gt;(jacobian_matrix) = dX_dxi[2];</span>
+<span class="lineNum">     249 </span><span class="lineCov">        330 :   get&lt;2, 1&gt;(jacobian_matrix) = dX_deta[2];</span>
+<span class="lineNum">     250 </span><span class="lineCov">        330 :   get&lt;2, 2&gt;(jacobian_matrix) = dX_dzeta[0];</span>
+<span class="lineNum">     251 </span><span class="lineCov">        177 :   return jacobian_matrix;</span>
+<span class="lineNum">     252 </span>            : }
+<span class="lineNum">     253 </span>            : 
+<a name="254"><span class="lineNum">     254 </span>            : template &lt;typename T&gt;</a>
+<span class="lineNum">     255 </span>            : tnsr::Ij&lt;tt::remove_cvref_wrap_t&lt;T&gt;, 3, Frame::NoFrame&gt;
+<span class="lineNum">     256 </span><span class="lineCov">         77 : BulgedCube::inv_jacobian(const std::array&lt;T, 3&gt;&amp; source_coords) const noexcept {</span>
+<span class="lineNum">     257 </span><span class="lineCov">         83 :   const auto jac = jacobian(source_coords);</span>
+<span class="lineNum">     258 </span><span class="lineCov">         83 :   return determinant_and_inverse(jac).second;</span>
+<a name="259"><span class="lineNum">     259 </span>            : }</a>
+<span class="lineNum">     260 </span>            : 
+<span class="lineNum">     261 </span><span class="lineCov">         18 : void BulgedCube::pup(PUP::er&amp; p) noexcept {</span>
+<span class="lineNum">     262 </span><span class="lineCov">         18 :   p | radius_;</span>
+<span class="lineNum">     263 </span><span class="lineCov">         18 :   p | sphericity_;</span>
+<span class="lineNum">     264 </span><span class="lineCov">         18 :   p | use_equiangular_map_;</span>
+<a name="265"><span class="lineNum">     265 </span><span class="lineCov">         18 : }</span></a>
+<span class="lineNum">     266 </span>            : 
+<span class="lineNum">     267 </span><span class="lineCov">          6 : bool operator==(const BulgedCube&amp; lhs, const BulgedCube&amp; rhs) noexcept {</span>
+<span class="lineNum">     268 </span><span class="lineCov">         12 :   return lhs.radius_ == rhs.radius_ and lhs.sphericity_ == rhs.sphericity_ and</span>
+<span class="lineNum">     269 </span><span class="lineCov">         12 :          lhs.use_equiangular_map_ == rhs.use_equiangular_map_;</span>
+<a name="270"><span class="lineNum">     270 </span>            : }</a>
+<span class="lineNum">     271 </span>            : 
+<span class="lineNum">     272 </span><span class="lineCov">          3 : bool operator!=(const BulgedCube&amp; lhs, const BulgedCube&amp; rhs) noexcept {</span>
+<span class="lineNum">     273 </span><span class="lineCov">          3 :   return not(lhs == rhs);</span>
+<span class="lineNum">     274 </span>            : }
+<span class="lineNum">     275 </span>            : 
+<span class="lineNum">     276 </span>            : // Explicit instantiations
+<span class="lineNum">     277 </span>            : /// \cond
+<span class="lineNum">     278 </span>            : #define DTYPE(data) BOOST_PP_TUPLE_ELEM(0, data)
+<span class="lineNum">     279 </span>            : 
+<span class="lineNum">     280 </span>            : #define INSTANTIATE(_, data)                                                  \
+<span class="lineNum">     281 </span>            :   template std::array&lt;tt::remove_cvref_wrap_t&lt;DTYPE(data)&gt;, 3&gt; BulgedCube::   \
+<span class="lineNum">     282 </span>            :   operator()(const std::array&lt;DTYPE(data), 3&gt;&amp; source_coords) const noexcept; \
+<span class="lineNum">     283 </span>            :   template std::array&lt;tt::remove_cvref_wrap_t&lt;DTYPE(data)&gt;, 3&gt;                \
+<span class="lineNum">     284 </span>            :   BulgedCube::inverse(const std::array&lt;DTYPE(data), 3&gt;&amp; target_coords)        \
+<span class="lineNum">     285 </span>            :       const noexcept;                                                         \
+<span class="lineNum">     286 </span>            :   template tnsr::Ij&lt;tt::remove_cvref_wrap_t&lt;DTYPE(data)&gt;, 3, Frame::NoFrame&gt;  \
+<span class="lineNum">     287 </span>            :   BulgedCube::jacobian(const std::array&lt;DTYPE(data), 3&gt;&amp; source_coords)       \
+<span class="lineNum">     288 </span>            :       const noexcept;                                                         \
+<span class="lineNum">     289 </span>            :   template tnsr::Ij&lt;tt::remove_cvref_wrap_t&lt;DTYPE(data)&gt;, 3, Frame::NoFrame&gt;  \
+<span class="lineNum">     290 </span>            :   BulgedCube::inv_jacobian(const std::array&lt;DTYPE(data), 3&gt;&amp; source_coords)   \
+<span class="lineNum">     291 </span>            :       const noexcept;
+<span class="lineNum">     292 </span>            : 
+<span class="lineNum">     293 </span>            : GENERATE_INSTANTIATIONS(INSTANTIATE, (double, DataVector,
+<span class="lineNum">     294 </span>            :                                       std::reference_wrapper&lt;const double&gt;,
+<span class="lineNum">     295 </span>            :                                       std::reference_wrapper&lt;const DataVector&gt;))
+<span class="lineNum">     296 </span>            : 
+<span class="lineNum">     297 </span>            : #undef DTYPE
+<a name="298"><span class="lineNum">     298 </span>            : #undef INSTANTIATE</a>
+<span class="lineNum">     299 </span>            : /// \endcond
+<span class="lineNum">     300 </span><span class="lineCov">       2283 : }  // namespace CoordinateMaps</span>
+</pre>
+      </td>
+    </tr>
+  </table>
+  <br>
+
+  <table width="100%" border=0 cellspacing=0 cellpadding=0>
+    <tr><td class="ruler"><img src="../../glass.png" width=3 height=3 alt=""></td></tr>
+    <tr><td class="versionInfo">Generated by: <a href="http://ltp.sourceforge.net/coverage/lcov.php" target="_parent">LCOV version 1.13</a></td></tr>
+  </table>
+  <br>
+
+</body>
+</html>

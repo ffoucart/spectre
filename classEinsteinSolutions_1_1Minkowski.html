@@ -1,0 +1,337 @@
+<!-- HTML header for doxygen 1.8.10-->
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=9"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="author" content="SXS Collaboration">
+    <meta name="generator" content="Doxygen 1.8.13"/>
+    <style>
+        /*!
+         * IE10 viewport hack for Surface/desktop Windows 8 bug
+         * Copyright 2014-2015 Twitter, Inc.
+         * Licensed under MIT (https://github.com/twbs/bootstrap/blob/master/LICENSE)
+         */
+        @-webkit-viewport { width: device-width; }
+        @-moz-viewport    { width: device-width; }
+        @-ms-viewport     { width: device-width; }
+        @-o-viewport      { width: device-width; }
+        @viewport         { width: device-width; }
+      </style>
+  <title>SpECTRE: EinsteinSolutions::Minkowski&lt; Dim &gt; Class Template Reference</title>
+  <link href="tabs.css" rel="stylesheet" type="text/css"/>
+  <script type="text/javascript" src="jquery.js"></script>
+  <script type="text/javascript" src="dynsections.js"></script>
+  <link href="search/search.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="search/searchdata.js"></script>
+<script type="text/javascript" src="search/search.js"></script>
+  <script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+    extensions: ["tex2jax.js", "TeX/AMSmath.js", "TeX/AMSsymbols.js", "color.js"],
+    jax: ["input/TeX","output/HTML-CSS"],
+});
+MathJax.Hub.Config({
+    TeX: { equationNumbers: { autoNumber: "AMS" } }
+});
+MathJax.Hub.Config({
+    tex2jax: {inlineMath: [['^^','^^'], ['\\(', '\\)']]}
+});
+</script><script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.2/MathJax.js"></script>
+  <link href="octicons.css" rel="stylesheet">
+  <link href="bootstrap.min.css" rel="stylesheet">
+  <link href="doxygen.css" rel="stylesheet" type="text/css" />
+  <script type="text/javascript" src="jquery.js"></script>
+  <script type="text/javascript" src="bootstrap.min.js"></script>
+  <script type="text/javascript" src="spectre.js"></script>
+  </head>
+  <body>
+  <div id="top" class="navbar-fixed-top"><!-- do not remove this div, it is closed by doxygen! -->
+  <!-- BEGIN TITLEAREA -->
+  <div id="titlearea">
+  <script type="text/javascript">
+  var searchBox = new SearchBox("searchBox", "search",false,'Search');
+  </script>
+  <div id="main-nav">
+    <ul class="sm sm-dox" id="main-menu">
+      <li>
+      <a href="index.html">
+      SpECTRE &#160;
+        <span id="projectnumber">v0.0.0</span>
+      </a>
+      </li>
+      <li class="dropdown">
+        <a class="dropdown-toggle" data-toggle="dropdown" href="#" id="selected">
+          <span id="selected">
+            <i class="octicon octicon-book"></i><span>Documentation</span>
+          </span>
+          <span class="caret"></span>
+        </a>
+        <ul class="dropdown-menu">
+          <li style="min-width: 135px;">
+            <a href="index.html">
+            <i class="octicon octicon-book"></i><span>Introduction</span></a>
+          </li>
+          <li style="min-width: 135px;">
+            <a href="installation.html">
+              <i class="octicon octicon-desktop-download"></i><span>Installation</span>
+            </a>
+          </li>
+          <li style="min-width: 135px;">
+            <a href="tutorials.html">
+              <i class="octicon octicon-mortar-board"></i><span>User Tutorials</span>
+            </a>
+          </li>
+          <li style="min-width: 135px;">
+            <a href="dev_guide.html">
+              <i class="octicon octicon-gist-secret"></i><span>Dev Guide</span>
+            </a>
+          </li>
+        </ul>
+      </li>
+      <li class="dropdown">
+        <a class="dropdown-toggle" data-toggle="dropdown" href="#" id="selected">
+          <span id="selected">
+            <i class="octicon octicon-code"></i>
+              <span>Reference</span>
+          </span>
+          <span class="caret"></span>
+        </a>
+        <ul class="dropdown-menu">
+          <li style="min-width: 130px;">
+            <a href="modules.html">
+              <i class="octicon octicon-code"></i>
+              <span>Topics</span>
+            </a>
+          </li>
+          <li style="min-width: 130px;">
+            <a href="namespaces.html">
+              <i class="octicon octicon-gist"></i>
+              <span>Namespaces</span>
+            </a>
+          </li>
+        </ul>
+      </li>
+      <li>
+        <a href="files.html">
+          <i class="octicon octicon-file-directory"></i><span>Files</span>
+        </a>
+      </li>
+      <li>
+        <a href="https://github.com/sxs-collaboration/spectre" target="_blank">
+          <i class="octicon octicon-mark-github"></i><span>View on GitHub</span>
+        </a>
+      </li>
+      <!--The Search <li> is added by doxygen later-->
+    </ul>
+  </div><!-- main-nav -->
+  </div><!-- titlearea -->
+  <!-- window showing the filter options -->
+  <div id="MSearchSelectWindow"  style="position: fixed;"
+       onmouseover="return searchBox.OnSearchSelectShow()"
+       onmouseout="return searchBox.OnSearchSelectHide()"
+       onkeydown="return searchBox.OnSearchSelectKey(event)">
+  </div>
+  <!-- iframe showing the search results (closed by default) -->
+  <div id="MSearchResultsWindow"  style="position: fixed;">
+  <iframe src="javascript:void(0)" frameborder="0"
+          name="MSearchResults" id="MSearchResults">
+  </iframe>
+  </div>
+<!-- Generated by Doxygen 1.8.13 -->
+<script type="text/javascript">
+var searchBox = new SearchBox("searchBox", "search",false,'Search');
+</script>
+<script type="text/javascript" src="menudata.js"></script>
+<script type="text/javascript" src="menu.js"></script>
+<script type="text/javascript">
+$(function() {
+  initMenu('',true,false,'search.php','Search');
+  $(document).ready(function() { init_search(); });
+});
+</script>
+<div id="main-nav"></div>
+<!-- window showing the filter options -->
+<div id="MSearchSelectWindow"
+     onmouseover="return searchBox.OnSearchSelectShow()"
+     onmouseout="return searchBox.OnSearchSelectHide()"
+     onkeydown="return searchBox.OnSearchSelectKey(event)">
+</div>
+
+<!-- iframe showing the search results (closed by default) -->
+<div id="MSearchResultsWindow">
+<iframe src="javascript:void(0)" frameborder="0" 
+        name="MSearchResults" id="MSearchResults">
+</iframe>
+</div>
+
+<div id="nav-path" class="navpath">
+  <ul>
+<li class="navelem"><b>EinsteinSolutions</b></li><li class="navelem"><a class="el" href="classEinsteinSolutions_1_1Minkowski.html">Minkowski</a></li>  </ul>
+</div>
+</div><!-- top -->
+<div class="header">
+  <div class="summary">
+<a href="#pub-types">Public Types</a> &#124;
+<a href="#pub-methods">Public Member Functions</a> &#124;
+<a href="#pub-static-attribs">Static Public Attributes</a> &#124;
+<a href="classEinsteinSolutions_1_1Minkowski-members.html">List of all members</a>  </div>
+  <div class="headertitle">
+<div class="title">EinsteinSolutions::Minkowski&lt; Dim &gt; Class Template Reference<div class="ingroups"><a class="el" href="group__EinsteinSolutionsGroup.html">Einstein Solutions</a></div></div>  </div>
+</div><!--header-->
+<div class="contents">
+
+<p>The <a class="el" href="classEinsteinSolutions_1_1Minkowski.html" title="The Minkowski solution for flat space in Dim spatial dimensions. ">Minkowski</a> solution for flat space in Dim spatial dimensions.  
+ <a href="classEinsteinSolutions_1_1Minkowski.html#details">More...</a></p>
+
+<p><code>#include &lt;<a class="el" href="Minkowski_8hpp_source.html">Minkowski.hpp</a>&gt;</code></p>
+<table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-types"></a>
+Public Types</h2></td></tr>
+<tr class="memitem:a0686824417febeffbe251c2d22e955d0"><td class="memItemLeft" align="right" valign="top"><a id="a0686824417febeffbe251c2d22e955d0"></a>
+using&#160;</td><td class="memItemRight" valign="bottom"><b>options</b> = tmpl::list&lt;&gt;</td></tr>
+<tr class="separator:a0686824417febeffbe251c2d22e955d0"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a388bcd61606e537ae5f3aaab8ce66728"><td class="memTemplParams" colspan="2"><a id="a388bcd61606e537ae5f3aaab8ce66728"></a>
+template&lt;typename DataType &gt; </td></tr>
+<tr class="memitem:a388bcd61606e537ae5f3aaab8ce66728"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><b>DerivLapse</b> = Tags::deriv&lt; <a class="el" href="structgr_1_1Tags_1_1Lapse.html">gr::Tags::Lapse</a>&lt; Dim, <a class="el" href="structFrame_1_1Inertial.html">Frame::Inertial</a>, DataType &gt;, tmpl::size_t&lt; Dim &gt;, <a class="el" href="structFrame_1_1Inertial.html">Frame::Inertial</a> &gt;</td></tr>
+<tr class="separator:a388bcd61606e537ae5f3aaab8ce66728"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aed709a5cc820a8bf025100fc9c801654"><td class="memTemplParams" colspan="2"><a id="aed709a5cc820a8bf025100fc9c801654"></a>
+template&lt;typename DataType &gt; </td></tr>
+<tr class="memitem:aed709a5cc820a8bf025100fc9c801654"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><b>DerivShift</b> = Tags::deriv&lt; <a class="el" href="structgr_1_1Tags_1_1Shift.html">gr::Tags::Shift</a>&lt; Dim, <a class="el" href="structFrame_1_1Inertial.html">Frame::Inertial</a>, DataType &gt;, tmpl::size_t&lt; Dim &gt;, <a class="el" href="structFrame_1_1Inertial.html">Frame::Inertial</a> &gt;</td></tr>
+<tr class="separator:aed709a5cc820a8bf025100fc9c801654"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a48ed3eb03cb2edfe61822e65d9e072d0"><td class="memTemplParams" colspan="2"><a id="a48ed3eb03cb2edfe61822e65d9e072d0"></a>
+template&lt;typename DataType &gt; </td></tr>
+<tr class="memitem:a48ed3eb03cb2edfe61822e65d9e072d0"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><b>DerivSpatialMetric</b> = Tags::deriv&lt; <a class="el" href="structgr_1_1Tags_1_1SpatialMetric.html">gr::Tags::SpatialMetric</a>&lt; Dim, <a class="el" href="structFrame_1_1Inertial.html">Frame::Inertial</a>, DataType &gt;, tmpl::size_t&lt; Dim &gt;, <a class="el" href="structFrame_1_1Inertial.html">Frame::Inertial</a> &gt;</td></tr>
+<tr class="separator:a48ed3eb03cb2edfe61822e65d9e072d0"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae6ce5d27c8467bd11002678d3a252ef6"><td class="memTemplParams" colspan="2"><a id="ae6ce5d27c8467bd11002678d3a252ef6"></a>
+template&lt;typename DataType &gt; </td></tr>
+<tr class="memitem:ae6ce5d27c8467bd11002678d3a252ef6"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><b>tags</b> = tmpl::list&lt; <a class="el" href="structgr_1_1Tags_1_1Lapse.html">gr::Tags::Lapse</a>&lt; Dim, <a class="el" href="structFrame_1_1Inertial.html">Frame::Inertial</a>, DataType &gt;, <a class="el" href="structTags_1_1dt.html">Tags::dt</a>&lt; <a class="el" href="structgr_1_1Tags_1_1Lapse.html">gr::Tags::Lapse</a>&lt; Dim, <a class="el" href="structFrame_1_1Inertial.html">Frame::Inertial</a>, DataType &gt; &gt;, DerivLapse&lt; DataType &gt;, <a class="el" href="structgr_1_1Tags_1_1Shift.html">gr::Tags::Shift</a>&lt; Dim, <a class="el" href="structFrame_1_1Inertial.html">Frame::Inertial</a>, DataType &gt;, <a class="el" href="structTags_1_1dt.html">Tags::dt</a>&lt; <a class="el" href="structgr_1_1Tags_1_1Shift.html">gr::Tags::Shift</a>&lt; Dim, <a class="el" href="structFrame_1_1Inertial.html">Frame::Inertial</a>, DataType &gt; &gt;, DerivShift&lt; DataType &gt;, <a class="el" href="structgr_1_1Tags_1_1SpatialMetric.html">gr::Tags::SpatialMetric</a>&lt; Dim, <a class="el" href="structFrame_1_1Inertial.html">Frame::Inertial</a>, DataType &gt;, <a class="el" href="structTags_1_1dt.html">Tags::dt</a>&lt; <a class="el" href="structgr_1_1Tags_1_1SpatialMetric.html">gr::Tags::SpatialMetric</a>&lt; Dim, <a class="el" href="structFrame_1_1Inertial.html">Frame::Inertial</a>, DataType &gt; &gt;, DerivSpatialMetric&lt; DataType &gt; &gt;</td></tr>
+<tr class="separator:ae6ce5d27c8467bd11002678d3a252ef6"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
+Public Member Functions</h2></td></tr>
+<tr class="memitem:a0a7a597d2a08f2c904c5a12448b9b522"><td class="memItemLeft" align="right" valign="top"><a id="a0a7a597d2a08f2c904c5a12448b9b522"></a>
+&#160;</td><td class="memItemRight" valign="bottom"><b>Minkowski</b> (const <a class="el" href="classEinsteinSolutions_1_1Minkowski.html">Minkowski</a> &amp;)=delete</td></tr>
+<tr class="separator:a0a7a597d2a08f2c904c5a12448b9b522"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab34655a2d319871ec882fb726b18512b"><td class="memItemLeft" align="right" valign="top"><a id="ab34655a2d319871ec882fb726b18512b"></a>
+<a class="el" href="classEinsteinSolutions_1_1Minkowski.html">Minkowski</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>operator=</b> (const <a class="el" href="classEinsteinSolutions_1_1Minkowski.html">Minkowski</a> &amp;)=delete</td></tr>
+<tr class="separator:ab34655a2d319871ec882fb726b18512b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac458b8c99b929fed19652c1d241eb7ce"><td class="memItemLeft" align="right" valign="top"><a id="ac458b8c99b929fed19652c1d241eb7ce"></a>
+&#160;</td><td class="memItemRight" valign="bottom"><b>Minkowski</b> (<a class="el" href="classEinsteinSolutions_1_1Minkowski.html">Minkowski</a> &amp;&amp;) noexcept=default</td></tr>
+<tr class="separator:ac458b8c99b929fed19652c1d241eb7ce"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3c437609a6ec8315e413f05f5a6ade67"><td class="memItemLeft" align="right" valign="top"><a id="a3c437609a6ec8315e413f05f5a6ade67"></a>
+<a class="el" href="classEinsteinSolutions_1_1Minkowski.html">Minkowski</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>operator=</b> (<a class="el" href="classEinsteinSolutions_1_1Minkowski.html">Minkowski</a> &amp;&amp;) noexcept=default</td></tr>
+<tr class="separator:a3c437609a6ec8315e413f05f5a6ade67"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1970f76ad47468bce7666e29bf6afe2e"><td class="memTemplParams" colspan="2"><a id="a1970f76ad47468bce7666e29bf6afe2e"></a>
+template&lt;typename DataType , typename... Tags&gt; </td></tr>
+<tr class="memitem:a1970f76ad47468bce7666e29bf6afe2e"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="classtuples_1_1TaggedTuple.html">tuples::TaggedTuple</a>&lt; Tags... &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><b>variables</b> (const tnsr::I&lt; DataType, Dim &gt; &amp;x, double t, tmpl::list&lt; Tags... &gt;) const noexcept</td></tr>
+<tr class="separator:a1970f76ad47468bce7666e29bf6afe2e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a357b80ff72330fdf50e1c0dcf17f3c2f"><td class="memTemplParams" colspan="2"><a id="a357b80ff72330fdf50e1c0dcf17f3c2f"></a>
+template&lt;typename DataType &gt; </td></tr>
+<tr class="memitem:a357b80ff72330fdf50e1c0dcf17f3c2f"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="classtuples_1_1TaggedTuple.html">tuples::TaggedTuple</a>&lt; <a class="el" href="structgr_1_1Tags_1_1Lapse.html">gr::Tags::Lapse</a>&lt; Dim, <a class="el" href="structFrame_1_1Inertial.html">Frame::Inertial</a>, DataType &gt; &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><b>variables</b> (const tnsr::I&lt; DataType, Dim &gt; &amp;x, double t, tmpl::list&lt; <a class="el" href="structgr_1_1Tags_1_1Lapse.html">gr::Tags::Lapse</a>&lt; Dim, <a class="el" href="structFrame_1_1Inertial.html">Frame::Inertial</a>, DataType &gt;&gt;) const noexcept</td></tr>
+<tr class="separator:a357b80ff72330fdf50e1c0dcf17f3c2f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:afc96f7d5ab60c47a53e88ec9c18c6714"><td class="memTemplParams" colspan="2"><a id="afc96f7d5ab60c47a53e88ec9c18c6714"></a>
+template&lt;typename DataType &gt; </td></tr>
+<tr class="memitem:afc96f7d5ab60c47a53e88ec9c18c6714"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="classtuples_1_1TaggedTuple.html">tuples::TaggedTuple</a>&lt; <a class="el" href="structTags_1_1dt.html">Tags::dt</a>&lt; <a class="el" href="structgr_1_1Tags_1_1Lapse.html">gr::Tags::Lapse</a>&lt; Dim, <a class="el" href="structFrame_1_1Inertial.html">Frame::Inertial</a>, DataType &gt; &gt; &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><b>variables</b> (const tnsr::I&lt; DataType, Dim &gt; &amp;x, double t, tmpl::list&lt; <a class="el" href="structTags_1_1dt.html">Tags::dt</a>&lt; <a class="el" href="structgr_1_1Tags_1_1Lapse.html">gr::Tags::Lapse</a>&lt; Dim, <a class="el" href="structFrame_1_1Inertial.html">Frame::Inertial</a>, DataType &gt;&gt;&gt;) const noexcept</td></tr>
+<tr class="separator:afc96f7d5ab60c47a53e88ec9c18c6714"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:acde892462c6a3ff312eaa091f836f81f"><td class="memTemplParams" colspan="2"><a id="acde892462c6a3ff312eaa091f836f81f"></a>
+template&lt;typename DataType &gt; </td></tr>
+<tr class="memitem:acde892462c6a3ff312eaa091f836f81f"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="classtuples_1_1TaggedTuple.html">tuples::TaggedTuple</a>&lt; Tags::deriv&lt; <a class="el" href="structgr_1_1Tags_1_1Lapse.html">gr::Tags::Lapse</a>&lt; Dim, <a class="el" href="structFrame_1_1Inertial.html">Frame::Inertial</a>, DataType &gt;, tmpl::size_t&lt; Dim &gt;, <a class="el" href="structFrame_1_1Inertial.html">Frame::Inertial</a> &gt; &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><b>variables</b> (const tnsr::I&lt; DataType, Dim &gt; &amp;x, double t, tmpl::list&lt; Tags::deriv&lt; <a class="el" href="structgr_1_1Tags_1_1Lapse.html">gr::Tags::Lapse</a>&lt; Dim, <a class="el" href="structFrame_1_1Inertial.html">Frame::Inertial</a>, DataType &gt;, tmpl::size_t&lt; Dim &gt;, <a class="el" href="structFrame_1_1Inertial.html">Frame::Inertial</a> &gt;&gt;) const noexcept</td></tr>
+<tr class="separator:acde892462c6a3ff312eaa091f836f81f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad08bc91a61fae3e98d3f00d3e6895d1d"><td class="memTemplParams" colspan="2"><a id="ad08bc91a61fae3e98d3f00d3e6895d1d"></a>
+template&lt;typename DataType &gt; </td></tr>
+<tr class="memitem:ad08bc91a61fae3e98d3f00d3e6895d1d"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="classtuples_1_1TaggedTuple.html">tuples::TaggedTuple</a>&lt; <a class="el" href="structgr_1_1Tags_1_1Shift.html">gr::Tags::Shift</a>&lt; Dim, <a class="el" href="structFrame_1_1Inertial.html">Frame::Inertial</a>, DataType &gt; &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><b>variables</b> (const tnsr::I&lt; DataType, Dim &gt; &amp;x, double, tmpl::list&lt; <a class="el" href="structgr_1_1Tags_1_1Shift.html">gr::Tags::Shift</a>&lt; Dim, <a class="el" href="structFrame_1_1Inertial.html">Frame::Inertial</a>, DataType &gt;&gt;) const noexcept</td></tr>
+<tr class="separator:ad08bc91a61fae3e98d3f00d3e6895d1d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad66013007a90af5186d0a1424156cb90"><td class="memTemplParams" colspan="2"><a id="ad66013007a90af5186d0a1424156cb90"></a>
+template&lt;typename DataType &gt; </td></tr>
+<tr class="memitem:ad66013007a90af5186d0a1424156cb90"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="classtuples_1_1TaggedTuple.html">tuples::TaggedTuple</a>&lt; <a class="el" href="structTags_1_1dt.html">Tags::dt</a>&lt; <a class="el" href="structgr_1_1Tags_1_1Shift.html">gr::Tags::Shift</a>&lt; Dim, <a class="el" href="structFrame_1_1Inertial.html">Frame::Inertial</a>, DataType &gt; &gt; &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><b>variables</b> (const tnsr::I&lt; DataType, Dim &gt; &amp;x, double, tmpl::list&lt; <a class="el" href="structTags_1_1dt.html">Tags::dt</a>&lt; <a class="el" href="structgr_1_1Tags_1_1Shift.html">gr::Tags::Shift</a>&lt; Dim, <a class="el" href="structFrame_1_1Inertial.html">Frame::Inertial</a>, DataType &gt;&gt;&gt;) const noexcept</td></tr>
+<tr class="separator:ad66013007a90af5186d0a1424156cb90"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a5eb16f68d0e33c5463e74cc3128a296c"><td class="memTemplParams" colspan="2"><a id="a5eb16f68d0e33c5463e74cc3128a296c"></a>
+template&lt;typename DataType &gt; </td></tr>
+<tr class="memitem:a5eb16f68d0e33c5463e74cc3128a296c"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="classtuples_1_1TaggedTuple.html">tuples::TaggedTuple</a>&lt; Tags::deriv&lt; <a class="el" href="structgr_1_1Tags_1_1Shift.html">gr::Tags::Shift</a>&lt; Dim, <a class="el" href="structFrame_1_1Inertial.html">Frame::Inertial</a>, DataType &gt;, tmpl::size_t&lt; Dim &gt;, <a class="el" href="structFrame_1_1Inertial.html">Frame::Inertial</a> &gt; &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><b>variables</b> (const tnsr::I&lt; DataType, Dim &gt; &amp;x, double, tmpl::list&lt; Tags::deriv&lt; <a class="el" href="structgr_1_1Tags_1_1Shift.html">gr::Tags::Shift</a>&lt; Dim, <a class="el" href="structFrame_1_1Inertial.html">Frame::Inertial</a>, DataType &gt;, tmpl::size_t&lt; Dim &gt;, <a class="el" href="structFrame_1_1Inertial.html">Frame::Inertial</a> &gt;&gt;) const noexcept</td></tr>
+<tr class="separator:a5eb16f68d0e33c5463e74cc3128a296c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0efdea57ca87c8a06d1e2b5f681137f2"><td class="memTemplParams" colspan="2"><a id="a0efdea57ca87c8a06d1e2b5f681137f2"></a>
+template&lt;typename DataType &gt; </td></tr>
+<tr class="memitem:a0efdea57ca87c8a06d1e2b5f681137f2"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="classtuples_1_1TaggedTuple.html">tuples::TaggedTuple</a>&lt; <a class="el" href="structgr_1_1Tags_1_1SpatialMetric.html">gr::Tags::SpatialMetric</a>&lt; Dim, <a class="el" href="structFrame_1_1Inertial.html">Frame::Inertial</a>, DataType &gt; &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><b>variables</b> (const tnsr::I&lt; DataType, Dim &gt; &amp;x, double, tmpl::list&lt; <a class="el" href="structgr_1_1Tags_1_1SpatialMetric.html">gr::Tags::SpatialMetric</a>&lt; Dim, <a class="el" href="structFrame_1_1Inertial.html">Frame::Inertial</a>, DataType &gt;&gt;) const noexcept</td></tr>
+<tr class="separator:a0efdea57ca87c8a06d1e2b5f681137f2"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae2fe7a6afda121dfb8a75f87dbdf9148"><td class="memTemplParams" colspan="2"><a id="ae2fe7a6afda121dfb8a75f87dbdf9148"></a>
+template&lt;typename DataType &gt; </td></tr>
+<tr class="memitem:ae2fe7a6afda121dfb8a75f87dbdf9148"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="classtuples_1_1TaggedTuple.html">tuples::TaggedTuple</a>&lt; <a class="el" href="structTags_1_1dt.html">Tags::dt</a>&lt; <a class="el" href="structgr_1_1Tags_1_1SpatialMetric.html">gr::Tags::SpatialMetric</a>&lt; Dim, <a class="el" href="structFrame_1_1Inertial.html">Frame::Inertial</a>, DataType &gt; &gt; &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><b>variables</b> (const tnsr::I&lt; DataType, Dim &gt; &amp;x, double, tmpl::list&lt; <a class="el" href="structTags_1_1dt.html">Tags::dt</a>&lt; <a class="el" href="structgr_1_1Tags_1_1SpatialMetric.html">gr::Tags::SpatialMetric</a>&lt; Dim, <a class="el" href="structFrame_1_1Inertial.html">Frame::Inertial</a>, DataType &gt;&gt;&gt;) const noexcept</td></tr>
+<tr class="separator:ae2fe7a6afda121dfb8a75f87dbdf9148"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:adfbc059141c8af03a18481773a2ef18e"><td class="memTemplParams" colspan="2"><a id="adfbc059141c8af03a18481773a2ef18e"></a>
+template&lt;typename DataType &gt; </td></tr>
+<tr class="memitem:adfbc059141c8af03a18481773a2ef18e"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="classtuples_1_1TaggedTuple.html">tuples::TaggedTuple</a>&lt; Tags::deriv&lt; <a class="el" href="structgr_1_1Tags_1_1SpatialMetric.html">gr::Tags::SpatialMetric</a>&lt; Dim, <a class="el" href="structFrame_1_1Inertial.html">Frame::Inertial</a>, DataType &gt;, tmpl::size_t&lt; Dim &gt;, <a class="el" href="structFrame_1_1Inertial.html">Frame::Inertial</a> &gt; &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><b>variables</b> (const tnsr::I&lt; DataType, Dim &gt; &amp;x, double, tmpl::list&lt; Tags::deriv&lt; <a class="el" href="structgr_1_1Tags_1_1SpatialMetric.html">gr::Tags::SpatialMetric</a>&lt; Dim, <a class="el" href="structFrame_1_1Inertial.html">Frame::Inertial</a>, DataType &gt;, tmpl::size_t&lt; Dim &gt;, <a class="el" href="structFrame_1_1Inertial.html">Frame::Inertial</a> &gt;&gt;) const noexcept</td></tr>
+<tr class="separator:adfbc059141c8af03a18481773a2ef18e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af37e30b426196bd67497532e5c76eb41"><td class="memTemplParams" colspan="2"><a id="af37e30b426196bd67497532e5c76eb41"></a>
+template&lt;typename DataType &gt; </td></tr>
+<tr class="memitem:af37e30b426196bd67497532e5c76eb41"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="classtuples_1_1TaggedTuple.html">tuples::TaggedTuple</a>&lt; <a class="el" href="structgr_1_1Tags_1_1InverseSpatialMetric.html">gr::Tags::InverseSpatialMetric</a>&lt; Dim, <a class="el" href="structFrame_1_1Inertial.html">Frame::Inertial</a>, DataType &gt; &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><b>variables</b> (const tnsr::I&lt; DataType, Dim &gt; &amp;x, double, tmpl::list&lt; <a class="el" href="structgr_1_1Tags_1_1InverseSpatialMetric.html">gr::Tags::InverseSpatialMetric</a>&lt; Dim, <a class="el" href="structFrame_1_1Inertial.html">Frame::Inertial</a>, DataType &gt;&gt;) const noexcept</td></tr>
+<tr class="separator:af37e30b426196bd67497532e5c76eb41"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:acc7dcc26b2265e062c1423ac811b9cf6"><td class="memTemplParams" colspan="2"><a id="acc7dcc26b2265e062c1423ac811b9cf6"></a>
+template&lt;typename DataType &gt; </td></tr>
+<tr class="memitem:acc7dcc26b2265e062c1423ac811b9cf6"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="classtuples_1_1TaggedTuple.html">tuples::TaggedTuple</a>&lt; <a class="el" href="structgr_1_1Tags_1_1ExtrinsicCurvature.html">gr::Tags::ExtrinsicCurvature</a>&lt; Dim, <a class="el" href="structFrame_1_1Inertial.html">Frame::Inertial</a>, DataType &gt; &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><b>variables</b> (const tnsr::I&lt; DataType, Dim &gt; &amp;x, double, tmpl::list&lt; <a class="el" href="structgr_1_1Tags_1_1ExtrinsicCurvature.html">gr::Tags::ExtrinsicCurvature</a>&lt; Dim, <a class="el" href="structFrame_1_1Inertial.html">Frame::Inertial</a>, DataType &gt;&gt;) const noexcept</td></tr>
+<tr class="separator:acc7dcc26b2265e062c1423ac811b9cf6"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:afbfbe3229496a23e13d138cc01306f65"><td class="memTemplParams" colspan="2"><a id="afbfbe3229496a23e13d138cc01306f65"></a>
+template&lt;typename DataType &gt; </td></tr>
+<tr class="memitem:afbfbe3229496a23e13d138cc01306f65"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="classtuples_1_1TaggedTuple.html">tuples::TaggedTuple</a>&lt; <a class="el" href="structgr_1_1Tags_1_1SqrtDetSpatialMetric.html">gr::Tags::SqrtDetSpatialMetric</a>&lt; Dim, <a class="el" href="structFrame_1_1Inertial.html">Frame::Inertial</a>, DataType &gt; &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><b>variables</b> (const tnsr::I&lt; DataType, Dim &gt; &amp;x, double, tmpl::list&lt; <a class="el" href="structgr_1_1Tags_1_1SqrtDetSpatialMetric.html">gr::Tags::SqrtDetSpatialMetric</a>&lt; Dim, <a class="el" href="structFrame_1_1Inertial.html">Frame::Inertial</a>, DataType &gt;&gt;) const noexcept</td></tr>
+<tr class="separator:afbfbe3229496a23e13d138cc01306f65"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3cdca4989b20acfd41229cb12055c349"><td class="memTemplParams" colspan="2"><a id="a3cdca4989b20acfd41229cb12055c349"></a>
+template&lt;typename DataType &gt; </td></tr>
+<tr class="memitem:a3cdca4989b20acfd41229cb12055c349"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="classtuples_1_1TaggedTuple.html">tuples::TaggedTuple</a>&lt; <a class="el" href="structTags_1_1dt.html">Tags::dt</a>&lt; <a class="el" href="structgr_1_1Tags_1_1SqrtDetSpatialMetric.html">gr::Tags::SqrtDetSpatialMetric</a>&lt; Dim, <a class="el" href="structFrame_1_1Inertial.html">Frame::Inertial</a>, DataType &gt; &gt; &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><b>variables</b> (const tnsr::I&lt; DataType, Dim &gt; &amp;x, double, tmpl::list&lt; <a class="el" href="structTags_1_1dt.html">Tags::dt</a>&lt; <a class="el" href="structgr_1_1Tags_1_1SqrtDetSpatialMetric.html">gr::Tags::SqrtDetSpatialMetric</a>&lt; Dim, <a class="el" href="structFrame_1_1Inertial.html">Frame::Inertial</a>, DataType &gt;&gt;&gt;) const noexcept</td></tr>
+<tr class="separator:a3cdca4989b20acfd41229cb12055c349"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a61bbcb459b570c17c4c9fe9b2e6a508d"><td class="memItemLeft" align="right" valign="top"><a id="a61bbcb459b570c17c4c9fe9b2e6a508d"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>pup</b> (PUP::er &amp;) noexcept</td></tr>
+<tr class="separator:a61bbcb459b570c17c4c9fe9b2e6a508d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-static-attribs"></a>
+Static Public Attributes</h2></td></tr>
+<tr class="memitem:a5b43157d35e4dc1787fc2c820ed73d01"><td class="memItemLeft" align="right" valign="top">static constexpr <a class="el" href="Options_8hpp.html#ac6df7d1b74fbddedd85b06a0087d93f6">OptionString</a>&#160;</td><td class="memItemRight" valign="bottom"><b>help</b></td></tr>
+<tr class="separator:a5b43157d35e4dc1787fc2c820ed73d01"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table>
+<a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
+<div class="textblock"><h3>template&lt;size_t Dim&gt;<br />
+class EinsteinSolutions::Minkowski&lt; Dim &gt;</h3>
+
+<p>The <a class="el" href="classEinsteinSolutions_1_1Minkowski.html" title="The Minkowski solution for flat space in Dim spatial dimensions. ">Minkowski</a> solution for flat space in Dim spatial dimensions. </p>
+<h3>Details</h3>
+<p>The solution has lapse \(N(x,t)= 1 \), shift \(N^i(x,t) = 0 \) and the identity as the spatial metric: \(g_{ii} = 1 \) </p>
+</div><h2 class="groupheader">Member Data Documentation</h2>
+<a id="a5b43157d35e4dc1787fc2c820ed73d01"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a5b43157d35e4dc1787fc2c820ed73d01">&#9670;&nbsp;</a></span>help</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;size_t Dim&gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">constexpr <a class="el" href="Options_8hpp.html#ac6df7d1b74fbddedd85b06a0087d93f6">OptionString</a> <a class="el" href="classEinsteinSolutions_1_1Minkowski.html">EinsteinSolutions::Minkowski</a>&lt; Dim &gt;::help</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<b>Initial value:</b><div class="fragment"><div class="line">{</div><div class="line">      <span class="stringliteral">&quot;Minkowski solution to Einstein&#39;s Equations&quot;</span>}</div></div><!-- fragment -->
+</div>
+</div>
+<hr/>The documentation for this class was generated from the following files:<ul>
+<li>src/PointwiseFunctions/AnalyticSolutions/EinsteinSolutions/<a class="el" href="Minkowski_8hpp_source.html">Minkowski.hpp</a></li>
+<li>src/PointwiseFunctions/AnalyticSolutions/EinsteinSolutions/Minkowski.cpp</li>
+</ul>
+</div><!-- contents -->
+<!-- HTML footer for doxygen 1.8.10-->
+<!-- start footer part -->
+<hr class="footer"/><address class="footer"><small>
+&copy; Copyright 2017 - 2018
+<a href="https://black-holes.org">SXS Collaboration</a>,
+<a href="LICENSE.txt" target="_blank">
+<span class="hidden-xs">Distributed under the</span>
+MIT License</a>
+</small></address>
+</body>
+</html>

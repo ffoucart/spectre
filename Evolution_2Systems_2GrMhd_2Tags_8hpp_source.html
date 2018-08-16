@@ -1,0 +1,209 @@
+<!-- HTML header for doxygen 1.8.10-->
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=9"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="author" content="SXS Collaboration">
+    <meta name="generator" content="Doxygen 1.8.13"/>
+    <style>
+        /*!
+         * IE10 viewport hack for Surface/desktop Windows 8 bug
+         * Copyright 2014-2015 Twitter, Inc.
+         * Licensed under MIT (https://github.com/twbs/bootstrap/blob/master/LICENSE)
+         */
+        @-webkit-viewport { width: device-width; }
+        @-moz-viewport    { width: device-width; }
+        @-ms-viewport     { width: device-width; }
+        @-o-viewport      { width: device-width; }
+        @viewport         { width: device-width; }
+      </style>
+  <title>SpECTRE: src/Evolution/Systems/GrMhd/Tags.hpp Source File</title>
+  <link href="tabs.css" rel="stylesheet" type="text/css"/>
+  <script type="text/javascript" src="jquery.js"></script>
+  <script type="text/javascript" src="dynsections.js"></script>
+  <link href="search/search.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="search/searchdata.js"></script>
+<script type="text/javascript" src="search/search.js"></script>
+  <script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+    extensions: ["tex2jax.js", "TeX/AMSmath.js", "TeX/AMSsymbols.js", "color.js"],
+    jax: ["input/TeX","output/HTML-CSS"],
+});
+MathJax.Hub.Config({
+    TeX: { equationNumbers: { autoNumber: "AMS" } }
+});
+MathJax.Hub.Config({
+    tex2jax: {inlineMath: [['^^','^^'], ['\\(', '\\)']]}
+});
+</script><script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.2/MathJax.js"></script>
+  <link href="octicons.css" rel="stylesheet">
+  <link href="bootstrap.min.css" rel="stylesheet">
+  <link href="doxygen.css" rel="stylesheet" type="text/css" />
+  <script type="text/javascript" src="jquery.js"></script>
+  <script type="text/javascript" src="bootstrap.min.js"></script>
+  <script type="text/javascript" src="spectre.js"></script>
+  </head>
+  <body>
+  <div id="top" class="navbar-fixed-top"><!-- do not remove this div, it is closed by doxygen! -->
+  <!-- BEGIN TITLEAREA -->
+  <div id="titlearea">
+  <script type="text/javascript">
+  var searchBox = new SearchBox("searchBox", "search",false,'Search');
+  </script>
+  <div id="main-nav">
+    <ul class="sm sm-dox" id="main-menu">
+      <li>
+      <a href="index.html">
+      SpECTRE &#160;
+        <span id="projectnumber">v0.0.0</span>
+      </a>
+      </li>
+      <li class="dropdown">
+        <a class="dropdown-toggle" data-toggle="dropdown" href="#" id="selected">
+          <span id="selected">
+            <i class="octicon octicon-book"></i><span>Documentation</span>
+          </span>
+          <span class="caret"></span>
+        </a>
+        <ul class="dropdown-menu">
+          <li style="min-width: 135px;">
+            <a href="index.html">
+            <i class="octicon octicon-book"></i><span>Introduction</span></a>
+          </li>
+          <li style="min-width: 135px;">
+            <a href="installation.html">
+              <i class="octicon octicon-desktop-download"></i><span>Installation</span>
+            </a>
+          </li>
+          <li style="min-width: 135px;">
+            <a href="tutorials.html">
+              <i class="octicon octicon-mortar-board"></i><span>User Tutorials</span>
+            </a>
+          </li>
+          <li style="min-width: 135px;">
+            <a href="dev_guide.html">
+              <i class="octicon octicon-gist-secret"></i><span>Dev Guide</span>
+            </a>
+          </li>
+        </ul>
+      </li>
+      <li class="dropdown">
+        <a class="dropdown-toggle" data-toggle="dropdown" href="#" id="selected">
+          <span id="selected">
+            <i class="octicon octicon-code"></i>
+              <span>Reference</span>
+          </span>
+          <span class="caret"></span>
+        </a>
+        <ul class="dropdown-menu">
+          <li style="min-width: 130px;">
+            <a href="modules.html">
+              <i class="octicon octicon-code"></i>
+              <span>Topics</span>
+            </a>
+          </li>
+          <li style="min-width: 130px;">
+            <a href="namespaces.html">
+              <i class="octicon octicon-gist"></i>
+              <span>Namespaces</span>
+            </a>
+          </li>
+        </ul>
+      </li>
+      <li>
+        <a href="files.html">
+          <i class="octicon octicon-file-directory"></i><span>Files</span>
+        </a>
+      </li>
+      <li>
+        <a href="https://github.com/sxs-collaboration/spectre" target="_blank">
+          <i class="octicon octicon-mark-github"></i><span>View on GitHub</span>
+        </a>
+      </li>
+      <!--The Search <li> is added by doxygen later-->
+    </ul>
+  </div><!-- main-nav -->
+  </div><!-- titlearea -->
+  <!-- window showing the filter options -->
+  <div id="MSearchSelectWindow"  style="position: fixed;"
+       onmouseover="return searchBox.OnSearchSelectShow()"
+       onmouseout="return searchBox.OnSearchSelectHide()"
+       onkeydown="return searchBox.OnSearchSelectKey(event)">
+  </div>
+  <!-- iframe showing the search results (closed by default) -->
+  <div id="MSearchResultsWindow"  style="position: fixed;">
+  <iframe src="javascript:void(0)" frameborder="0"
+          name="MSearchResults" id="MSearchResults">
+  </iframe>
+  </div>
+<!-- Generated by Doxygen 1.8.13 -->
+<script type="text/javascript">
+var searchBox = new SearchBox("searchBox", "search",false,'Search');
+</script>
+<script type="text/javascript" src="menudata.js"></script>
+<script type="text/javascript" src="menu.js"></script>
+<script type="text/javascript">
+$(function() {
+  initMenu('',true,false,'search.php','Search');
+  $(document).ready(function() { init_search(); });
+});
+</script>
+<div id="main-nav"></div>
+<!-- window showing the filter options -->
+<div id="MSearchSelectWindow"
+     onmouseover="return searchBox.OnSearchSelectShow()"
+     onmouseout="return searchBox.OnSearchSelectHide()"
+     onkeydown="return searchBox.OnSearchSelectKey(event)">
+</div>
+
+<!-- iframe showing the search results (closed by default) -->
+<div id="MSearchResultsWindow">
+<iframe src="javascript:void(0)" frameborder="0" 
+        name="MSearchResults" id="MSearchResults">
+</iframe>
+</div>
+
+<div id="nav-path" class="navpath">
+  <ul>
+<li class="navelem"><a class="el" href="dir_22cd119e9135d55404da822cc2bf42d2.html">src</a></li><li class="navelem"><a class="el" href="dir_7d19b16c3461122ea63afe85d1697a3b.html">Evolution</a></li><li class="navelem"><a class="el" href="dir_2d69a5df0814271789b4515609f6faf2.html">Systems</a></li><li class="navelem"><a class="el" href="dir_c58b308224cd09966c04d4604131fa15.html">GrMhd</a></li>  </ul>
+</div>
+</div><!-- top -->
+<div class="header">
+  <div class="headertitle">
+<div class="title">Tags.hpp</div>  </div>
+</div><!--header-->
+<div class="contents">
+<div class="fragment"><div class="line"><a name="l00001"></a><span class="lineno">    1</span>&#160;<span class="comment">// Distributed under the MIT License.</span></div><div class="line"><a name="l00002"></a><span class="lineno">    2</span>&#160;<span class="comment">// See LICENSE.txt for details.</span></div><div class="line"><a name="l00003"></a><span class="lineno">    3</span>&#160;</div><div class="line"><a name="l00004"></a><span class="lineno">    4</span>&#160;<span class="preprocessor">#pragma once</span></div><div class="line"><a name="l00005"></a><span class="lineno">    5</span>&#160;</div><div class="line"><a name="l00006"></a><span class="lineno">    6</span>&#160;<span class="preprocessor">#include &lt;<a class="codeRef" doxygen="/work/spectre/docs/config/cppreference-doxygen-web.tag.xml:http://en.cppreference.com/w/" href="http://en.cppreference.com/w/cpp/header/cstddef.html">cstddef</a>&gt;</span></div><div class="line"><a name="l00007"></a><span class="lineno">    7</span>&#160;<span class="preprocessor">#include &lt;<a class="codeRef" doxygen="/work/spectre/docs/config/cppreference-doxygen-web.tag.xml:http://en.cppreference.com/w/" href="http://en.cppreference.com/w/cpp/header/string.html">string</a>&gt;</span></div><div class="line"><a name="l00008"></a><span class="lineno">    8</span>&#160;</div><div class="line"><a name="l00009"></a><span class="lineno">    9</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="DataBoxTag_8hpp.html">DataStructures/DataBox/DataBoxTag.hpp</a>&quot;</span></div><div class="line"><a name="l00010"></a><span class="lineno">   10</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="TypeAliases_8hpp.html">DataStructures/Tensor/TypeAliases.hpp</a>&quot;</span></div><div class="line"><a name="l00011"></a><span class="lineno">   11</span>&#160;</div><div class="line"><a name="l00012"></a><span class="lineno">   12</span>&#160;<span class="keyword">class </span><a class="code" href="classDataVector.html">DataVector</a>;</div><div class="line"><a name="l00013"></a><span class="lineno">   13</span>&#160;<span class="comment"></span></div><div class="line"><a name="l00014"></a><span class="lineno">   14</span>&#160;<span class="comment">/// \ingroup EvolutionSystemsGroup</span></div><div class="line"><a name="l00015"></a><span class="lineno">   15</span>&#160;<span class="comment">/// \brief Items related to general relativistic magnetohydrodynamics (GRMHD)</span></div><div class="line"><a name="l00016"></a><span class="lineno"><a class="line" href="namespacegrmhd.html">   16</a></span>&#160;<span class="comment"></span><span class="keyword">namespace </span><a class="code" href="namespacegrmhd.html">grmhd</a> {<span class="comment"></span></div><div class="line"><a name="l00017"></a><span class="lineno">   17</span>&#160;<span class="comment">/// %Tags for general relativistic magnetohydrodynamics.</span></div><div class="line"><a name="l00018"></a><span class="lineno"><a class="line" href="namespacegrmhd_1_1Tags.html">   18</a></span>&#160;<span class="comment"></span><span class="keyword">namespace </span><a class="code" href="namespaceTags.html">Tags</a> {</div><div class="line"><a name="l00019"></a><span class="lineno">   19</span>&#160;<span class="comment"></span></div><div class="line"><a name="l00020"></a><span class="lineno">   20</span>&#160;<span class="comment">/// The rest-mass density \f$\rho\f$</span></div><div class="line"><a name="l00021"></a><span class="lineno"><a class="line" href="structgrmhd_1_1Tags_1_1RestMassDensity.html">   21</a></span>&#160;<span class="comment"></span><span class="keyword">struct </span><a class="code" href="structgrmhd_1_1Tags_1_1RestMassDensity.html">RestMassDensity</a> : <a class="code" href="structdb_1_1SimpleTag.html">db::SimpleTag</a> {</div><div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160;  <span class="keyword">using</span> type = <a class="code" href="group__TensorGroup.html#ga06ebcb38a1f13c246e53378b9e8959ce">Scalar&lt;DataVector&gt;</a>;</div><div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160;  <span class="keyword">static</span> <a class="codeRef" doxygen="/work/spectre/docs/config/cppreference-doxygen-web.tag.xml:http://en.cppreference.com/w/" href="http://en.cppreference.com/w/cpp/string/basic_string.html">std::string</a> name() noexcept { <span class="keywordflow">return</span> <span class="stringliteral">&quot;RestMassDensity&quot;</span>; }</div><div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;};</div><div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;<span class="comment"></span></div><div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;<span class="comment">/// The specific internal energy \f$\epsilon\f$</span></div><div class="line"><a name="l00027"></a><span class="lineno"><a class="line" href="structgrmhd_1_1Tags_1_1SpecificInternalEnergy.html">   27</a></span>&#160;<span class="comment"></span><span class="keyword">struct </span><a class="code" href="structgrmhd_1_1Tags_1_1SpecificInternalEnergy.html">SpecificInternalEnergy</a> : <a class="code" href="structdb_1_1SimpleTag.html">db::SimpleTag</a> {</div><div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;  <span class="keyword">using</span> type = <a class="code" href="group__TensorGroup.html#ga06ebcb38a1f13c246e53378b9e8959ce">Scalar&lt;DataVector&gt;</a>;</div><div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;  <span class="keyword">static</span> <a class="codeRef" doxygen="/work/spectre/docs/config/cppreference-doxygen-web.tag.xml:http://en.cppreference.com/w/" href="http://en.cppreference.com/w/cpp/string/basic_string.html">std::string</a> name() noexcept { <span class="keywordflow">return</span> <span class="stringliteral">&quot;SpecificInternalEnergy&quot;</span>; }</div><div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;};</div><div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;<span class="comment"></span></div><div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;<span class="comment">/// The spatial velocity \f$v^i\f$</span></div><div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;<span class="comment"></span><span class="keyword">template</span> &lt;<span class="keyword">typename</span> Fr = Frame::Inertial&gt;</div><div class="line"><a name="l00034"></a><span class="lineno"><a class="line" href="structgrmhd_1_1Tags_1_1SpatialVelocity.html">   34</a></span>&#160;<span class="keyword">struct </span><a class="code" href="structgrmhd_1_1Tags_1_1SpatialVelocity.html">SpatialVelocity</a> : <a class="code" href="structdb_1_1SimpleTag.html">db::SimpleTag</a> {</div><div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;  <span class="keyword">using</span> type = tnsr::I&lt;DataVector, 3, Fr&gt;;</div><div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;  <span class="keyword">static</span> <a class="codeRef" doxygen="/work/spectre/docs/config/cppreference-doxygen-web.tag.xml:http://en.cppreference.com/w/" href="http://en.cppreference.com/w/cpp/string/basic_string.html">std::string</a> name() noexcept {</div><div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;    <span class="keywordflow">return</span> Frame::prefix&lt;Fr&gt;() + <span class="stringliteral">&quot;SpatialVelocity&quot;</span>;</div><div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;  }</div><div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;};</div><div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;<span class="comment"></span></div><div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;<span class="comment">/// The magnetic field \f$B^i = n_\mu F^{i \mu}\f$ measured by an Eulerian</span></div><div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;<span class="comment">/// observer where \f$n_\mu\f$ is the normal to the spatial hypersurface and</span></div><div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;<span class="comment">/// \f$F^{\mu \nu}\f$ is the Faraday tensor</span></div><div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;<span class="comment"></span><span class="keyword">template</span> &lt;<span class="keyword">typename</span> Fr = Frame::Inertial&gt;</div><div class="line"><a name="l00045"></a><span class="lineno"><a class="line" href="structgrmhd_1_1Tags_1_1MagneticField.html">   45</a></span>&#160;<span class="keyword">struct </span><a class="code" href="structgrmhd_1_1Tags_1_1MagneticField.html">MagneticField</a> : <a class="code" href="structdb_1_1SimpleTag.html">db::SimpleTag</a> {</div><div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;  <span class="keyword">using</span> type = tnsr::I&lt;DataVector, 3, Fr&gt;;</div><div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;  <span class="keyword">static</span> <a class="codeRef" doxygen="/work/spectre/docs/config/cppreference-doxygen-web.tag.xml:http://en.cppreference.com/w/" href="http://en.cppreference.com/w/cpp/string/basic_string.html">std::string</a> name() noexcept {</div><div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;    <span class="keywordflow">return</span> Frame::prefix&lt;Fr&gt;() + <span class="stringliteral">&quot;MagneticField&quot;</span>;</div><div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;  }</div><div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;};</div><div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;<span class="comment"></span></div><div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;<span class="comment">/// The divergence-cleaning field \f$\Phi\f$</span></div><div class="line"><a name="l00053"></a><span class="lineno"><a class="line" href="structgrmhd_1_1Tags_1_1DivergenceCleaningField.html">   53</a></span>&#160;<span class="comment"></span><span class="keyword">struct </span><a class="code" href="structgrmhd_1_1Tags_1_1DivergenceCleaningField.html">DivergenceCleaningField</a> : <a class="code" href="structdb_1_1SimpleTag.html">db::SimpleTag</a> {</div><div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;  <span class="keyword">using</span> type = <a class="code" href="group__TensorGroup.html#ga06ebcb38a1f13c246e53378b9e8959ce">Scalar&lt;DataVector&gt;</a>;</div><div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;  <span class="keyword">static</span> <a class="codeRef" doxygen="/work/spectre/docs/config/cppreference-doxygen-web.tag.xml:http://en.cppreference.com/w/" href="http://en.cppreference.com/w/cpp/string/basic_string.html">std::string</a> name() noexcept { <span class="keywordflow">return</span> <span class="stringliteral">&quot;DivergenceCleaningField&quot;</span>; }</div><div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;};</div><div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;<span class="comment"></span></div><div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;<span class="comment">/// The fluid pressure \f$p\f$</span></div><div class="line"><a name="l00059"></a><span class="lineno"><a class="line" href="structgrmhd_1_1Tags_1_1Pressure.html">   59</a></span>&#160;<span class="comment"></span><span class="keyword">struct </span><a class="code" href="structgrmhd_1_1Tags_1_1Pressure.html">Pressure</a> : <a class="code" href="structdb_1_1SimpleTag.html">db::SimpleTag</a> {</div><div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;  <span class="keyword">using</span> type = <a class="code" href="group__TensorGroup.html#ga06ebcb38a1f13c246e53378b9e8959ce">Scalar&lt;DataVector&gt;</a>;</div><div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;  <span class="keyword">static</span> <a class="codeRef" doxygen="/work/spectre/docs/config/cppreference-doxygen-web.tag.xml:http://en.cppreference.com/w/" href="http://en.cppreference.com/w/cpp/string/basic_string.html">std::string</a> name() noexcept { <span class="keywordflow">return</span> <span class="stringliteral">&quot;Pressure&quot;</span>; }</div><div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;};</div><div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;<span class="comment"></span></div><div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160;<span class="comment">/// The specific enthalpy  \f$h\f$</span></div><div class="line"><a name="l00065"></a><span class="lineno"><a class="line" href="structgrmhd_1_1Tags_1_1SpecificEnthalpy.html">   65</a></span>&#160;<span class="comment"></span><span class="keyword">struct </span><a class="code" href="structgrmhd_1_1Tags_1_1SpecificEnthalpy.html">SpecificEnthalpy</a> : <a class="code" href="structdb_1_1SimpleTag.html">db::SimpleTag</a> {</div><div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160;  <span class="keyword">using</span> type = <a class="code" href="group__TensorGroup.html#ga06ebcb38a1f13c246e53378b9e8959ce">Scalar&lt;DataVector&gt;</a>;</div><div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160;  <span class="keyword">static</span> <a class="codeRef" doxygen="/work/spectre/docs/config/cppreference-doxygen-web.tag.xml:http://en.cppreference.com/w/" href="http://en.cppreference.com/w/cpp/string/basic_string.html">std::string</a> name() noexcept { <span class="keywordflow">return</span> <span class="stringliteral">&quot;SpecificEnthalpy&quot;</span>; }</div><div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160;};</div><div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160;<span class="comment"></span></div><div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160;<span class="comment">/// The magnetic field \f$b^\mu = u_\nu F^{\mu \nu}\f$ measured by an observer</span></div><div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160;<span class="comment">/// comoving with the fluid with 4-velocity \f$u_\nu\f$ where \f$F^{\mu \nu}\f$</span></div><div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160;<span class="comment">/// is the Faraday tensor</span></div><div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160;<span class="comment"></span><span class="keyword">template</span> &lt;<span class="keyword">typename</span> Fr = Frame::Inertial&gt;</div><div class="line"><a name="l00074"></a><span class="lineno"><a class="line" href="structgrmhd_1_1Tags_1_1ComovingMagneticField.html">   74</a></span>&#160;<span class="keyword">struct </span><a class="code" href="structgrmhd_1_1Tags_1_1ComovingMagneticField.html">ComovingMagneticField</a> : <a class="code" href="structdb_1_1SimpleTag.html">db::SimpleTag</a> {</div><div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160;  <span class="keyword">using</span> type = tnsr::A&lt;DataVector, 3, Fr&gt;;</div><div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160;  <span class="keyword">static</span> <a class="codeRef" doxygen="/work/spectre/docs/config/cppreference-doxygen-web.tag.xml:http://en.cppreference.com/w/" href="http://en.cppreference.com/w/cpp/string/basic_string.html">std::string</a> name() noexcept {</div><div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160;    <span class="keywordflow">return</span> Frame::prefix&lt;Fr&gt;() + <span class="stringliteral">&quot;ComovingMagneticField&quot;</span>;</div><div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160;  }</div><div class="line"><a name="l00079"></a><span class="lineno">   79</span>&#160;};</div><div class="line"><a name="l00080"></a><span class="lineno">   80</span>&#160;<span class="comment"></span></div><div class="line"><a name="l00081"></a><span class="lineno">   81</span>&#160;<span class="comment">/// The magnetic pressure \f$p_m\f$</span></div><div class="line"><a name="l00082"></a><span class="lineno"><a class="line" href="structgrmhd_1_1Tags_1_1MagneticPressure.html">   82</a></span>&#160;<span class="comment"></span><span class="keyword">struct </span><a class="code" href="structgrmhd_1_1Tags_1_1MagneticPressure.html">MagneticPressure</a> : <a class="code" href="structdb_1_1SimpleTag.html">db::SimpleTag</a> {</div><div class="line"><a name="l00083"></a><span class="lineno">   83</span>&#160;  <span class="keyword">using</span> type = <a class="code" href="group__TensorGroup.html#ga06ebcb38a1f13c246e53378b9e8959ce">Scalar&lt;DataVector&gt;</a>;</div><div class="line"><a name="l00084"></a><span class="lineno">   84</span>&#160;  <span class="keyword">static</span> <a class="codeRef" doxygen="/work/spectre/docs/config/cppreference-doxygen-web.tag.xml:http://en.cppreference.com/w/" href="http://en.cppreference.com/w/cpp/string/basic_string.html">std::string</a> name() noexcept { <span class="keywordflow">return</span> <span class="stringliteral">&quot;MagneticPressure&quot;</span>; }</div><div class="line"><a name="l00085"></a><span class="lineno">   85</span>&#160;};</div><div class="line"><a name="l00086"></a><span class="lineno">   86</span>&#160;<span class="comment"></span></div><div class="line"><a name="l00087"></a><span class="lineno">   87</span>&#160;<span class="comment">/// The Lorentz factor \f$W\f$</span></div><div class="line"><a name="l00088"></a><span class="lineno"><a class="line" href="structgrmhd_1_1Tags_1_1LorentzFactor.html">   88</a></span>&#160;<span class="comment"></span><span class="keyword">struct </span><a class="code" href="structgrmhd_1_1Tags_1_1LorentzFactor.html">LorentzFactor</a> : <a class="code" href="structdb_1_1SimpleTag.html">db::SimpleTag</a> {</div><div class="line"><a name="l00089"></a><span class="lineno">   89</span>&#160;  <span class="keyword">using</span> type = <a class="code" href="group__TensorGroup.html#ga06ebcb38a1f13c246e53378b9e8959ce">Scalar&lt;DataVector&gt;</a>;</div><div class="line"><a name="l00090"></a><span class="lineno">   90</span>&#160;  <span class="keyword">static</span> <a class="codeRef" doxygen="/work/spectre/docs/config/cppreference-doxygen-web.tag.xml:http://en.cppreference.com/w/" href="http://en.cppreference.com/w/cpp/string/basic_string.html">std::string</a> name() noexcept { <span class="keywordflow">return</span> <span class="stringliteral">&quot;LorentzFactor&quot;</span>; }</div><div class="line"><a name="l00091"></a><span class="lineno">   91</span>&#160;};</div><div class="line"><a name="l00092"></a><span class="lineno">   92</span>&#160;</div><div class="line"><a name="l00093"></a><span class="lineno">   93</span>&#160;}  <span class="comment">// namespace Tags</span></div><div class="line"><a name="l00094"></a><span class="lineno">   94</span>&#160;}  <span class="comment">// namespace grmhd</span></div><div class="ttc" id="cstddef_html"><div class="ttname"><a href="http://en.cppreference.com/w/cpp/header/cstddef.html">cstddef</a></div></div>
+<div class="ttc" id="structgrmhd_1_1Tags_1_1MagneticField_html"><div class="ttname"><a href="structgrmhd_1_1Tags_1_1MagneticField.html">grmhd::Tags::MagneticField</a></div><div class="ttdoc">The magnetic field  measured by an Eulerian observer where  is the normal to the spatial hypersurface...</div><div class="ttdef"><b>Definition:</b> Tags.hpp:45</div></div>
+<div class="ttc" id="structdb_1_1SimpleTag_html"><div class="ttname"><a href="structdb_1_1SimpleTag.html">db::SimpleTag</a></div><div class="ttdoc">Tags for the DataBox inherit from this type. </div><div class="ttdef"><b>Definition:</b> DataBoxTag.hpp:65</div></div>
+<div class="ttc" id="structgrmhd_1_1Tags_1_1SpecificInternalEnergy_html"><div class="ttname"><a href="structgrmhd_1_1Tags_1_1SpecificInternalEnergy.html">grmhd::Tags::SpecificInternalEnergy</a></div><div class="ttdoc">The specific internal energy . </div><div class="ttdef"><b>Definition:</b> Tags.hpp:27</div></div>
+<div class="ttc" id="basic_string_html"><div class="ttname"><a href="http://en.cppreference.com/w/cpp/string/basic_string.html">std::string</a></div></div>
+<div class="ttc" id="structgrmhd_1_1Tags_1_1SpatialVelocity_html"><div class="ttname"><a href="structgrmhd_1_1Tags_1_1SpatialVelocity.html">grmhd::Tags::SpatialVelocity</a></div><div class="ttdoc">The spatial velocity . </div><div class="ttdef"><b>Definition:</b> Tags.hpp:34</div></div>
+<div class="ttc" id="string_html"><div class="ttname"><a href="http://en.cppreference.com/w/cpp/header/string.html">string</a></div></div>
+<div class="ttc" id="namespaceTags_html"><div class="ttname"><a href="namespaceTags.html">Tags</a></div><div class="ttdef"><b>Definition:</b> DataBoxTag.hpp:29</div></div>
+<div class="ttc" id="structgrmhd_1_1Tags_1_1DivergenceCleaningField_html"><div class="ttname"><a href="structgrmhd_1_1Tags_1_1DivergenceCleaningField.html">grmhd::Tags::DivergenceCleaningField</a></div><div class="ttdoc">The divergence-cleaning field . </div><div class="ttdef"><b>Definition:</b> Tags.hpp:53</div></div>
+<div class="ttc" id="TypeAliases_8hpp_html"><div class="ttname"><a href="TypeAliases_8hpp.html">TypeAliases.hpp</a></div><div class="ttdoc">Defines a list of useful type aliases for tensors. </div></div>
+<div class="ttc" id="structgrmhd_1_1Tags_1_1Pressure_html"><div class="ttname"><a href="structgrmhd_1_1Tags_1_1Pressure.html">grmhd::Tags::Pressure</a></div><div class="ttdoc">The fluid pressure . </div><div class="ttdef"><b>Definition:</b> Tags.hpp:59</div></div>
+<div class="ttc" id="classDataVector_html"><div class="ttname"><a href="classDataVector.html">DataVector</a></div><div class="ttdoc">Stores a collection of function values. </div><div class="ttdef"><b>Definition:</b> DataVector.hpp:126</div></div>
+<div class="ttc" id="structgrmhd_1_1Tags_1_1SpecificEnthalpy_html"><div class="ttname"><a href="structgrmhd_1_1Tags_1_1SpecificEnthalpy.html">grmhd::Tags::SpecificEnthalpy</a></div><div class="ttdoc">The specific enthalpy . </div><div class="ttdef"><b>Definition:</b> Tags.hpp:65</div></div>
+<div class="ttc" id="structgrmhd_1_1Tags_1_1MagneticPressure_html"><div class="ttname"><a href="structgrmhd_1_1Tags_1_1MagneticPressure.html">grmhd::Tags::MagneticPressure</a></div><div class="ttdoc">The magnetic pressure . </div><div class="ttdef"><b>Definition:</b> Tags.hpp:82</div></div>
+<div class="ttc" id="structgrmhd_1_1Tags_1_1RestMassDensity_html"><div class="ttname"><a href="structgrmhd_1_1Tags_1_1RestMassDensity.html">grmhd::Tags::RestMassDensity</a></div><div class="ttdoc">The rest-mass density . </div><div class="ttdef"><b>Definition:</b> Tags.hpp:21</div></div>
+<div class="ttc" id="structgrmhd_1_1Tags_1_1LorentzFactor_html"><div class="ttname"><a href="structgrmhd_1_1Tags_1_1LorentzFactor.html">grmhd::Tags::LorentzFactor</a></div><div class="ttdoc">The Lorentz factor . </div><div class="ttdef"><b>Definition:</b> Tags.hpp:88</div></div>
+<div class="ttc" id="DataBoxTag_8hpp_html"><div class="ttname"><a href="DataBoxTag_8hpp.html">DataBoxTag.hpp</a></div><div class="ttdoc">Defines classes SimpleTag, PrefixTag, ComputeTag and several functions for retrieving tag info...</div></div>
+<div class="ttc" id="namespacegrmhd_html"><div class="ttname"><a href="namespacegrmhd.html">grmhd</a></div><div class="ttdoc">Items related to general relativistic magnetohydrodynamics (GRMHD) </div><div class="ttdef"><b>Definition:</b> Tags.hpp:16</div></div>
+<div class="ttc" id="structgrmhd_1_1Tags_1_1ComovingMagneticField_html"><div class="ttname"><a href="structgrmhd_1_1Tags_1_1ComovingMagneticField.html">grmhd::Tags::ComovingMagneticField</a></div><div class="ttdoc">The magnetic field  measured by an observer comoving with the fluid with 4-velocity  where  is the Fa...</div><div class="ttdef"><b>Definition:</b> Tags.hpp:74</div></div>
+<div class="ttc" id="group__TensorGroup_html_ga06ebcb38a1f13c246e53378b9e8959ce"><div class="ttname"><a href="group__TensorGroup.html#ga06ebcb38a1f13c246e53378b9e8959ce">Scalar</a></div><div class="ttdeci">Tensor&lt; T, Symmetry&lt;&gt;, index_list&lt;&gt; &gt; Scalar</div><div class="ttdoc">Scalar type. </div><div class="ttdef"><b>Definition:</b> TypeAliases.hpp:21</div></div>
+</div><!-- fragment --></div><!-- contents -->
+<!-- HTML footer for doxygen 1.8.10-->
+<!-- start footer part -->
+<hr class="footer"/><address class="footer"><small>
+&copy; Copyright 2017 - 2018
+<a href="https://black-holes.org">SXS Collaboration</a>,
+<a href="LICENSE.txt" target="_blank">
+<span class="hidden-xs">Distributed under the</span>
+MIT License</a>
+</small></address>
+</body>
+</html>

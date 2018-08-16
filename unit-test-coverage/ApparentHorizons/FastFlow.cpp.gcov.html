@@ -1,0 +1,448 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+
+<html lang="en">
+
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <title>LCOV - 4a100dde3b231e0ada6ff7b2b4c32892a30db7f6 - ApparentHorizons/FastFlow.cpp</title>
+  <link rel="stylesheet" type="text/css" href="../gcov.css">
+</head>
+
+<body>
+
+  <table width="100%" border=0 cellspacing=0 cellpadding=0>
+    <tr><td class="title">SpECTRE Unit Test Code Coverage Report</td></tr>
+    <tr><td class="ruler"><img src="../glass.png" width=3 height=3 alt=""></td></tr>
+
+    <tr>
+      <td width="100%">
+        <table cellpadding=1 border=0 width="100%">
+          <tr>
+            <td width="10%" class="headerItem">Current view:</td>
+            <td width="35%" class="headerValue"><a href="../index.html">top level</a> - <a href="index.html">ApparentHorizons</a> - FastFlow.cpp<span style="font-size: 80%;"> (source / <a href="FastFlow.cpp.func-sort-c.html">functions</a>)</span></td>
+            <td width="5%"></td>
+            <td width="15%"></td>
+            <td width="10%" class="headerCovTableHead">Hit</td>
+            <td width="10%" class="headerCovTableHead">Total</td>
+            <td width="15%" class="headerCovTableHead">Coverage</td>
+          </tr>
+          <tr>
+            <td class="headerItem">Commit:</td>
+             <td class="headerValue"><a target="_blank" href="https://github.com/sxs-collaboration/spectre/commit/4a100dde3b231e0ada6ff7b2b4c32892a30db7f6">4a100dde3b231e0ada6ff7b2b4c32892a30db7f6</a></td>
+            <td></td>
+            <td class="headerItem">Lines:</td>
+            <td class="headerCovTableEntry">148</td>
+            <td class="headerCovTableEntry">151</td>
+            <td class="headerCovTableEntryHi">98.0 %</td>
+          </tr>
+          <tr>
+            <td class="headerItem">Date:</td>
+            <td class="headerValue">2018-08-16 19:06:01</td>
+            <td></td>
+            <td class="headerItem">Functions:</td>
+            <td class="headerCovTableEntry">11</td>
+            <td class="headerCovTableEntry">11</td>
+            <td class="headerCovTableEntryHi">100.0 %</td>
+          </tr>
+          <tr>
+            <td class="headerItem">Legend:</td>
+            <td class="headerValueLeg">            Lines:
+            <span class="coverLegendCov">hit</span>
+            <span class="coverLegendNoCov">not hit</span>
+</td>
+            <td></td>
+          </tr>
+          <tr><td><img src="../glass.png" width=3 height=3 alt=""></td></tr>
+        </table>
+      </td>
+    </tr>
+
+    <tr><td class="ruler"><img src="../glass.png" width=3 height=3 alt=""></td></tr>
+  </table>
+
+  <table cellpadding=0 cellspacing=0 border=0>
+    <tr>
+      <td><br></td>
+    </tr>
+    <tr>
+      <td>
+<pre class="sourceHeading">          Line data    Source code</pre>
+<pre class="source">
+<a name="1"><span class="lineNum">       1 </span>            : // Distributed under the MIT License.</a>
+<span class="lineNum">       2 </span>            : // See LICENSE.txt for details.
+<span class="lineNum">       3 </span>            : 
+<span class="lineNum">       4 </span>            : #include &quot;ApparentHorizons/FastFlow.hpp&quot;
+<span class="lineNum">       5 </span>            : 
+<span class="lineNum">       6 </span>            : #include &lt;algorithm&gt;
+<span class="lineNum">       7 </span>            : #include &lt;array&gt;
+<span class="lineNum">       8 </span>            : #include &lt;cmath&gt;
+<span class="lineNum">       9 </span>            : #include &lt;pup.h&gt;
+<span class="lineNum">      10 </span>            : #include &lt;string&gt;
+<span class="lineNum">      11 </span>            : #include &lt;utility&gt;
+<span class="lineNum">      12 </span>            : 
+<span class="lineNum">      13 </span>            : #include &quot;ApparentHorizons/SpherepackIterator.hpp&quot;
+<span class="lineNum">      14 </span>            : #include &quot;ApparentHorizons/Strahlkorper.hpp&quot;
+<span class="lineNum">      15 </span>            : #include &quot;ApparentHorizons/StrahlkorperDataBox.hpp&quot;
+<span class="lineNum">      16 </span>            : #include &quot;ApparentHorizons/StrahlkorperGr.hpp&quot;
+<span class="lineNum">      17 </span>            : #include &quot;DataStructures/DataBox/DataBox.hpp&quot;
+<span class="lineNum">      18 </span>            : #include &quot;DataStructures/DataBox/DataBoxTag.hpp&quot;
+<span class="lineNum">      19 </span>            : #include &quot;DataStructures/DataVector.hpp&quot;
+<span class="lineNum">      20 </span>            : #include &quot;DataStructures/Tensor/EagerMath/Magnitude.hpp&quot;
+<span class="lineNum">      21 </span>            : #include &quot;DataStructures/Tensor/Tensor.hpp&quot;
+<span class="lineNum">      22 </span>            : #include &quot;ErrorHandling/Error.hpp&quot;
+<span class="lineNum">      23 </span>            : #include &quot;Options/ParseOptions.hpp&quot;
+<span class="lineNum">      24 </span>            : #include &quot;Parallel/PupStlCpp11.hpp&quot;
+<span class="lineNum">      25 </span>            : #include &quot;PointwiseFunctions/GeneralRelativity/IndexManipulation.hpp&quot;
+<span class="lineNum">      26 </span>            : #include &quot;Utilities/ConstantExpressions.hpp&quot;
+<span class="lineNum">      27 </span>            : #include &quot;Utilities/EqualWithinRoundoff.hpp&quot;
+<span class="lineNum">      28 </span>            : #include &quot;Utilities/Gsl.hpp&quot;
+<span class="lineNum">      29 </span>            : #include &quot;Utilities/MakeWithValue.hpp&quot;
+<a name="30"><span class="lineNum">      30 </span>            : // IWYU pragma: no_forward_declare Tensor</a>
+<span class="lineNum">      31 </span>            : 
+<span class="lineNum">      32 </span><span class="lineCov">         23 : FastFlow::FastFlow(FastFlow::Flow::type flow, FastFlow::Alpha::type alpha,</span>
+<span class="lineNum">      33 </span>            :                    FastFlow::Beta::type beta, FastFlow::AbsTol::type abs_tol,
+<span class="lineNum">      34 </span>            :                    FastFlow::TruncationTol::type trunc_tol,
+<span class="lineNum">      35 </span>            :                    FastFlow::DivergenceTol::type divergence_tol,
+<span class="lineNum">      36 </span>            :                    FastFlow::DivergenceIter::type divergence_iter,
+<span class="lineNum">      37 </span><span class="lineCov">         23 :                    FastFlow::MaxIts::type max_its) noexcept</span>
+<span class="lineNum">      38 </span>            :     : alpha_(alpha),
+<span class="lineNum">      39 </span>            :       beta_(beta),
+<span class="lineNum">      40 </span>            :       abs_tol_(abs_tol),
+<span class="lineNum">      41 </span>            :       trunc_tol_(trunc_tol),
+<span class="lineNum">      42 </span>            :       divergence_tol_(divergence_tol),
+<span class="lineNum">      43 </span>            :       divergence_iter_(divergence_iter),
+<span class="lineNum">      44 </span>            :       max_its_(max_its),
+<span class="lineNum">      45 </span>            :       flow_(flow),
+<span class="lineNum">      46 </span>            :       current_iter_(0),
+<span class="lineNum">      47 </span>            :       previous_residual_mesh_norm_(0.0),
+<span class="lineNum">      48 </span><span class="lineCov">         23 :       min_residual_mesh_norm_(std::numeric_limits&lt;double&gt;::max()),</span>
+<span class="lineNum">      49 </span><span class="lineCov">         46 :       iter_at_min_residual_mesh_norm_(0) {}</span>
+<a name="50"><span class="lineNum">      50 </span>            : </a>
+<span class="lineNum">      51 </span>            : template &lt;typename Frame&gt;
+<span class="lineNum">      52 </span><span class="lineCov">       1324 : size_t FastFlow::current_l_mesh(const Strahlkorper&lt;Frame&gt;&amp; strahlkorper) const</span>
+<span class="lineNum">      53 </span>            :     noexcept {
+<span class="lineNum">      54 </span><span class="lineCov">       1324 :   const size_t l_max = strahlkorper.ylm_spherepack().l_max();</span>
+<span class="lineNum">      55 </span>            :   // This is the formula used in SpEC (if l_max&gt;=4). We may want to make this
+<span class="lineNum">      56 </span>            :   // formula an option in the future, if we want to experiment with it.
+<span class="lineNum">      57 </span><span class="lineCov">       1324 :   return static_cast&lt;size_t&gt;(std::floor(1.5 * l_max));</span>
+<span class="lineNum">      58 </span>            : }
+<span class="lineNum">      59 </span>            : 
+<a name="60"><span class="lineNum">      60 </span>            : namespace {</a>
+<span class="lineNum">      61 </span>            : template &lt;typename Frame&gt;
+<span class="lineNum">      62 </span><span class="lineCov">         72 : DataVector fast_flow_weight(</span>
+<span class="lineNum">      63 </span>            :     const Scalar&lt;DataVector&gt;&amp; one_form_magnitude,
+<span class="lineNum">      64 </span>            :     const db::item_type&lt;StrahlkorperTags::Rhat&lt;Frame&gt;&gt;&amp; r_hat,
+<span class="lineNum">      65 </span>            :     const db::item_type&lt;StrahlkorperTags::Radius&lt;Frame&gt;&gt;&amp; radius,
+<span class="lineNum">      66 </span>            :     const tnsr::II&lt;DataVector, 3, Frame&gt;&amp; inverse_surface_metric) noexcept {
+<span class="lineNum">      67 </span>            :   // Form Euclidean surface metric
+<span class="lineNum">      68 </span><span class="lineCov">         72 :   auto flat_metric =</span>
+<span class="lineNum">      69 </span>            :       make_with_value&lt;tnsr::ii&lt;DataVector, 3, Frame&gt;&gt;(radius, 0.0);
+<span class="lineNum">      70 </span><span class="lineCov">        288 :   for (size_t i = 0; i &lt; 3; ++i) {</span>
+<span class="lineNum">      71 </span><span class="lineCov">        216 :     flat_metric.get(i, i) = 1.0;</span>
+<span class="lineNum">      72 </span><span class="lineCov">        648 :     for (size_t j = i; j &lt; 3; ++j) {</span>
+<span class="lineNum">      73 </span><span class="lineCov">        432 :       flat_metric.get(i, j) -= r_hat.get(i) * r_hat.get(j);</span>
+<span class="lineNum">      74 </span>            :     }
+<span class="lineNum">      75 </span>            :   }
+<span class="lineNum">      76 </span>            : 
+<span class="lineNum">      77 </span><span class="lineCov">         72 :   auto denominator = make_with_value&lt;DataVector&gt;(radius, 0.0);</span>
+<span class="lineNum">      78 </span><span class="lineCov">        288 :   for (size_t i = 0; i &lt; 3; ++i) {</span>
+<span class="lineNum">      79 </span><span class="lineCov">        864 :     for (size_t j = 0; j &lt; 3; ++j) {</span>
+<span class="lineNum">      80 </span><span class="lineCov">        648 :       denominator += inverse_surface_metric.get(i, j) * flat_metric.get(i, j);</span>
+<span class="lineNum">      81 </span>            :     }
+<span class="lineNum">      82 </span>            :   }
+<span class="lineNum">      83 </span>            : 
+<span class="lineNum">      84 </span><span class="lineCov">        216 :   return 2.0 * get(one_form_magnitude) * square(radius) / denominator;</span>
+<span class="lineNum">      85 </span>            : }
+<span class="lineNum">      86 </span>            : }  // namespace
+<span class="lineNum">      87 </span>            : 
+<a name="88"><span class="lineNum">      88 </span>            : template &lt;typename Frame&gt;</a>
+<span class="lineNum">      89 </span>            : std::pair&lt;FastFlow::Status, FastFlow::IterInfo&gt;
+<span class="lineNum">      90 </span><span class="lineCov">        662 : FastFlow::iterate_horizon_finder(</span>
+<span class="lineNum">      91 </span>            :     const gsl::not_null&lt;Strahlkorper&lt;Frame&gt;*&gt; current_strahlkorper,
+<span class="lineNum">      92 </span>            :     const tnsr::II&lt;DataVector, 3, Frame&gt;&amp; upper_spatial_metric,
+<span class="lineNum">      93 </span>            :     const tnsr::ii&lt;DataVector, 3, Frame&gt;&amp; extrinsic_curvature,
+<span class="lineNum">      94 </span>            :     const tnsr::Ijj&lt;DataVector, 3, Frame&gt;&amp; christoffel_2nd_kind) noexcept {
+<span class="lineNum">      95 </span><span class="lineCov">       1324 :   const size_t l_surface = current_strahlkorper-&gt;l_max();</span>
+<span class="lineNum">      96 </span><span class="lineCov">        662 :   const size_t l_mesh = current_l_mesh(*current_strahlkorper);</span>
+<span class="lineNum">      97 </span>            : 
+<span class="lineNum">      98 </span>            :   // Evaluate the Strahlkorper on a higher resolution mesh
+<span class="lineNum">      99 </span><span class="lineCov">       1324 :   const Strahlkorper&lt;Frame&gt; strahlkorper(l_mesh, l_mesh, *current_strahlkorper);</span>
+<span class="lineNum">     100 </span>            : 
+<span class="lineNum">     101 </span>            :   // Make a DataBox with this strahlkorper.
+<span class="lineNum">     102 </span>            :   // Do we want to define ComputeItems for expansion, normalized
+<span class="lineNum">     103 </span>            :   // unit norms, etc in this DataBox? So far we do not.
+<span class="lineNum">     104 </span><span class="lineCov">        662 :   auto box = db::create&lt;</span>
+<span class="lineNum">     105 </span>            :       db::AddSimpleTags&lt;StrahlkorperTags::items_tags&lt;Frame&gt;&gt;,
+<span class="lineNum">     106 </span>            :       db::AddComputeTags&lt;StrahlkorperTags::compute_items_tags&lt;Frame&gt;&gt;&gt;(
+<span class="lineNum">     107 </span>            :       strahlkorper);
+<span class="lineNum">     108 </span>            : 
+<span class="lineNum">     109 </span>            :   // Get minimum radius.
+<span class="lineNum">     110 </span><span class="lineCov">        662 :   const auto&amp; radius = db::get&lt;StrahlkorperTags::Radius&lt;Frame&gt;&gt;(box);</span>
+<span class="lineNum">     111 </span><span class="lineCov">        662 :   const auto r_minmax = std::minmax_element(radius.begin(), radius.end());</span>
+<span class="lineNum">     112 </span><span class="lineCov">        662 :   const auto r_min = *r_minmax.first;</span>
+<span class="lineNum">     113 </span><span class="lineCov">        662 :   const auto r_max = *r_minmax.second;</span>
+<span class="lineNum">     114 </span>            : 
+<span class="lineNum">     115 </span><span class="lineCov">        662 :   if (r_min &lt; 0.0) {</span>
+<span class="lineNum">     116 </span><span class="lineCov">          6 :     return std::make_pair(Status::NegativeRadius,</span>
+<span class="lineNum">     117 </span><span class="lineCov">          2 :                           IterInfo{current_iter_, r_min, r_max});</span>
+<span class="lineNum">     118 </span>            :   }
+<span class="lineNum">     119 </span>            : 
+<span class="lineNum">     120 </span>            :   // Evaluate the current residual on the surface
+<span class="lineNum">     121 </span><span class="lineCov">       1322 :   const auto one_form_magnitude =</span>
+<span class="lineNum">     122 </span>            :       magnitude(db::get&lt;StrahlkorperTags::NormalOneForm&lt;Frame&gt;&gt;(box),
+<span class="lineNum">     123 </span>            :                 upper_spatial_metric);
+<span class="lineNum">     124 </span><span class="lineCov">       1983 :   const DataVector one_over_one_form_magnitude = 1.0 / get(one_form_magnitude);</span>
+<span class="lineNum">     125 </span><span class="lineCov">       1322 :   const auto unit_normal_one_form = StrahlkorperGr::unit_normal_one_form(</span>
+<span class="lineNum">     126 </span><span class="lineCov">        661 :       db::get&lt;StrahlkorperTags::NormalOneForm&lt;Frame&gt;&gt;(box),</span>
+<span class="lineNum">     127 </span>            :       one_over_one_form_magnitude);
+<span class="lineNum">     128 </span><span class="lineCov">       1322 :   const auto inverse_surface_metric = StrahlkorperGr::inverse_surface_metric(</span>
+<span class="lineNum">     129 </span>            :       raise_or_lower_index(unit_normal_one_form, upper_spatial_metric),
+<span class="lineNum">     130 </span>            :       upper_spatial_metric);
+<span class="lineNum">     131 </span>            : 
+<span class="lineNum">     132 </span><span class="lineCov">       1983 :   const auto surface_residual = StrahlkorperGr::expansion(</span>
+<span class="lineNum">     133 </span>            :       StrahlkorperGr::grad_unit_normal_one_form(
+<span class="lineNum">     134 </span><span class="lineCov">        661 :           db::get&lt;StrahlkorperTags::Rhat&lt;Frame&gt;&gt;(box),</span>
+<span class="lineNum">     135 </span>            :           db::get&lt;StrahlkorperTags::Radius&lt;Frame&gt;&gt;(box), unit_normal_one_form,
+<span class="lineNum">     136 </span><span class="lineCov">        661 :           db::get&lt;StrahlkorperTags::D2xRadius&lt;Frame&gt;&gt;(box),</span>
+<span class="lineNum">     137 </span>            :           one_over_one_form_magnitude, christoffel_2nd_kind),
+<span class="lineNum">     138 </span>            :       inverse_surface_metric, extrinsic_curvature);
+<span class="lineNum">     139 </span>            : 
+<span class="lineNum">     140 </span><span class="lineCov">       1322 :   auto weighted_residual = get(surface_residual);</span>
+<span class="lineNum">     141 </span><span class="lineCov">        661 :   switch (flow_) {</span>
+<span class="lineNum">     142 </span><span class="lineCov">        242 :     case FlowType::Jacobi:</span>
+<span class="lineNum">     143 </span>            :       // Do nothing
+<span class="lineNum">     144 </span><span class="lineCov">        242 :       break;</span>
+<span class="lineNum">     145 </span><span class="lineCov">        347 :     case FlowType::Curvature: {</span>
+<span class="lineNum">     146 </span><span class="lineCov">        347 :       weighted_residual *= get(one_form_magnitude);</span>
+<span class="lineNum">     147 </span><span class="lineCov">        347 :     } break;</span>
+<span class="lineNum">     148 </span><span class="lineCov">         72 :     case FlowType::Fast: {</span>
+<span class="lineNum">     149 </span><span class="lineCov">         72 :       weighted_residual *= fast_flow_weight&lt;Frame&gt;(</span>
+<span class="lineNum">     150 </span><span class="lineCov">         72 :           one_form_magnitude, db::get&lt;StrahlkorperTags::Rhat&lt;Frame&gt;&gt;(box),</span>
+<span class="lineNum">     151 </span><span class="lineCov">         72 :           db::get&lt;StrahlkorperTags::Radius&lt;Frame&gt;&gt;(box),</span>
+<span class="lineNum">     152 </span>            :           inverse_surface_metric);
+<span class="lineNum">     153 </span><span class="lineCov">         72 :     } break;</span>
+<span class="lineNum">     154 </span>            :     default:  // LCOV_EXCL_LINE
+<span class="lineNum">     155 </span>            :       // LCOV_EXCL_START
+<span class="lineNum">     156 </span>            :       ERROR(&quot;Cannot find the specified value of FlowType, need to add a case?&quot;);
+<span class="lineNum">     157 </span>            :       // LCOV_EXCL_STOP
+<span class="lineNum">     158 </span>            :   }
+<span class="lineNum">     159 </span>            : 
+<span class="lineNum">     160 </span>            :   // Norm of the residual on the surface of size l_mesh.
+<span class="lineNum">     161 </span>            :   // Note: In SpEC, this norm is computed as a pointwise L2 norm.  But
+<span class="lineNum">     162 </span>            :   // here we compute the L2 integral norm.  The integral should be
+<span class="lineNum">     163 </span>            :   // more accurate, but if it turns out that this integral is
+<span class="lineNum">     164 </span>            :   // expensive, we can switch back to the pointwise L2 norm.
+<span class="lineNum">     165 </span><span class="lineCov">       1983 :   const double residual_mesh_norm = sqrt(strahlkorper.ylm_spherepack().average(</span>
+<span class="lineNum">     166 </span><span class="lineCov">       1983 :       strahlkorper.ylm_spherepack().phys_to_spec(square(weighted_residual))));</span>
+<span class="lineNum">     167 </span>            : 
+<span class="lineNum">     168 </span><span class="lineCov">        661 :   if (residual_mesh_norm &lt; min_residual_mesh_norm_) {</span>
+<span class="lineNum">     169 </span><span class="lineCov">        661 :     min_residual_mesh_norm_ = residual_mesh_norm;</span>
+<span class="lineNum">     170 </span><span class="lineCov">        661 :     iter_at_min_residual_mesh_norm_ = current_iter_;</span>
+<span class="lineNum">     171 </span>            :   }
+<span class="lineNum">     172 </span>            : 
+<span class="lineNum">     173 </span>            :   // Transform the weighted residual
+<span class="lineNum">     174 </span><span class="lineCov">       1322 :   const auto weighted_residual_coefs =</span>
+<span class="lineNum">     175 </span><span class="lineCov">        661 :       strahlkorper.ylm_spherepack().phys_to_spec(weighted_residual);</span>
+<span class="lineNum">     176 </span>            : 
+<span class="lineNum">     177 </span>            :   // Restrict to the basis of the surface
+<span class="lineNum">     178 </span><span class="lineCov">       1983 :   const auto residual_on_surface =</span>
+<span class="lineNum">     179 </span><span class="lineCov">        661 :       strahlkorper.ylm_spherepack().prolong_or_restrict(</span>
+<span class="lineNum">     180 </span>            :           weighted_residual_coefs, current_strahlkorper-&gt;ylm_spherepack());
+<span class="lineNum">     181 </span>            : 
+<span class="lineNum">     182 </span>            :   // Evaluate the norm of the residual on the surface of size l_surface.
+<span class="lineNum">     183 </span>            :   // See comment on pointwise norm vs integral norm above.
+<span class="lineNum">     184 </span><span class="lineCov">        661 :   const auto residual_ylm_norm =</span>
+<span class="lineNum">     185 </span><span class="lineCov">       3305 :       sqrt(current_strahlkorper-&gt;ylm_spherepack().average(</span>
+<span class="lineNum">     186 </span><span class="lineCov">       1322 :           current_strahlkorper-&gt;ylm_spherepack().phys_to_spec(</span>
+<span class="lineNum">     187 </span><span class="lineCov">       2644 :               square(current_strahlkorper-&gt;ylm_spherepack().spec_to_phys(</span>
+<span class="lineNum">     188 </span>            :                   residual_on_surface)))));
+<span class="lineNum">     189 </span>            : 
+<span class="lineNum">     190 </span>            :   // Fill iter_info
+<span class="lineNum">     191 </span><span class="lineCov">        661 :   const auto minmax_residual =</span>
+<span class="lineNum">     192 </span><span class="lineCov">        661 :       std::minmax_element(weighted_residual.begin(), weighted_residual.end());</span>
+<span class="lineNum">     193 </span><span class="lineCov">       1983 :   IterInfo iter_info{current_iter_,</span>
+<span class="lineNum">     194 </span>            :                      r_min,
+<span class="lineNum">     195 </span>            :                      r_max,
+<span class="lineNum">     196 </span><span class="lineCov">        661 :                      *minmax_residual.first,</span>
+<span class="lineNum">     197 </span><span class="lineCov">        661 :                      *minmax_residual.second,</span>
+<span class="lineNum">     198 </span>            :                      residual_ylm_norm,
+<span class="lineNum">     199 </span>            :                      residual_mesh_norm};
+<span class="lineNum">     200 </span>            : 
+<span class="lineNum">     201 </span>            :   // Exit if converged.
+<span class="lineNum">     202 </span>            :   // What should happen is that as iterations proceed,
+<span class="lineNum">     203 </span>            :   // residual_mesh_norm approaches a constant (the truncation error), and
+<span class="lineNum">     204 </span>            :   // residual_ylm_norm decreases to roundoff.
+<span class="lineNum">     205 </span>            :   //
+<span class="lineNum">     206 </span>            :   // The first convergence condition is just
+<span class="lineNum">     207 </span>            :   // residual_ylm_norm&lt;abs_tol_.  The second convergence condition has
+<span class="lineNum">     208 </span>            :   // two parts: First, we require that residual_ylm_norm &lt;
+<span class="lineNum">     209 </span>            :   // trunc_tol_*residual_mesh_norm.  But this may happen because
+<span class="lineNum">     210 </span>            :   // residual_mesh_norm grows quickly, rather than because
+<span class="lineNum">     211 </span>            :   // residual_ylm_norm shrinks.  So we require also that
+<span class="lineNum">     212 </span>            :   // residual_mesh_norm-previous_residual_mesh_norm_ is small; that
+<span class="lineNum">     213 </span>            :   // is, that residual_mesh_norm is converging to something.  But we
+<span class="lineNum">     214 </span>            :   // can't require that
+<span class="lineNum">     215 </span>            :   // residual_mesh_norm-previous_residual_mesh_norm_ is small on the
+<span class="lineNum">     216 </span>            :   // first step, since previous_residual_mesh_norm_ is not defined, so
+<span class="lineNum">     217 </span>            :   // we skip this part of the check on the first iteration.
+<span class="lineNum">     218 </span><span class="lineCov">        661 :   if (residual_ylm_norm &lt; abs_tol_) {</span>
+<span class="lineNum">     219 </span>            :     // clang-tidy: std::move of trivially-copyable type
+<span class="lineNum">     220 </span><span class="lineCov">          3 :     return std::make_pair(Status::AbsTol, std::move(iter_info));  // NOLINT</span>
+<span class="lineNum">     221 </span><span class="lineCov">        658 :   } else if (residual_ylm_norm &lt; trunc_tol_ * residual_mesh_norm) {</span>
+<span class="lineNum">     222 </span>            :     // This may be convergence by TruncationTol, but first make sure
+<span class="lineNum">     223 </span>            :     // that either residual_mesh_norm is converging, or that it is the
+<span class="lineNum">     224 </span>            :     // first step (i.e. previous_residual_mesh_norm_ == 0) so that we
+<span class="lineNum">     225 </span>            :     // don't know yet if residual_mesh_norm is converging.
+<span class="lineNum">     226 </span><span class="lineCov">          6 :     if (previous_residual_mesh_norm_ == 0 or</span>
+<span class="lineNum">     227 </span><span class="lineCov">          6 :         equal_within_roundoff(residual_mesh_norm, previous_residual_mesh_norm_,</span>
+<span class="lineNum">     228 </span><span class="lineCov">          3 :                               divergence_tol_ - 1.0, 0.0)) {</span>
+<span class="lineNum">     229 </span>            :       // clang-tidy: std::move of trivially-copyable type
+<span class="lineNum">     230 </span><span class="lineCov">          6 :       return std::make_pair(Status::TruncationTol,</span>
+<span class="lineNum">     231 </span><span class="lineCov">          6 :                             std::move(iter_info));  // NOLINT</span>
+<span class="lineNum">     232 </span>            :     }
+<span class="lineNum">     233 </span>            :   }
+<span class="lineNum">     234 </span>            : 
+<span class="lineNum">     235 </span>            :   // Treat the case in which residual_mesh_norm is increasing
+<span class="lineNum">     236 </span><span class="lineCov">        655 :   if (residual_mesh_norm &gt; divergence_tol_ * min_residual_mesh_norm_ and</span>
+<span class="lineNum">     237 </span><span class="lineNoCov">          0 :       iter_at_min_residual_mesh_norm_ &lt;= current_iter_ - divergence_iter_) {</span>
+<span class="lineNum">     238 </span>            :     // clang-tidy: std::move of trivially-copyable type
+<span class="lineNum">     239 </span><span class="lineNoCov">          0 :     return std::make_pair(Status::DivergenceError,</span>
+<span class="lineNum">     240 </span><span class="lineNoCov">          0 :                           std::move(iter_info));  // NOLINT</span>
+<span class="lineNum">     241 </span>            :   }
+<span class="lineNum">     242 </span>            : 
+<span class="lineNum">     243 </span><span class="lineCov">        655 :   if (current_iter_ == max_its_) {</span>
+<span class="lineNum">     244 </span>            :     // clang-tidy: std::move of trivially-copyable type
+<span class="lineNum">     245 </span><span class="lineCov">          1 :     return std::make_pair(Status::MaxIts, std::move(iter_info));  // NOLINT</span>
+<span class="lineNum">     246 </span>            :   }
+<span class="lineNum">     247 </span>            : 
+<span class="lineNum">     248 </span>            :   // We have succeeded in an iteration.  So return the next guess.
+<span class="lineNum">     249 </span><span class="lineCov">        654 :   ++current_iter_;</span>
+<span class="lineNum">     250 </span>            : 
+<span class="lineNum">     251 </span>            :   // Construct new coefs.  Parameters flow_A and flow_B are from
+<span class="lineNum">     252 </span>            :   // Gundlach, PRD 57, 863 (1998), eq. 44.
+<span class="lineNum">     253 </span><span class="lineCov">        654 :   const double flow_A = alpha_ / (l_surface * (l_surface + 1)) + beta_;</span>
+<span class="lineNum">     254 </span><span class="lineCov">        654 :   const double flow_B = beta_ / alpha_;</span>
+<span class="lineNum">     255 </span><span class="lineCov">       1962 :   auto coefs = current_strahlkorper-&gt;coefficients();</span>
+<span class="lineNum">     256 </span><span class="lineCov">      38736 :   for (auto cit = SpherepackIterator(current_strahlkorper-&gt;l_max(),</span>
+<span class="lineNum">     257 </span>            :                                      current_strahlkorper-&gt;l_max());
+<span class="lineNum">     258 </span>            :        cit; ++cit) {
+<span class="lineNum">     259 </span><span class="lineCov">      73548 :     coefs[cit()] -= flow_A / (1.0 + flow_B * cit.l() * (cit.l() + 1)) *</span>
+<span class="lineNum">     260 </span><span class="lineCov">      36774 :                     residual_on_surface[cit()];</span>
+<span class="lineNum">     261 </span>            :   }
+<span class="lineNum">     262 </span><span class="lineCov">        654 :   *current_strahlkorper = Strahlkorper&lt;Frame&gt;(coefs, *current_strahlkorper);</span>
+<span class="lineNum">     263 </span>            : 
+<span class="lineNum">     264 </span>            :   // Set up for next iter
+<span class="lineNum">     265 </span><span class="lineCov">        654 :   previous_residual_mesh_norm_ = residual_mesh_norm;</span>
+<span class="lineNum">     266 </span>            : 
+<span class="lineNum">     267 </span>            :   // clang-tidy: std::move of trivially-copyable type
+<span class="lineNum">     268 </span><span class="lineCov">       1308 :   return std::make_pair(Status::SuccessfulIteration,</span>
+<span class="lineNum">     269 </span><span class="lineCov">       1308 :                         std::move(iter_info));  // NOLINT</span>
+<a name="270"><span class="lineNum">     270 </span>            : }</a>
+<span class="lineNum">     271 </span>            : 
+<span class="lineNum">     272 </span><span class="lineCov">          4 : std::ostream&amp; operator&lt;&lt;(std::ostream&amp; os,</span>
+<span class="lineNum">     273 </span>            :                          const FastFlow::FlowType&amp; flow_type) noexcept {
+<span class="lineNum">     274 </span><span class="lineCov">          4 :   switch (flow_type) {</span>
+<span class="lineNum">     275 </span><span class="lineCov">          1 :     case FastFlow::FlowType::Jacobi:</span>
+<span class="lineNum">     276 </span><span class="lineCov">          1 :       return os &lt;&lt; &quot;Jacobi&quot;;</span>
+<span class="lineNum">     277 </span><span class="lineCov">          1 :     case FastFlow::FlowType::Curvature:</span>
+<span class="lineNum">     278 </span><span class="lineCov">          1 :       return os &lt;&lt; &quot;Curvature&quot;;</span>
+<span class="lineNum">     279 </span><span class="lineCov">          2 :     case FastFlow::FlowType::Fast:</span>
+<span class="lineNum">     280 </span><span class="lineCov">          2 :       return os &lt;&lt; &quot;Fast&quot;;</span>
+<span class="lineNum">     281 </span>            :     default:  // LCOV_EXCL_LINE
+<span class="lineNum">     282 </span>            :       // LCOV_EXCL_START
+<span class="lineNum">     283 </span>            :       ERROR(&quot;Unknown FastFlow::FlowType&quot;);
+<span class="lineNum">     284 </span>            :       // LCOV_EXCL_STOP
+<span class="lineNum">     285 </span>            :   }
+<a name="286"><span class="lineNum">     286 </span>            : }</a>
+<span class="lineNum">     287 </span>            : 
+<span class="lineNum">     288 </span><span class="lineCov">          3 : void FastFlow::pup(PUP::er&amp; p) noexcept {</span>
+<span class="lineNum">     289 </span><span class="lineCov">          3 :   p | alpha_;</span>
+<span class="lineNum">     290 </span><span class="lineCov">          3 :   p | beta_;</span>
+<span class="lineNum">     291 </span><span class="lineCov">          3 :   p | abs_tol_;</span>
+<span class="lineNum">     292 </span><span class="lineCov">          3 :   p | trunc_tol_;</span>
+<span class="lineNum">     293 </span><span class="lineCov">          3 :   p | divergence_tol_;</span>
+<span class="lineNum">     294 </span><span class="lineCov">          3 :   p | divergence_iter_;</span>
+<span class="lineNum">     295 </span><span class="lineCov">          3 :   p | max_its_;</span>
+<span class="lineNum">     296 </span><span class="lineCov">          3 :   p | flow_;</span>
+<span class="lineNum">     297 </span><span class="lineCov">          3 :   p | current_iter_;</span>
+<span class="lineNum">     298 </span><span class="lineCov">          3 :   p | previous_residual_mesh_norm_;</span>
+<span class="lineNum">     299 </span><span class="lineCov">          3 :   p | min_residual_mesh_norm_;</span>
+<span class="lineNum">     300 </span><span class="lineCov">          3 :   p | iter_at_min_residual_mesh_norm_;</span>
+<a name="301"><span class="lineNum">     301 </span><span class="lineCov">          3 : }</span></a>
+<span class="lineNum">     302 </span>            : 
+<span class="lineNum">     303 </span><span class="lineCov">          6 : std::ostream&amp; operator&lt;&lt;(std::ostream&amp; os,</span>
+<span class="lineNum">     304 </span>            :                          const FastFlow::Status&amp; status) noexcept {
+<span class="lineNum">     305 </span><span class="lineCov">          6 :   switch (status) {</span>
+<span class="lineNum">     306 </span><span class="lineCov">          1 :     case FastFlow::Status::SuccessfulIteration:</span>
+<span class="lineNum">     307 </span><span class="lineCov">          1 :       return os &lt;&lt; &quot;Still iterating&quot;;</span>
+<span class="lineNum">     308 </span><span class="lineCov">          1 :     case FastFlow::Status::AbsTol:</span>
+<span class="lineNum">     309 </span><span class="lineCov">          1 :       return os &lt;&lt; &quot;Converged: Absolute tolerance&quot;;</span>
+<span class="lineNum">     310 </span><span class="lineCov">          1 :     case FastFlow::Status::TruncationTol:</span>
+<span class="lineNum">     311 </span><span class="lineCov">          1 :       return os &lt;&lt; &quot;Converged: Truncation tolerance&quot;;</span>
+<span class="lineNum">     312 </span><span class="lineCov">          1 :     case FastFlow::Status::MaxIts:</span>
+<span class="lineNum">     313 </span><span class="lineCov">          1 :       return os &lt;&lt; &quot;Failed: Too many iterations&quot;;</span>
+<span class="lineNum">     314 </span><span class="lineCov">          1 :     case FastFlow::Status::NegativeRadius:</span>
+<span class="lineNum">     315 </span><span class="lineCov">          1 :       return os &lt;&lt; &quot;Failed: Negative radius&quot;;</span>
+<span class="lineNum">     316 </span><span class="lineCov">          1 :     case FastFlow::Status::DivergenceError:</span>
+<span class="lineNum">     317 </span><span class="lineCov">          1 :       return os &lt;&lt; &quot;Failed: Diverging&quot;;</span>
+<span class="lineNum">     318 </span>            :     default:  // LCOV_EXCL_LINE
+<span class="lineNum">     319 </span>            :       // LCOV_EXCL_START
+<span class="lineNum">     320 </span>            :       ERROR(&quot;Need to add another case, don't understand value of 'status'&quot;);
+<span class="lineNum">     321 </span>            :       // LCOV_EXCL_STOP
+<span class="lineNum">     322 </span>            :   }
+<a name="323"><span class="lineNum">     323 </span>            : }</a>
+<span class="lineNum">     324 </span>            : 
+<span class="lineNum">     325 </span><span class="lineCov">         10 : bool operator==(const FastFlow&amp; lhs, const FastFlow&amp; rhs) noexcept {</span>
+<span class="lineNum">     326 </span><span class="lineCov">         30 :   return lhs.alpha_ == rhs.alpha_ and lhs.beta_ == rhs.beta_ and</span>
+<span class="lineNum">     327 </span><span class="lineCov">         30 :          lhs.abs_tol_ == rhs.abs_tol_ and lhs.trunc_tol_ == rhs.trunc_tol_ and</span>
+<span class="lineNum">     328 </span><span class="lineCov">         20 :          lhs.divergence_tol_ == rhs.divergence_tol_ and</span>
+<span class="lineNum">     329 </span><span class="lineCov">         20 :          lhs.divergence_iter_ == rhs.divergence_iter_ and</span>
+<span class="lineNum">     330 </span><span class="lineCov">         30 :          lhs.max_its_ == rhs.max_its_ and lhs.flow_ == rhs.flow_ and</span>
+<span class="lineNum">     331 </span><span class="lineCov">         20 :          lhs.current_iter_ == rhs.current_iter_ and</span>
+<span class="lineNum">     332 </span><span class="lineCov">         10 :          lhs.previous_residual_mesh_norm_ ==</span>
+<span class="lineNum">     333 </span><span class="lineCov">         20 :              rhs.previous_residual_mesh_norm_ and</span>
+<span class="lineNum">     334 </span><span class="lineCov">         30 :          lhs.min_residual_mesh_norm_ == rhs.min_residual_mesh_norm_ and</span>
+<span class="lineNum">     335 </span><span class="lineCov">         10 :          lhs.iter_at_min_residual_mesh_norm_ ==</span>
+<span class="lineNum">     336 </span><span class="lineCov">         20 :              rhs.iter_at_min_residual_mesh_norm_;</span>
+<a name="337"><span class="lineNum">     337 </span>            : }</a>
+<span class="lineNum">     338 </span>            : 
+<span class="lineNum">     339 </span><span class="lineCov">          4 : FastFlow::FlowType create_from_yaml&lt;FastFlow::FlowType&gt;::create(</span>
+<span class="lineNum">     340 </span>            :     const Option&amp; options) {
+<span class="lineNum">     341 </span><span class="lineCov">          8 :   const std::string flow_type_read = options.parse_as&lt;std::string&gt;();</span>
+<span class="lineNum">     342 </span><span class="lineCov">          4 :   if (&quot;Jacobi&quot; == flow_type_read) {</span>
+<span class="lineNum">     343 </span><span class="lineCov">          1 :     return FastFlow::FlowType::Jacobi;</span>
+<span class="lineNum">     344 </span><span class="lineCov">          3 :   } else if (&quot;Curvature&quot; == flow_type_read) {</span>
+<span class="lineNum">     345 </span><span class="lineCov">          1 :     return FastFlow::FlowType::Curvature;</span>
+<span class="lineNum">     346 </span><span class="lineCov">          2 :   } else if (&quot;Fast&quot; == flow_type_read) {</span>
+<span class="lineNum">     347 </span><span class="lineCov">          1 :     return FastFlow::FlowType::Fast;</span>
+<span class="lineNum">     348 </span>            :   }
+<span class="lineNum">     349 </span><span class="lineCov">          1 :   PARSE_ERROR(options.context(), &quot;Failed to convert \&quot;&quot;</span>
+<span class="lineNum">     350 </span>            :                                      &lt;&lt; flow_type_read
+<span class="lineNum">     351 </span>            :                                      &lt;&lt; &quot;\&quot; to FastFlow::FlowType. Must be &quot;
+<span class="lineNum">     352 </span>            :                                         &quot;one of Jacobi, Curvature, Fast.&quot;);
+<span class="lineNum">     353 </span>            : }
+<span class="lineNum">     354 </span>            : 
+<span class="lineNum">     355 </span>            : template size_t FastFlow::current_l_mesh(
+<span class="lineNum">     356 </span>            :     const Strahlkorper&lt;Frame::Inertial&gt;&amp; strahlkorper) const noexcept;
+<span class="lineNum">     357 </span>            : 
+<span class="lineNum">     358 </span>            : template std::pair&lt;FastFlow::Status, FastFlow::IterInfo&gt;
+<span class="lineNum">     359 </span>            : FastFlow::iterate_horizon_finder&lt;Frame::Inertial&gt;(
+<span class="lineNum">     360 </span>            :     const gsl::not_null&lt;Strahlkorper&lt;Frame::Inertial&gt;*&gt; current_strahlkorper,
+<span class="lineNum">     361 </span>            :     const tnsr::II&lt;DataVector, 3, Frame::Inertial&gt;&amp; upper_spatial_metric,
+<a name="362"><span class="lineNum">     362 </span>            :     const tnsr::ii&lt;DataVector, 3, Frame::Inertial&gt;&amp; extrinsic_curvature,</a>
+<span class="lineNum">     363 </span>            :     const tnsr::Ijj&lt;DataVector, 3, Frame::Inertial&gt;&amp;
+<span class="lineNum">     364 </span><span class="lineCov">       2283 :         christoffel_2nd_kind) noexcept;</span>
+</pre>
+      </td>
+    </tr>
+  </table>
+  <br>
+
+  <table width="100%" border=0 cellspacing=0 cellpadding=0>
+    <tr><td class="ruler"><img src="../glass.png" width=3 height=3 alt=""></td></tr>
+    <tr><td class="versionInfo">Generated by: <a href="http://ltp.sourceforge.net/coverage/lcov.php" target="_parent">LCOV version 1.13</a></td></tr>
+  </table>
+  <br>
+
+</body>
+</html>

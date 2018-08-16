@@ -1,0 +1,363 @@
+<!-- HTML header for doxygen 1.8.10-->
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=9"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="author" content="SXS Collaboration">
+    <meta name="generator" content="Doxygen 1.8.13"/>
+    <style>
+        /*!
+         * IE10 viewport hack for Surface/desktop Windows 8 bug
+         * Copyright 2014-2015 Twitter, Inc.
+         * Licensed under MIT (https://github.com/twbs/bootstrap/blob/master/LICENSE)
+         */
+        @-webkit-viewport { width: device-width; }
+        @-moz-viewport    { width: device-width; }
+        @-ms-viewport     { width: device-width; }
+        @-o-viewport      { width: device-width; }
+        @viewport         { width: device-width; }
+      </style>
+  <title>SpECTRE: vis::VolumeFile Class Reference</title>
+  <link href="tabs.css" rel="stylesheet" type="text/css"/>
+  <script type="text/javascript" src="jquery.js"></script>
+  <script type="text/javascript" src="dynsections.js"></script>
+  <link href="search/search.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="search/searchdata.js"></script>
+<script type="text/javascript" src="search/search.js"></script>
+  <script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+    extensions: ["tex2jax.js", "TeX/AMSmath.js", "TeX/AMSsymbols.js", "color.js"],
+    jax: ["input/TeX","output/HTML-CSS"],
+});
+MathJax.Hub.Config({
+    TeX: { equationNumbers: { autoNumber: "AMS" } }
+});
+MathJax.Hub.Config({
+    tex2jax: {inlineMath: [['^^','^^'], ['\\(', '\\)']]}
+});
+</script><script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.2/MathJax.js"></script>
+  <link href="octicons.css" rel="stylesheet">
+  <link href="bootstrap.min.css" rel="stylesheet">
+  <link href="doxygen.css" rel="stylesheet" type="text/css" />
+  <script type="text/javascript" src="jquery.js"></script>
+  <script type="text/javascript" src="bootstrap.min.js"></script>
+  <script type="text/javascript" src="spectre.js"></script>
+  </head>
+  <body>
+  <div id="top" class="navbar-fixed-top"><!-- do not remove this div, it is closed by doxygen! -->
+  <!-- BEGIN TITLEAREA -->
+  <div id="titlearea">
+  <script type="text/javascript">
+  var searchBox = new SearchBox("searchBox", "search",false,'Search');
+  </script>
+  <div id="main-nav">
+    <ul class="sm sm-dox" id="main-menu">
+      <li>
+      <a href="index.html">
+      SpECTRE &#160;
+        <span id="projectnumber">v0.0.0</span>
+      </a>
+      </li>
+      <li class="dropdown">
+        <a class="dropdown-toggle" data-toggle="dropdown" href="#" id="selected">
+          <span id="selected">
+            <i class="octicon octicon-book"></i><span>Documentation</span>
+          </span>
+          <span class="caret"></span>
+        </a>
+        <ul class="dropdown-menu">
+          <li style="min-width: 135px;">
+            <a href="index.html">
+            <i class="octicon octicon-book"></i><span>Introduction</span></a>
+          </li>
+          <li style="min-width: 135px;">
+            <a href="installation.html">
+              <i class="octicon octicon-desktop-download"></i><span>Installation</span>
+            </a>
+          </li>
+          <li style="min-width: 135px;">
+            <a href="tutorials.html">
+              <i class="octicon octicon-mortar-board"></i><span>User Tutorials</span>
+            </a>
+          </li>
+          <li style="min-width: 135px;">
+            <a href="dev_guide.html">
+              <i class="octicon octicon-gist-secret"></i><span>Dev Guide</span>
+            </a>
+          </li>
+        </ul>
+      </li>
+      <li class="dropdown">
+        <a class="dropdown-toggle" data-toggle="dropdown" href="#" id="selected">
+          <span id="selected">
+            <i class="octicon octicon-code"></i>
+              <span>Reference</span>
+          </span>
+          <span class="caret"></span>
+        </a>
+        <ul class="dropdown-menu">
+          <li style="min-width: 130px;">
+            <a href="modules.html">
+              <i class="octicon octicon-code"></i>
+              <span>Topics</span>
+            </a>
+          </li>
+          <li style="min-width: 130px;">
+            <a href="namespaces.html">
+              <i class="octicon octicon-gist"></i>
+              <span>Namespaces</span>
+            </a>
+          </li>
+        </ul>
+      </li>
+      <li>
+        <a href="files.html">
+          <i class="octicon octicon-file-directory"></i><span>Files</span>
+        </a>
+      </li>
+      <li>
+        <a href="https://github.com/sxs-collaboration/spectre" target="_blank">
+          <i class="octicon octicon-mark-github"></i><span>View on GitHub</span>
+        </a>
+      </li>
+      <!--The Search <li> is added by doxygen later-->
+    </ul>
+  </div><!-- main-nav -->
+  </div><!-- titlearea -->
+  <!-- window showing the filter options -->
+  <div id="MSearchSelectWindow"  style="position: fixed;"
+       onmouseover="return searchBox.OnSearchSelectShow()"
+       onmouseout="return searchBox.OnSearchSelectHide()"
+       onkeydown="return searchBox.OnSearchSelectKey(event)">
+  </div>
+  <!-- iframe showing the search results (closed by default) -->
+  <div id="MSearchResultsWindow"  style="position: fixed;">
+  <iframe src="javascript:void(0)" frameborder="0"
+          name="MSearchResults" id="MSearchResults">
+  </iframe>
+  </div>
+<!-- Generated by Doxygen 1.8.13 -->
+<script type="text/javascript">
+var searchBox = new SearchBox("searchBox", "search",false,'Search');
+</script>
+<script type="text/javascript" src="menudata.js"></script>
+<script type="text/javascript" src="menu.js"></script>
+<script type="text/javascript">
+$(function() {
+  initMenu('',true,false,'search.php','Search');
+  $(document).ready(function() { init_search(); });
+});
+</script>
+<div id="main-nav"></div>
+<!-- window showing the filter options -->
+<div id="MSearchSelectWindow"
+     onmouseover="return searchBox.OnSearchSelectShow()"
+     onmouseout="return searchBox.OnSearchSelectHide()"
+     onkeydown="return searchBox.OnSearchSelectKey(event)">
+</div>
+
+<!-- iframe showing the search results (closed by default) -->
+<div id="MSearchResultsWindow">
+<iframe src="javascript:void(0)" frameborder="0" 
+        name="MSearchResults" id="MSearchResults">
+</iframe>
+</div>
+
+<div id="nav-path" class="navpath">
+  <ul>
+<li class="navelem"><a class="el" href="namespacevis.html">vis</a></li><li class="navelem"><a class="el" href="classvis_1_1VolumeFile.html">VolumeFile</a></li>  </ul>
+</div>
+</div><!-- top -->
+<div class="header">
+  <div class="summary">
+<a href="#pub-methods">Public Member Functions</a> &#124;
+<a href="classvis_1_1VolumeFile-members.html">List of all members</a>  </div>
+  <div class="headertitle">
+<div class="title">vis::VolumeFile Class Reference<div class="ingroups"><a class="el" href="group__HDF5Group.html">HDF5</a></div></div>  </div>
+</div><!--header-->
+<div class="contents">
+
+<p>Writes out volume data as an HDF5 file and an XDMF file to be visualized in ParaView or VisIt.  
+ <a href="classvis_1_1VolumeFile.html#details">More...</a></p>
+
+<p><code>#include &lt;<a class="el" href="VolumeDataFile_8hpp_source.html">VolumeDataFile.hpp</a>&gt;</code></p>
+<table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
+Public Member Functions</h2></td></tr>
+<tr class="memitem:ab903b9fed7318aa2a68d37fd46ddea4c"><td class="memItemLeft" align="right" valign="top"><a id="ab903b9fed7318aa2a68d37fd46ddea4c"></a>
+&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classvis_1_1VolumeFile.html#ab903b9fed7318aa2a68d37fd46ddea4c">VolumeFile</a> (<a class="elRef" doxygen="/work/spectre/docs/config/cppreference-doxygen-web.tag.xml:http://en.cppreference.com/w/" href="http://en.cppreference.com/w/cpp/string/basic_string.html">std::string</a> file_name, int format_id)</td></tr>
+<tr class="memdesc:ab903b9fed7318aa2a68d37fd46ddea4c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Open a file for volume data output. <br /></td></tr>
+<tr class="separator:ab903b9fed7318aa2a68d37fd46ddea4c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa76a84a7d137661a6ad82f1669ed07ed"><td class="memItemLeft" align="right" valign="top"><a id="aa76a84a7d137661a6ad82f1669ed07ed"></a>
+&#160;</td><td class="memItemRight" valign="bottom"><b>VolumeFile</b> (const <a class="el" href="classvis_1_1VolumeFile.html">VolumeFile</a> &amp;)=delete</td></tr>
+<tr class="separator:aa76a84a7d137661a6ad82f1669ed07ed"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1be95998e2b4de5425bd128f41394cd7"><td class="memItemLeft" align="right" valign="top"><a id="a1be95998e2b4de5425bd128f41394cd7"></a>
+<a class="el" href="classvis_1_1VolumeFile.html">VolumeFile</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>operator=</b> (const <a class="el" href="classvis_1_1VolumeFile.html">VolumeFile</a> &amp;)=delete</td></tr>
+<tr class="separator:a1be95998e2b4de5425bd128f41394cd7"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6d0efa9f9cbd2571e6e48facdcc7449e"><td class="memItemLeft" align="right" valign="top"><a id="a6d0efa9f9cbd2571e6e48facdcc7449e"></a>
+&#160;</td><td class="memItemRight" valign="bottom"><b>VolumeFile</b> (<a class="el" href="classvis_1_1VolumeFile.html">VolumeFile</a> &amp;&amp;)=delete</td></tr>
+<tr class="separator:a6d0efa9f9cbd2571e6e48facdcc7449e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a58feca71f5126d95808f783b9c93922d"><td class="memItemLeft" align="right" valign="top"><a id="a58feca71f5126d95808f783b9c93922d"></a>
+<a class="el" href="classvis_1_1VolumeFile.html">VolumeFile</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>operator=</b> (<a class="el" href="classvis_1_1VolumeFile.html">VolumeFile</a> &amp;&amp;)=delete</td></tr>
+<tr class="separator:a58feca71f5126d95808f783b9c93922d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1e340c89a2ebbbaec47de5afe0ca6942"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classvis_1_1VolumeFile.html#a1e340c89a2ebbbaec47de5afe0ca6942">write_xdmf_time</a> (double time)</td></tr>
+<tr class="separator:a1e340c89a2ebbbaec47de5afe0ca6942"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a25c75adefbdf3305d0c93f522016a37b"><td class="memTemplParams" colspan="2">template&lt;size_t Dim, typename Fr &gt; </td></tr>
+<tr class="memitem:a25c75adefbdf3305d0c93f522016a37b"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classvis_1_1VolumeFile.html#a25c75adefbdf3305d0c93f522016a37b">write_element_connectivity_and_coordinates</a> (double time, const tnsr::I&lt; <a class="el" href="classDataVector.html">DataVector</a>, Dim, Fr &gt; &amp;grid_coordinates, const <a class="el" href="classIndex.html">Index</a>&lt; Dim &gt; &amp;extents, const <a class="elRef" doxygen="/work/spectre/docs/config/cppreference-doxygen-web.tag.xml:http://en.cppreference.com/w/" href="http://en.cppreference.com/w/cpp/string/basic_string.html">std::string</a> &amp;element_id, const <a class="elRef" doxygen="/work/spectre/docs/config/cppreference-doxygen-web.tag.xml:http://en.cppreference.com/w/" href="http://en.cppreference.com/w/cpp/container/vector.html">std::vector</a>&lt; <a class="elRef" doxygen="/work/spectre/docs/config/cppreference-doxygen-web.tag.xml:http://en.cppreference.com/w/" href="http://en.cppreference.com/w/cpp/string/basic_string.html">std::string</a> &gt; &amp;coordinate_names={&quot;x-coord&quot;, &quot;y-coord&quot;, &quot;z-coord&quot;})</td></tr>
+<tr class="separator:a25c75adefbdf3305d0c93f522016a37b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a33836e9cc8135fb5c5d2adf8577b7b04"><td class="memTemplParams" colspan="2">template&lt;size_t Dim&gt; </td></tr>
+<tr class="memitem:a33836e9cc8135fb5c5d2adf8577b7b04"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classvis_1_1VolumeFile.html#a33836e9cc8135fb5c5d2adf8577b7b04">write_element_data</a> (<a class="elRef" doxygen="/work/spectre/docs/config/cppreference-doxygen-web.tag.xml:http://en.cppreference.com/w/" href="http://en.cppreference.com/w/cpp/container/unordered_map.html">std::unordered_map</a>&lt; <a class="elRef" doxygen="/work/spectre/docs/config/cppreference-doxygen-web.tag.xml:http://en.cppreference.com/w/" href="http://en.cppreference.com/w/cpp/string/basic_string.html">std::string</a>, <a class="elRef" doxygen="/work/spectre/docs/config/cppreference-doxygen-web.tag.xml:http://en.cppreference.com/w/" href="http://en.cppreference.com/w/cpp/utility/pair.html">std::pair</a>&lt; <a class="elRef" doxygen="/work/spectre/docs/config/cppreference-doxygen-web.tag.xml:http://en.cppreference.com/w/" href="http://en.cppreference.com/w/cpp/container/vector.html">std::vector</a>&lt; <a class="elRef" doxygen="/work/spectre/docs/config/cppreference-doxygen-web.tag.xml:http://en.cppreference.com/w/" href="http://en.cppreference.com/w/cpp/string/basic_string.html">std::string</a> &gt;, <a class="elRef" doxygen="/work/spectre/docs/config/cppreference-doxygen-web.tag.xml:http://en.cppreference.com/w/" href="http://en.cppreference.com/w/cpp/container/vector.html">std::vector</a>&lt; <a class="el" href="classDataVector.html">DataVector</a> &gt;&gt;&gt; vars_map, const <a class="el" href="classIndex.html">Index</a>&lt; Dim &gt; &amp;extents, const <a class="elRef" doxygen="/work/spectre/docs/config/cppreference-doxygen-web.tag.xml:http://en.cppreference.com/w/" href="http://en.cppreference.com/w/cpp/string/basic_string.html">std::string</a> &amp;element_id)</td></tr>
+<tr class="memdesc:a33836e9cc8135fb5c5d2adf8577b7b04"><td class="mdescLeft">&#160;</td><td class="mdescRight">Write the extents into the volume HDF5 file for the specific element.  <a href="#a33836e9cc8135fb5c5d2adf8577b7b04">More...</a><br /></td></tr>
+<tr class="separator:a33836e9cc8135fb5c5d2adf8577b7b04"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table>
+<a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
+<div class="textblock"><p>Writes out volume data as an HDF5 file and an XDMF file to be visualized in ParaView or VisIt. </p>
+</div><h2 class="groupheader">Member Function Documentation</h2>
+<a id="a25c75adefbdf3305d0c93f522016a37b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a25c75adefbdf3305d0c93f522016a37b">&#9670;&nbsp;</a></span>write_element_connectivity_and_coordinates()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;size_t Dim, typename Fr &gt; </div>
+      <table class="memname">
+        <tr>
+          <td class="memname">void vis::VolumeFile::write_element_connectivity_and_coordinates </td>
+          <td>(</td>
+          <td class="paramtype">double&#160;</td>
+          <td class="paramname"><em>time</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const tnsr::I&lt; <a class="el" href="classDataVector.html">DataVector</a>, Dim, Fr &gt; &amp;&#160;</td>
+          <td class="paramname"><em>grid_coordinates</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const <a class="el" href="classIndex.html">Index</a>&lt; Dim &gt; &amp;&#160;</td>
+          <td class="paramname"><em>extents</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const <a class="elRef" doxygen="/work/spectre/docs/config/cppreference-doxygen-web.tag.xml:http://en.cppreference.com/w/" href="http://en.cppreference.com/w/cpp/string/basic_string.html">std::string</a> &amp;&#160;</td>
+          <td class="paramname"><em>element_id</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const <a class="elRef" doxygen="/work/spectre/docs/config/cppreference-doxygen-web.tag.xml:http://en.cppreference.com/w/" href="http://en.cppreference.com/w/cpp/container/vector.html">std::vector</a>&lt; <a class="elRef" doxygen="/work/spectre/docs/config/cppreference-doxygen-web.tag.xml:http://en.cppreference.com/w/" href="http://en.cppreference.com/w/cpp/string/basic_string.html">std::string</a> &gt; &amp;&#160;</td>
+          <td class="paramname"><em>coordinate_names</em> = <code>{&quot;x-coord&quot;,&#160;&quot;y-coord&quot;,&#160;&quot;z-coord&quot;}</code>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>Write the time, extents, connectivity and grid coordinates into the volume HDF5 file for the specific element.</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">time</td><td>the coordinate time </td></tr>
+    <tr><td class="paramname">grid_coordinates</td><td>the coordinates of the grid </td></tr>
+    <tr><td class="paramname">extents</td><td>the extents of the element </td></tr>
+    <tr><td class="paramname">element_id</td><td>the name/ID of the element </td></tr>
+    <tr><td class="paramname">coordinate_names</td><td>the names of the grid coordinates </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a id="a33836e9cc8135fb5c5d2adf8577b7b04"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a33836e9cc8135fb5c5d2adf8577b7b04">&#9670;&nbsp;</a></span>write_element_data()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;size_t Dim&gt; </div>
+      <table class="memname">
+        <tr>
+          <td class="memname">void vis::VolumeFile::write_element_data </td>
+          <td>(</td>
+          <td class="paramtype"><a class="elRef" doxygen="/work/spectre/docs/config/cppreference-doxygen-web.tag.xml:http://en.cppreference.com/w/" href="http://en.cppreference.com/w/cpp/container/unordered_map.html">std::unordered_map</a>&lt; <a class="elRef" doxygen="/work/spectre/docs/config/cppreference-doxygen-web.tag.xml:http://en.cppreference.com/w/" href="http://en.cppreference.com/w/cpp/string/basic_string.html">std::string</a>, <a class="elRef" doxygen="/work/spectre/docs/config/cppreference-doxygen-web.tag.xml:http://en.cppreference.com/w/" href="http://en.cppreference.com/w/cpp/utility/pair.html">std::pair</a>&lt; <a class="elRef" doxygen="/work/spectre/docs/config/cppreference-doxygen-web.tag.xml:http://en.cppreference.com/w/" href="http://en.cppreference.com/w/cpp/container/vector.html">std::vector</a>&lt; <a class="elRef" doxygen="/work/spectre/docs/config/cppreference-doxygen-web.tag.xml:http://en.cppreference.com/w/" href="http://en.cppreference.com/w/cpp/string/basic_string.html">std::string</a> &gt;, <a class="elRef" doxygen="/work/spectre/docs/config/cppreference-doxygen-web.tag.xml:http://en.cppreference.com/w/" href="http://en.cppreference.com/w/cpp/container/vector.html">std::vector</a>&lt; <a class="el" href="classDataVector.html">DataVector</a> &gt;&gt;&gt;&#160;</td>
+          <td class="paramname"><em>vars_map</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const <a class="el" href="classIndex.html">Index</a>&lt; Dim &gt; &amp;&#160;</td>
+          <td class="paramname"><em>extents</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const <a class="elRef" doxygen="/work/spectre/docs/config/cppreference-doxygen-web.tag.xml:http://en.cppreference.com/w/" href="http://en.cppreference.com/w/cpp/string/basic_string.html">std::string</a> &amp;&#160;</td>
+          <td class="paramname"><em>element_id</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Write the extents into the volume HDF5 file for the specific element. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">vars_map</td><td>the map storing all the variables to be written </td></tr>
+    <tr><td class="paramname">extents</td><td>the extents of the element </td></tr>
+    <tr><td class="paramname">element_id</td><td>the name/ID of the element </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a id="a1e340c89a2ebbbaec47de5afe0ca6942"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a1e340c89a2ebbbaec47de5afe0ca6942">&#9670;&nbsp;</a></span>write_xdmf_time()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void vis::VolumeFile::write_xdmf_time </td>
+          <td>(</td>
+          <td class="paramtype">double&#160;</td>
+          <td class="paramname"><em>time</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>Writes the current time into the XDMF file and must only be called once per time step. <code><a class="el" href="classvis_1_1VolumeFile.html#a1e340c89a2ebbbaec47de5afe0ca6942">write_xdmf_time()</a></code> must also be called before looping over the elements and calling <code><a class="el" href="classvis_1_1VolumeFile.html#a25c75adefbdf3305d0c93f522016a37b">write_element_connectivity_and_coordinates()</a></code></p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">time</td><td>the coordinate time </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<hr/>The documentation for this class was generated from the following files:<ul>
+<li>src/IO/<a class="el" href="VolumeDataFile_8hpp_source.html">VolumeDataFile.hpp</a></li>
+<li>src/IO/VolumeDataFile.cpp</li>
+</ul>
+</div><!-- contents -->
+<!-- HTML footer for doxygen 1.8.10-->
+<!-- start footer part -->
+<hr class="footer"/><address class="footer"><small>
+&copy; Copyright 2017 - 2018
+<a href="https://black-holes.org">SXS Collaboration</a>,
+<a href="LICENSE.txt" target="_blank">
+<span class="hidden-xs">Distributed under the</span>
+MIT License</a>
+</small></address>
+</body>
+</html>

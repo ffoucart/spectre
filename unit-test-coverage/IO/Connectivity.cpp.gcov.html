@@ -1,0 +1,210 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+
+<html lang="en">
+
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <title>LCOV - 4a100dde3b231e0ada6ff7b2b4c32892a30db7f6 - IO/Connectivity.cpp</title>
+  <link rel="stylesheet" type="text/css" href="../gcov.css">
+</head>
+
+<body>
+
+  <table width="100%" border=0 cellspacing=0 cellpadding=0>
+    <tr><td class="title">SpECTRE Unit Test Code Coverage Report</td></tr>
+    <tr><td class="ruler"><img src="../glass.png" width=3 height=3 alt=""></td></tr>
+
+    <tr>
+      <td width="100%">
+        <table cellpadding=1 border=0 width="100%">
+          <tr>
+            <td width="10%" class="headerItem">Current view:</td>
+            <td width="35%" class="headerValue"><a href="../index.html">top level</a> - <a href="index.html">IO</a> - Connectivity.cpp<span style="font-size: 80%;"> (source / <a href="Connectivity.cpp.func-sort-c.html">functions</a>)</span></td>
+            <td width="5%"></td>
+            <td width="15%"></td>
+            <td width="10%" class="headerCovTableHead">Hit</td>
+            <td width="10%" class="headerCovTableHead">Total</td>
+            <td width="15%" class="headerCovTableHead">Coverage</td>
+          </tr>
+          <tr>
+            <td class="headerItem">Commit:</td>
+             <td class="headerValue"><a target="_blank" href="https://github.com/sxs-collaboration/spectre/commit/4a100dde3b231e0ada6ff7b2b4c32892a30db7f6">4a100dde3b231e0ada6ff7b2b4c32892a30db7f6</a></td>
+            <td></td>
+            <td class="headerItem">Lines:</td>
+            <td class="headerCovTableEntry">59</td>
+            <td class="headerCovTableEntry">59</td>
+            <td class="headerCovTableEntryHi">100.0 %</td>
+          </tr>
+          <tr>
+            <td class="headerItem">Date:</td>
+            <td class="headerValue">2018-08-16 19:06:01</td>
+            <td></td>
+            <td class="headerItem">Functions:</td>
+            <td class="headerCovTableEntry">10</td>
+            <td class="headerCovTableEntry">10</td>
+            <td class="headerCovTableEntryHi">100.0 %</td>
+          </tr>
+          <tr>
+            <td class="headerItem">Legend:</td>
+            <td class="headerValueLeg">            Lines:
+            <span class="coverLegendCov">hit</span>
+            <span class="coverLegendNoCov">not hit</span>
+</td>
+            <td></td>
+          </tr>
+          <tr><td><img src="../glass.png" width=3 height=3 alt=""></td></tr>
+        </table>
+      </td>
+    </tr>
+
+    <tr><td class="ruler"><img src="../glass.png" width=3 height=3 alt=""></td></tr>
+  </table>
+
+  <table cellpadding=0 cellspacing=0 border=0>
+    <tr>
+      <td><br></td>
+    </tr>
+    <tr>
+      <td>
+<pre class="sourceHeading">          Line data    Source code</pre>
+<pre class="source">
+<a name="1"><span class="lineNum">       1 </span>            : // Distributed under the MIT License.</a>
+<span class="lineNum">       2 </span>            : // See LICENSE.txt for details.
+<span class="lineNum">       3 </span>            : 
+<span class="lineNum">       4 </span>            : #include &quot;IO/Connectivity.hpp&quot;
+<span class="lineNum">       5 </span>            : 
+<span class="lineNum">       6 </span>            : #include &lt;algorithm&gt;
+<span class="lineNum">       7 </span>            : 
+<span class="lineNum">       8 </span>            : #include &quot;DataStructures/Index.hpp&quot;  // IWYU pragma: keep
+<span class="lineNum">       9 </span>            : #include &quot;ErrorHandling/Error.hpp&quot;
+<span class="lineNum">      10 </span>            : 
+<a name="11"><span class="lineNum">      11 </span>            : namespace vis {</a>
+<span class="lineNum">      12 </span>            : namespace detail {
+<span class="lineNum">      13 </span><span class="lineCov">          3 : std::ostream&amp; operator&lt;&lt;(std::ostream&amp; os, const Topology&amp; topology) {</span>
+<span class="lineNum">      14 </span><span class="lineCov">          3 :   switch (topology) {</span>
+<span class="lineNum">      15 </span><span class="lineCov">          1 :     case Topology::Line:</span>
+<span class="lineNum">      16 </span><span class="lineCov">          1 :       return os &lt;&lt; &quot;Line&quot;;</span>
+<span class="lineNum">      17 </span><span class="lineCov">          1 :     case Topology::Quad:</span>
+<span class="lineNum">      18 </span><span class="lineCov">          1 :       return os &lt;&lt; &quot;Quad&quot;;</span>
+<span class="lineNum">      19 </span><span class="lineCov">          1 :     case Topology::Hexahedron:</span>
+<span class="lineNum">      20 </span><span class="lineCov">          1 :       return os &lt;&lt; &quot;Hexahedron&quot;;</span>
+<span class="lineNum">      21 </span>            :     // LCOV_EXCL_START
+<span class="lineNum">      22 </span>            :     default:
+<span class="lineNum">      23 </span>            :       ERROR(&quot;Unknown value of Topology trying to be streamed&quot;);
+<span class="lineNum">      24 </span>            :       // LCOV_EXCL_STOP
+<span class="lineNum">      25 </span>            :   }
+<a name="26"><span class="lineNum">      26 </span>            : }</a>
+<span class="lineNum">      27 </span>            : 
+<span class="lineNum">      28 </span><span class="lineCov">          6 : std::vector&lt;CellInTopology&gt; cells_in_i1(const size_t number_of_points_in_i1) {</span>
+<span class="lineNum">      29 </span>            :   // The number of cells in an I1 with N collocation points is N-1. Each cell
+<span class="lineNum">      30 </span>            :   // goes from the ith to the i+1th collocation point. This is stored in a
+<span class="lineNum">      31 </span>            :   // vector.
+<span class="lineNum">      32 </span><span class="lineCov">          6 :   std::vector&lt;CellInTopology&gt; result;</span>
+<span class="lineNum">      33 </span><span class="lineCov">          6 :   result.reserve(number_of_points_in_i1 - 1);</span>
+<span class="lineNum">      34 </span><span class="lineCov">         15 :   for (size_t i = 0; i &lt; number_of_points_in_i1 - 1; ++i) {</span>
+<span class="lineNum">      35 </span><span class="lineCov">          9 :     result.emplace_back(Topology::Line, std::vector&lt;size_t&gt;{i, i + 1});</span>
+<span class="lineNum">      36 </span>            :   }
+<span class="lineNum">      37 </span><span class="lineCov">          6 :   return result;</span>
+<a name="38"><span class="lineNum">      38 </span>            : }</a>
+<span class="lineNum">      39 </span>            : 
+<span class="lineNum">      40 </span><span class="lineCov">          3 : std::vector&lt;CellInTopology&gt; tensor_product_cells(</span>
+<span class="lineNum">      41 </span>            :     const std::vector&lt;CellInTopology&gt;&amp; first_topology_cells,
+<span class="lineNum">      42 </span>            :     const size_t first_topology_cells_size,
+<span class="lineNum">      43 </span>            :     const std::vector&lt;CellInTopology&gt;&amp; second_topology_cells) {
+<span class="lineNum">      44 </span>            :   // first_topology_cells_size is the number of cells plus one in the topology.
+<span class="lineNum">      45 </span>            :   // For an I1 topology it is the number of grid points. Passing it in
+<span class="lineNum">      46 </span>            :   // separately allows easier generalization to other topologies such as S2.
+<span class="lineNum">      47 </span><span class="lineCov">          3 :   std::vector&lt;CellInTopology&gt; result;</span>
+<span class="lineNum">      48 </span><span class="lineCov">          8 :   for (const auto&amp; first_cells : first_topology_cells) {</span>
+<span class="lineNum">      49 </span><span class="lineCov">         10 :     for (const auto&amp; second_cells : second_topology_cells) {</span>
+<span class="lineNum">      50 </span><span class="lineCov">          5 :       const std::vector&lt;size_t&gt;&amp; first_bounding_indices =</span>
+<span class="lineNum">      51 </span>            :           first_cells.bounding_indices;
+<a name="52"><span class="lineNum">      52 </span>            :       const std::vector&lt;size_t&gt; second_bounding_indices =</a>
+<span class="lineNum">      53 </span>            :           [first_topology_cells_size](
+<span class="lineNum">      54 </span><span class="lineCov">         10 :               const std::vector&lt;size_t&gt;&amp; bounding_indices) {</span>
+<span class="lineNum">      55 </span><span class="lineCov">          5 :             std::vector&lt;size_t&gt; bounding_computed(bounding_indices.size());</span>
+<a name="56"><span class="lineNum">      56 </span><span class="lineCov">          5 :             std::transform(bounding_indices.begin(), bounding_indices.end(),</span></a>
+<span class="lineNum">      57 </span>            :                            bounding_computed.begin(),
+<span class="lineNum">      58 </span><span class="lineCov">         14 :                            [first_topology_cells_size](const size_t element) {</span>
+<span class="lineNum">      59 </span>            :                              return element * first_topology_cells_size;
+<span class="lineNum">      60 </span><span class="lineCov">         19 :                            });</span>
+<span class="lineNum">      61 </span><span class="lineCov">          5 :             return bounding_computed;</span>
+<span class="lineNum">      62 </span><span class="lineCov">         10 :           }(second_cells.bounding_indices);</span>
+<span class="lineNum">      63 </span>            : 
+<span class="lineNum">      64 </span><span class="lineCov">         10 :       if (first_cells.topology == Topology::Line and</span>
+<span class="lineNum">      65 </span><span class="lineCov">          5 :           second_cells.topology == Topology::Line) {</span>
+<span class="lineNum">      66 </span><span class="lineCov">          6 :         result.emplace_back(</span>
+<span class="lineNum">      67 </span>            :             Topology::Quad,
+<span class="lineNum">      68 </span><span class="lineCov">         15 :             std::vector&lt;size_t&gt;{</span>
+<span class="lineNum">      69 </span><span class="lineCov">          3 :                 first_bounding_indices[0] + second_bounding_indices[0],</span>
+<span class="lineNum">      70 </span><span class="lineCov">          3 :                 first_bounding_indices[1] + second_bounding_indices[0],</span>
+<span class="lineNum">      71 </span><span class="lineCov">          3 :                 first_bounding_indices[1] + second_bounding_indices[1],</span>
+<span class="lineNum">      72 </span><span class="lineCov">          3 :                 first_bounding_indices[0] + second_bounding_indices[1]});</span>
+<span class="lineNum">      73 </span><span class="lineCov">          4 :       } else if (first_cells.topology == Topology::Line and</span>
+<span class="lineNum">      74 </span><span class="lineCov">          2 :                  second_cells.topology == Topology::Quad) {</span>
+<span class="lineNum">      75 </span><span class="lineCov">          4 :         result.emplace_back(</span>
+<span class="lineNum">      76 </span>            :             Topology::Hexahedron,
+<span class="lineNum">      77 </span><span class="lineCov">         18 :             std::vector&lt;size_t&gt;{</span>
+<span class="lineNum">      78 </span><span class="lineCov">          2 :                 first_bounding_indices[0] + second_bounding_indices[0],</span>
+<span class="lineNum">      79 </span><span class="lineCov">          2 :                 first_bounding_indices[1] + second_bounding_indices[0],</span>
+<span class="lineNum">      80 </span><span class="lineCov">          2 :                 first_bounding_indices[1] + second_bounding_indices[1],</span>
+<span class="lineNum">      81 </span><span class="lineCov">          2 :                 first_bounding_indices[0] + second_bounding_indices[1],</span>
+<span class="lineNum">      82 </span><span class="lineCov">          2 :                 first_bounding_indices[0] + second_bounding_indices[3],</span>
+<span class="lineNum">      83 </span><span class="lineCov">          2 :                 first_bounding_indices[1] + second_bounding_indices[3],</span>
+<span class="lineNum">      84 </span><span class="lineCov">          2 :                 first_bounding_indices[1] + second_bounding_indices[2],</span>
+<span class="lineNum">      85 </span><span class="lineCov">          2 :                 first_bounding_indices[0] + second_bounding_indices[2]});</span>
+<span class="lineNum">      86 </span>            :       } else {
+<span class="lineNum">      87 </span>            :         // LCOV_EXCL_START
+<span class="lineNum">      88 </span>            :         ERROR(
+<span class="lineNum">      89 </span>            :             &quot;Tensor product of cells that are unknown. The first topology is: &quot;
+<span class="lineNum">      90 </span>            :             &lt;&lt; first_cells.topology
+<span class="lineNum">      91 </span>            :             &lt;&lt; &quot; and the second is: &quot; &lt;&lt; second_cells.topology);
+<span class="lineNum">      92 </span>            :         // LCOV_EXCL_STOP
+<span class="lineNum">      93 </span>            :       }
+<span class="lineNum">      94 </span>            :     }
+<span class="lineNum">      95 </span>            :   }
+<span class="lineNum">      96 </span><span class="lineCov">          3 :   return result;</span>
+<span class="lineNum">      97 </span>            : }
+<a name="98"><span class="lineNum">      98 </span>            : </a>
+<span class="lineNum">      99 </span>            : template &lt;size_t Dim&gt;
+<span class="lineNum">     100 </span><span class="lineCov">          3 : std::vector&lt;CellInTopology&gt; compute_cells(const Index&lt;Dim&gt;&amp; extents) {</span>
+<span class="lineNum">     101 </span><span class="lineCov">          3 :   std::vector&lt;CellInTopology&gt; cells;</span>
+<span class="lineNum">     102 </span><span class="lineCov">          6 :   std::vector&lt;std::vector&lt;CellInTopology&gt;&gt; cells_per_topology;</span>
+<span class="lineNum">     103 </span><span class="lineCov">          6 :   std::vector&lt;size_t&gt; size_per_topology;</span>
+<span class="lineNum">     104 </span>            :   // Compute the number of cells in each topology and the number of extents
+<span class="lineNum">     105 </span>            :   // The extents are copied since this will need generalization for other
+<span class="lineNum">     106 </span>            :   // topologies.
+<span class="lineNum">     107 </span><span class="lineCov">          9 :   for (size_t i = 0; i &lt; Dim; ++i) {</span>
+<span class="lineNum">     108 </span><span class="lineCov">          6 :     cells_per_topology.push_back(cells_in_i1(extents[i]));</span>
+<span class="lineNum">     109 </span><span class="lineCov">          6 :     size_per_topology.push_back(extents[i]);</span>
+<span class="lineNum">     110 </span>            :   }
+<span class="lineNum">     111 </span><span class="lineCov">          3 :   cells = cells_per_topology.back();</span>
+<span class="lineNum">     112 </span>            :   // Compute the tensor product of the number of cells in each topology to get
+<span class="lineNum">     113 </span>            :   // the cell structure of the full domain, ie 3D cell structure.
+<span class="lineNum">     114 </span><span class="lineCov">          6 :   for (size_t i = cells_per_topology.size() - 1; i &gt; 0; --i) {</span>
+<span class="lineNum">     115 </span><span class="lineCov">          3 :     cells = tensor_product_cells(cells_per_topology[i - 1],</span>
+<span class="lineNum">     116 </span>            :                                  size_per_topology[i - 1], cells);
+<span class="lineNum">     117 </span>            :   }
+<span class="lineNum">     118 </span><span class="lineCov">          6 :   return cells;</span>
+<span class="lineNum">     119 </span>            : }
+<span class="lineNum">     120 </span>            : 
+<span class="lineNum">     121 </span>            : // Explicit instantiations
+<span class="lineNum">     122 </span>            : template std::vector&lt;CellInTopology&gt; compute_cells&lt;1&gt;(const Index&lt;1&gt;&amp; extents);
+<span class="lineNum">     123 </span>            : template std::vector&lt;CellInTopology&gt; compute_cells&lt;2&gt;(const Index&lt;2&gt;&amp; extents);
+<a name="124"><span class="lineNum">     124 </span>            : template std::vector&lt;CellInTopology&gt; compute_cells&lt;3&gt;(const Index&lt;3&gt;&amp; extents);</a>
+<span class="lineNum">     125 </span>            : }  // namespace detail
+<span class="lineNum">     126 </span><span class="lineCov">       2283 : }  // namespace vis</span>
+</pre>
+      </td>
+    </tr>
+  </table>
+  <br>
+
+  <table width="100%" border=0 cellspacing=0 cellpadding=0>
+    <tr><td class="ruler"><img src="../glass.png" width=3 height=3 alt=""></td></tr>
+    <tr><td class="versionInfo">Generated by: <a href="http://ltp.sourceforge.net/coverage/lcov.php" target="_parent">LCOV version 1.13</a></td></tr>
+  </table>
+  <br>
+
+</body>
+</html>

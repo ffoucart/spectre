@@ -1,0 +1,761 @@
+<!-- HTML header for doxygen 1.8.10-->
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=9"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="author" content="SXS Collaboration">
+    <meta name="generator" content="Doxygen 1.8.13"/>
+    <style>
+        /*!
+         * IE10 viewport hack for Surface/desktop Windows 8 bug
+         * Copyright 2014-2015 Twitter, Inc.
+         * Licensed under MIT (https://github.com/twbs/bootstrap/blob/master/LICENSE)
+         */
+        @-webkit-viewport { width: device-width; }
+        @-moz-viewport    { width: device-width; }
+        @-ms-viewport     { width: device-width; }
+        @-o-viewport      { width: device-width; }
+        @viewport         { width: device-width; }
+      </style>
+  <title>SpECTRE: grmhd::ValenciaDivClean Namespace Reference</title>
+  <link href="tabs.css" rel="stylesheet" type="text/css"/>
+  <script type="text/javascript" src="jquery.js"></script>
+  <script type="text/javascript" src="dynsections.js"></script>
+  <link href="search/search.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="search/searchdata.js"></script>
+<script type="text/javascript" src="search/search.js"></script>
+  <script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+    extensions: ["tex2jax.js", "TeX/AMSmath.js", "TeX/AMSsymbols.js", "color.js"],
+    jax: ["input/TeX","output/HTML-CSS"],
+});
+MathJax.Hub.Config({
+    TeX: { equationNumbers: { autoNumber: "AMS" } }
+});
+MathJax.Hub.Config({
+    tex2jax: {inlineMath: [['^^','^^'], ['\\(', '\\)']]}
+});
+</script><script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.2/MathJax.js"></script>
+  <link href="octicons.css" rel="stylesheet">
+  <link href="bootstrap.min.css" rel="stylesheet">
+  <link href="doxygen.css" rel="stylesheet" type="text/css" />
+  <script type="text/javascript" src="jquery.js"></script>
+  <script type="text/javascript" src="bootstrap.min.js"></script>
+  <script type="text/javascript" src="spectre.js"></script>
+  </head>
+  <body>
+  <div id="top" class="navbar-fixed-top"><!-- do not remove this div, it is closed by doxygen! -->
+  <!-- BEGIN TITLEAREA -->
+  <div id="titlearea">
+  <script type="text/javascript">
+  var searchBox = new SearchBox("searchBox", "search",false,'Search');
+  </script>
+  <div id="main-nav">
+    <ul class="sm sm-dox" id="main-menu">
+      <li>
+      <a href="index.html">
+      SpECTRE &#160;
+        <span id="projectnumber">v0.0.0</span>
+      </a>
+      </li>
+      <li class="dropdown">
+        <a class="dropdown-toggle" data-toggle="dropdown" href="#" id="selected">
+          <span id="selected">
+            <i class="octicon octicon-book"></i><span>Documentation</span>
+          </span>
+          <span class="caret"></span>
+        </a>
+        <ul class="dropdown-menu">
+          <li style="min-width: 135px;">
+            <a href="index.html">
+            <i class="octicon octicon-book"></i><span>Introduction</span></a>
+          </li>
+          <li style="min-width: 135px;">
+            <a href="installation.html">
+              <i class="octicon octicon-desktop-download"></i><span>Installation</span>
+            </a>
+          </li>
+          <li style="min-width: 135px;">
+            <a href="tutorials.html">
+              <i class="octicon octicon-mortar-board"></i><span>User Tutorials</span>
+            </a>
+          </li>
+          <li style="min-width: 135px;">
+            <a href="dev_guide.html">
+              <i class="octicon octicon-gist-secret"></i><span>Dev Guide</span>
+            </a>
+          </li>
+        </ul>
+      </li>
+      <li class="dropdown">
+        <a class="dropdown-toggle" data-toggle="dropdown" href="#" id="selected">
+          <span id="selected">
+            <i class="octicon octicon-code"></i>
+              <span>Reference</span>
+          </span>
+          <span class="caret"></span>
+        </a>
+        <ul class="dropdown-menu">
+          <li style="min-width: 130px;">
+            <a href="modules.html">
+              <i class="octicon octicon-code"></i>
+              <span>Topics</span>
+            </a>
+          </li>
+          <li style="min-width: 130px;">
+            <a href="namespaces.html">
+              <i class="octicon octicon-gist"></i>
+              <span>Namespaces</span>
+            </a>
+          </li>
+        </ul>
+      </li>
+      <li>
+        <a href="files.html">
+          <i class="octicon octicon-file-directory"></i><span>Files</span>
+        </a>
+      </li>
+      <li>
+        <a href="https://github.com/sxs-collaboration/spectre" target="_blank">
+          <i class="octicon octicon-mark-github"></i><span>View on GitHub</span>
+        </a>
+      </li>
+      <!--The Search <li> is added by doxygen later-->
+    </ul>
+  </div><!-- main-nav -->
+  </div><!-- titlearea -->
+  <!-- window showing the filter options -->
+  <div id="MSearchSelectWindow"  style="position: fixed;"
+       onmouseover="return searchBox.OnSearchSelectShow()"
+       onmouseout="return searchBox.OnSearchSelectHide()"
+       onkeydown="return searchBox.OnSearchSelectKey(event)">
+  </div>
+  <!-- iframe showing the search results (closed by default) -->
+  <div id="MSearchResultsWindow"  style="position: fixed;">
+  <iframe src="javascript:void(0)" frameborder="0"
+          name="MSearchResults" id="MSearchResults">
+  </iframe>
+  </div>
+<!-- Generated by Doxygen 1.8.13 -->
+<script type="text/javascript">
+var searchBox = new SearchBox("searchBox", "search",false,'Search');
+</script>
+<script type="text/javascript" src="menudata.js"></script>
+<script type="text/javascript" src="menu.js"></script>
+<script type="text/javascript">
+$(function() {
+  initMenu('',true,false,'search.php','Search');
+  $(document).ready(function() { init_search(); });
+});
+</script>
+<div id="main-nav"></div>
+<!-- window showing the filter options -->
+<div id="MSearchSelectWindow"
+     onmouseover="return searchBox.OnSearchSelectShow()"
+     onmouseout="return searchBox.OnSearchSelectHide()"
+     onkeydown="return searchBox.OnSearchSelectKey(event)">
+</div>
+
+<!-- iframe showing the search results (closed by default) -->
+<div id="MSearchResultsWindow">
+<iframe src="javascript:void(0)" frameborder="0" 
+        name="MSearchResults" id="MSearchResults">
+</iframe>
+</div>
+
+<div id="nav-path" class="navpath">
+  <ul>
+<li class="navelem"><a class="el" href="namespacegrmhd.html">grmhd</a></li><li class="navelem"><a class="el" href="namespacegrmhd_1_1ValenciaDivClean.html">ValenciaDivClean</a></li>  </ul>
+</div>
+</div><!-- top -->
+<div class="header">
+  <div class="summary">
+<a href="#namespaces">Namespaces</a> &#124;
+<a href="#func-members">Functions</a>  </div>
+  <div class="headertitle">
+<div class="title">grmhd::ValenciaDivClean Namespace Reference</div>  </div>
+</div><!--header-->
+<div class="contents">
+
+<p>The Valencia formulation of ideal GRMHD with divergence cleaning.  
+<a href="#details">More...</a></p>
+<table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="namespaces"></a>
+Namespaces</h2></td></tr>
+<tr class="memitem:namespacegrmhd_1_1ValenciaDivClean_1_1Tags"><td class="memItemLeft" align="right" valign="top"> &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacegrmhd_1_1ValenciaDivClean_1_1Tags.html">Tags</a></td></tr>
+<tr class="memdesc:namespacegrmhd_1_1ValenciaDivClean_1_1Tags"><td class="mdescLeft">&#160;</td><td class="mdescRight">Tags for the Valencia formulation of the ideal GRMHD equations with divergence cleaning. <br /></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
+Functions</h2></td></tr>
+<tr class="memitem:a8fad7948617457106d45998b7b26a50c"><td class="memItemLeft" align="right" valign="top"><a class="elRef" doxygen="/work/spectre/docs/config/cppreference-doxygen-web.tag.xml:http://en.cppreference.com/w/" href="http://en.cppreference.com/w/cpp/container/array.html">std::array</a>&lt; <a class="el" href="classDataVector.html">DataVector</a>, 9 &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacegrmhd_1_1ValenciaDivClean.html#a8fad7948617457106d45998b7b26a50c">characteristic_speeds</a> (const <a class="el" href="group__TensorGroup.html#ga06ebcb38a1f13c246e53378b9e8959ce">Scalar</a>&lt; <a class="el" href="classDataVector.html">DataVector</a> &gt; &amp;lapse, const tnsr::I&lt; <a class="el" href="classDataVector.html">DataVector</a>, 3 &gt; &amp;shift, const tnsr::I&lt; <a class="el" href="classDataVector.html">DataVector</a>, 3 &gt; &amp;spatial_velocity, const <a class="el" href="group__TensorGroup.html#ga06ebcb38a1f13c246e53378b9e8959ce">Scalar</a>&lt; <a class="el" href="classDataVector.html">DataVector</a> &gt; &amp;spatial_velocity_squared, const <a class="el" href="group__TensorGroup.html#ga06ebcb38a1f13c246e53378b9e8959ce">Scalar</a>&lt; <a class="el" href="classDataVector.html">DataVector</a> &gt; &amp;sound_speed_squared, const <a class="el" href="group__TensorGroup.html#ga06ebcb38a1f13c246e53378b9e8959ce">Scalar</a>&lt; <a class="el" href="classDataVector.html">DataVector</a> &gt; &amp;alfven_speed_squared, const tnsr::i&lt; <a class="el" href="classDataVector.html">DataVector</a>, 3 &gt; &amp;normal) noexcept</td></tr>
+<tr class="memdesc:a8fad7948617457106d45998b7b26a50c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Compute the characteristic speeds for the Valencia formulation of GRMHD with divergence cleaning.  <a href="#a8fad7948617457106d45998b7b26a50c">More...</a><br /></td></tr>
+<tr class="separator:a8fad7948617457106d45998b7b26a50c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a23fa7db2fa526e02c699b340f1c030fe"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacegrmhd_1_1ValenciaDivClean.html#a23fa7db2fa526e02c699b340f1c030fe">conservative_from_primitive</a> (<a class="el" href="classgsl_1_1not__null.html">gsl::not_null</a>&lt; <a class="el" href="group__TensorGroup.html#ga06ebcb38a1f13c246e53378b9e8959ce">Scalar</a>&lt; <a class="el" href="classDataVector.html">DataVector</a> &gt; *&gt; tilde_d, <a class="el" href="classgsl_1_1not__null.html">gsl::not_null</a>&lt; <a class="el" href="group__TensorGroup.html#ga06ebcb38a1f13c246e53378b9e8959ce">Scalar</a>&lt; <a class="el" href="classDataVector.html">DataVector</a> &gt; *&gt; tilde_tau, <a class="el" href="classgsl_1_1not__null.html">gsl::not_null</a>&lt; tnsr::i&lt; <a class="el" href="classDataVector.html">DataVector</a>, 3, <a class="el" href="structFrame_1_1Inertial.html">Frame::Inertial</a> &gt; *&gt; tilde_s, <a class="el" href="classgsl_1_1not__null.html">gsl::not_null</a>&lt; tnsr::I&lt; <a class="el" href="classDataVector.html">DataVector</a>, 3, <a class="el" href="structFrame_1_1Inertial.html">Frame::Inertial</a> &gt; *&gt; tilde_b, <a class="el" href="classgsl_1_1not__null.html">gsl::not_null</a>&lt; <a class="el" href="group__TensorGroup.html#ga06ebcb38a1f13c246e53378b9e8959ce">Scalar</a>&lt; <a class="el" href="classDataVector.html">DataVector</a> &gt; *&gt; tilde_phi, const <a class="el" href="group__TensorGroup.html#ga06ebcb38a1f13c246e53378b9e8959ce">Scalar</a>&lt; <a class="el" href="classDataVector.html">DataVector</a> &gt; &amp;rest_mass_density, const <a class="el" href="group__TensorGroup.html#ga06ebcb38a1f13c246e53378b9e8959ce">Scalar</a>&lt; <a class="el" href="classDataVector.html">DataVector</a> &gt; &amp;specific_internal_energy, const <a class="el" href="group__TensorGroup.html#ga06ebcb38a1f13c246e53378b9e8959ce">Scalar</a>&lt; <a class="el" href="classDataVector.html">DataVector</a> &gt; &amp;specific_enthalpy, const <a class="el" href="group__TensorGroup.html#ga06ebcb38a1f13c246e53378b9e8959ce">Scalar</a>&lt; <a class="el" href="classDataVector.html">DataVector</a> &gt; &amp;pressure, const tnsr::I&lt; <a class="el" href="classDataVector.html">DataVector</a>, 3, <a class="el" href="structFrame_1_1Inertial.html">Frame::Inertial</a> &gt; &amp;spatial_velocity, const <a class="el" href="group__TensorGroup.html#ga06ebcb38a1f13c246e53378b9e8959ce">Scalar</a>&lt; <a class="el" href="classDataVector.html">DataVector</a> &gt; &amp;lorentz_factor, const tnsr::I&lt; <a class="el" href="classDataVector.html">DataVector</a>, 3, <a class="el" href="structFrame_1_1Inertial.html">Frame::Inertial</a> &gt; &amp;magnetic_field, const <a class="el" href="group__TensorGroup.html#ga06ebcb38a1f13c246e53378b9e8959ce">Scalar</a>&lt; <a class="el" href="classDataVector.html">DataVector</a> &gt; &amp;sqrt_det_spatial_metric, const tnsr::ii&lt; <a class="el" href="classDataVector.html">DataVector</a>, 3, <a class="el" href="structFrame_1_1Inertial.html">Frame::Inertial</a> &gt; &amp;spatial_metric, const <a class="el" href="group__TensorGroup.html#ga06ebcb38a1f13c246e53378b9e8959ce">Scalar</a>&lt; <a class="el" href="classDataVector.html">DataVector</a> &gt; &amp;divergence_cleaning_field) noexcept</td></tr>
+<tr class="memdesc:a23fa7db2fa526e02c699b340f1c030fe"><td class="mdescLeft">&#160;</td><td class="mdescRight">Compute the conservative variables from primitive variables.  <a href="#a23fa7db2fa526e02c699b340f1c030fe">More...</a><br /></td></tr>
+<tr class="separator:a23fa7db2fa526e02c699b340f1c030fe"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:abf04c03bff1824172a42ea62d816478a"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacegrmhd_1_1ValenciaDivClean.html#abf04c03bff1824172a42ea62d816478a">fluxes</a> (<a class="el" href="classgsl_1_1not__null.html">gsl::not_null</a>&lt; tnsr::I&lt; <a class="el" href="classDataVector.html">DataVector</a>, 3, <a class="el" href="structFrame_1_1Inertial.html">Frame::Inertial</a> &gt; *&gt; tilde_d_flux, <a class="el" href="classgsl_1_1not__null.html">gsl::not_null</a>&lt; tnsr::I&lt; <a class="el" href="classDataVector.html">DataVector</a>, 3, <a class="el" href="structFrame_1_1Inertial.html">Frame::Inertial</a> &gt; *&gt; tilde_tau_flux, <a class="el" href="classgsl_1_1not__null.html">gsl::not_null</a>&lt; tnsr::Ij&lt; <a class="el" href="classDataVector.html">DataVector</a>, 3, <a class="el" href="structFrame_1_1Inertial.html">Frame::Inertial</a> &gt; *&gt; tilde_s_flux, <a class="el" href="classgsl_1_1not__null.html">gsl::not_null</a>&lt; tnsr::IJ&lt; <a class="el" href="classDataVector.html">DataVector</a>, 3, <a class="el" href="structFrame_1_1Inertial.html">Frame::Inertial</a> &gt; *&gt; tilde_b_flux, <a class="el" href="classgsl_1_1not__null.html">gsl::not_null</a>&lt; tnsr::I&lt; <a class="el" href="classDataVector.html">DataVector</a>, 3, <a class="el" href="structFrame_1_1Inertial.html">Frame::Inertial</a> &gt; *&gt; tilde_phi_flux, const <a class="el" href="group__TensorGroup.html#ga06ebcb38a1f13c246e53378b9e8959ce">Scalar</a>&lt; <a class="el" href="classDataVector.html">DataVector</a> &gt; &amp;tilde_d, const <a class="el" href="group__TensorGroup.html#ga06ebcb38a1f13c246e53378b9e8959ce">Scalar</a>&lt; <a class="el" href="classDataVector.html">DataVector</a> &gt; &amp;tilde_tau, const tnsr::i&lt; <a class="el" href="classDataVector.html">DataVector</a>, 3, <a class="el" href="structFrame_1_1Inertial.html">Frame::Inertial</a> &gt; &amp;tilde_s, const tnsr::I&lt; <a class="el" href="classDataVector.html">DataVector</a>, 3, <a class="el" href="structFrame_1_1Inertial.html">Frame::Inertial</a> &gt; &amp;tilde_b, const <a class="el" href="group__TensorGroup.html#ga06ebcb38a1f13c246e53378b9e8959ce">Scalar</a>&lt; <a class="el" href="classDataVector.html">DataVector</a> &gt; &amp;tilde_phi, const <a class="el" href="group__TensorGroup.html#ga06ebcb38a1f13c246e53378b9e8959ce">Scalar</a>&lt; <a class="el" href="classDataVector.html">DataVector</a> &gt; &amp;lapse, const tnsr::I&lt; <a class="el" href="classDataVector.html">DataVector</a>, 3, <a class="el" href="structFrame_1_1Inertial.html">Frame::Inertial</a> &gt; &amp;shift, const <a class="el" href="group__TensorGroup.html#ga06ebcb38a1f13c246e53378b9e8959ce">Scalar</a>&lt; <a class="el" href="classDataVector.html">DataVector</a> &gt; &amp;sqrt_det_spatial_metric, const tnsr::ii&lt; <a class="el" href="classDataVector.html">DataVector</a>, 3, <a class="el" href="structFrame_1_1Inertial.html">Frame::Inertial</a> &gt; &amp;spatial_metric, const tnsr::II&lt; <a class="el" href="classDataVector.html">DataVector</a>, 3, <a class="el" href="structFrame_1_1Inertial.html">Frame::Inertial</a> &gt; &amp;inv_spatial_metric, const <a class="el" href="group__TensorGroup.html#ga06ebcb38a1f13c246e53378b9e8959ce">Scalar</a>&lt; <a class="el" href="classDataVector.html">DataVector</a> &gt; &amp;pressure, const tnsr::I&lt; <a class="el" href="classDataVector.html">DataVector</a>, 3, <a class="el" href="structFrame_1_1Inertial.html">Frame::Inertial</a> &gt; &amp;spatial_velocity, const <a class="el" href="group__TensorGroup.html#ga06ebcb38a1f13c246e53378b9e8959ce">Scalar</a>&lt; <a class="el" href="classDataVector.html">DataVector</a> &gt; &amp;lorentz_factor, const tnsr::I&lt; <a class="el" href="classDataVector.html">DataVector</a>, 3, <a class="el" href="structFrame_1_1Inertial.html">Frame::Inertial</a> &gt; &amp;magnetic_field) noexcept</td></tr>
+<tr class="memdesc:abf04c03bff1824172a42ea62d816478a"><td class="mdescLeft">&#160;</td><td class="mdescRight">The fluxes of the conservative variables.  <a href="#abf04c03bff1824172a42ea62d816478a">More...</a><br /></td></tr>
+<tr class="separator:abf04c03bff1824172a42ea62d816478a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a06aa24e2fb3811af8b5569f5cde1321a"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacegrmhd_1_1ValenciaDivClean.html#a06aa24e2fb3811af8b5569f5cde1321a">compute_source_terms_of_u</a> (<a class="el" href="classgsl_1_1not__null.html">gsl::not_null</a>&lt; <a class="el" href="group__TensorGroup.html#ga06ebcb38a1f13c246e53378b9e8959ce">Scalar</a>&lt; <a class="el" href="classDataVector.html">DataVector</a> &gt; *&gt; source_tilde_d, <a class="el" href="classgsl_1_1not__null.html">gsl::not_null</a>&lt; <a class="el" href="group__TensorGroup.html#ga06ebcb38a1f13c246e53378b9e8959ce">Scalar</a>&lt; <a class="el" href="classDataVector.html">DataVector</a> &gt; *&gt; source_tilde_tau, <a class="el" href="classgsl_1_1not__null.html">gsl::not_null</a>&lt; tnsr::i&lt; <a class="el" href="classDataVector.html">DataVector</a>, 3, <a class="el" href="structFrame_1_1Inertial.html">Frame::Inertial</a> &gt; *&gt; source_tilde_s, <a class="el" href="classgsl_1_1not__null.html">gsl::not_null</a>&lt; tnsr::I&lt; <a class="el" href="classDataVector.html">DataVector</a>, 3, <a class="el" href="structFrame_1_1Inertial.html">Frame::Inertial</a> &gt; *&gt; source_tilde_b, <a class="el" href="classgsl_1_1not__null.html">gsl::not_null</a>&lt; <a class="el" href="group__TensorGroup.html#ga06ebcb38a1f13c246e53378b9e8959ce">Scalar</a>&lt; <a class="el" href="classDataVector.html">DataVector</a> &gt; *&gt; source_tilde_phi, const <a class="el" href="group__TensorGroup.html#ga06ebcb38a1f13c246e53378b9e8959ce">Scalar</a>&lt; <a class="el" href="classDataVector.html">DataVector</a> &gt; &amp;tilde_d, const <a class="el" href="group__TensorGroup.html#ga06ebcb38a1f13c246e53378b9e8959ce">Scalar</a>&lt; <a class="el" href="classDataVector.html">DataVector</a> &gt; &amp;tilde_tau, const tnsr::i&lt; <a class="el" href="classDataVector.html">DataVector</a>, 3, <a class="el" href="structFrame_1_1Inertial.html">Frame::Inertial</a> &gt; &amp;tilde_s, const tnsr::I&lt; <a class="el" href="classDataVector.html">DataVector</a>, 3, <a class="el" href="structFrame_1_1Inertial.html">Frame::Inertial</a> &gt; &amp;tilde_b, const <a class="el" href="group__TensorGroup.html#ga06ebcb38a1f13c246e53378b9e8959ce">Scalar</a>&lt; <a class="el" href="classDataVector.html">DataVector</a> &gt; &amp;tilde_phi, const tnsr::I&lt; <a class="el" href="classDataVector.html">DataVector</a>, 3, <a class="el" href="structFrame_1_1Inertial.html">Frame::Inertial</a> &gt; &amp;spatial_velocity, const tnsr::I&lt; <a class="el" href="classDataVector.html">DataVector</a>, 3, <a class="el" href="structFrame_1_1Inertial.html">Frame::Inertial</a> &gt; &amp;magnetic_field, const <a class="el" href="group__TensorGroup.html#ga06ebcb38a1f13c246e53378b9e8959ce">Scalar</a>&lt; <a class="el" href="classDataVector.html">DataVector</a> &gt; &amp;rest_mass_density, const <a class="el" href="group__TensorGroup.html#ga06ebcb38a1f13c246e53378b9e8959ce">Scalar</a>&lt; <a class="el" href="classDataVector.html">DataVector</a> &gt; &amp;specific_enthalpy, const <a class="el" href="group__TensorGroup.html#ga06ebcb38a1f13c246e53378b9e8959ce">Scalar</a>&lt; <a class="el" href="classDataVector.html">DataVector</a> &gt; &amp;lorentz_factor, const <a class="el" href="group__TensorGroup.html#ga06ebcb38a1f13c246e53378b9e8959ce">Scalar</a>&lt; <a class="el" href="classDataVector.html">DataVector</a> &gt; &amp;pressure, const <a class="el" href="group__TensorGroup.html#ga06ebcb38a1f13c246e53378b9e8959ce">Scalar</a>&lt; <a class="el" href="classDataVector.html">DataVector</a> &gt; &amp;lapse, const tnsr::i&lt; <a class="el" href="classDataVector.html">DataVector</a>, 3, <a class="el" href="structFrame_1_1Inertial.html">Frame::Inertial</a> &gt; &amp;d_lapse, const tnsr::iJ&lt; <a class="el" href="classDataVector.html">DataVector</a>, 3, <a class="el" href="structFrame_1_1Inertial.html">Frame::Inertial</a> &gt; &amp;d_shift, const tnsr::ii&lt; <a class="el" href="classDataVector.html">DataVector</a>, 3, <a class="el" href="structFrame_1_1Inertial.html">Frame::Inertial</a> &gt; &amp;spatial_metric, const tnsr::ijj&lt; <a class="el" href="classDataVector.html">DataVector</a>, 3, <a class="el" href="structFrame_1_1Inertial.html">Frame::Inertial</a> &gt; &amp;d_spatial_metric, const tnsr::II&lt; <a class="el" href="classDataVector.html">DataVector</a>, 3, <a class="el" href="structFrame_1_1Inertial.html">Frame::Inertial</a> &gt; &amp;inv_spatial_metric, const <a class="el" href="group__TensorGroup.html#ga06ebcb38a1f13c246e53378b9e8959ce">Scalar</a>&lt; <a class="el" href="classDataVector.html">DataVector</a> &gt; &amp;sqrt_det_spatial_metric, const tnsr::ii&lt; <a class="el" href="classDataVector.html">DataVector</a>, 3, <a class="el" href="structFrame_1_1Inertial.html">Frame::Inertial</a> &gt; &amp;extrinsic_curvature, double constraint_damping_parameter) noexcept</td></tr>
+<tr class="memdesc:a06aa24e2fb3811af8b5569f5cde1321a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Compute the source terms for the flux-conservative Valencia formulation of GRMHD with divergence cleaning.  <a href="#a06aa24e2fb3811af8b5569f5cde1321a">More...</a><br /></td></tr>
+<tr class="separator:a06aa24e2fb3811af8b5569f5cde1321a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table>
+<a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
+<div class="textblock"><p>The Valencia formulation of ideal GRMHD with divergence cleaning. </p>
+<p>References:</p><ul>
+<li><a href="http://iopscience.iop.org/article/10.1086/498238">Numerical 3+1 General Relativistic Magnetohydrodynamics: A Local Characteristic Approach</a></li>
+<li><a href="http://iopscience.iop.org/article/10.1088/0264-9381/31/1/015005">GRHydro: a new open-source general-relativistic magnetohydrodynamics code for the Einstein toolkit</a> </li>
+</ul>
+</div><h2 class="groupheader">Function Documentation</h2>
+<a id="a8fad7948617457106d45998b7b26a50c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a8fad7948617457106d45998b7b26a50c">&#9670;&nbsp;</a></span>characteristic_speeds()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="elRef" doxygen="/work/spectre/docs/config/cppreference-doxygen-web.tag.xml:http://en.cppreference.com/w/" href="http://en.cppreference.com/w/cpp/container/array.html">std::array</a>&lt;<a class="el" href="classDataVector.html">DataVector</a>, 9&gt; grmhd::ValenciaDivClean::characteristic_speeds </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="group__TensorGroup.html#ga06ebcb38a1f13c246e53378b9e8959ce">Scalar</a>&lt; <a class="el" href="classDataVector.html">DataVector</a> &gt; &amp;&#160;</td>
+          <td class="paramname"><em>lapse</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const tnsr::I&lt; <a class="el" href="classDataVector.html">DataVector</a>, 3 &gt; &amp;&#160;</td>
+          <td class="paramname"><em>shift</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const tnsr::I&lt; <a class="el" href="classDataVector.html">DataVector</a>, 3 &gt; &amp;&#160;</td>
+          <td class="paramname"><em>spatial_velocity</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const <a class="el" href="group__TensorGroup.html#ga06ebcb38a1f13c246e53378b9e8959ce">Scalar</a>&lt; <a class="el" href="classDataVector.html">DataVector</a> &gt; &amp;&#160;</td>
+          <td class="paramname"><em>spatial_velocity_squared</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const <a class="el" href="group__TensorGroup.html#ga06ebcb38a1f13c246e53378b9e8959ce">Scalar</a>&lt; <a class="el" href="classDataVector.html">DataVector</a> &gt; &amp;&#160;</td>
+          <td class="paramname"><em>sound_speed_squared</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const <a class="el" href="group__TensorGroup.html#ga06ebcb38a1f13c246e53378b9e8959ce">Scalar</a>&lt; <a class="el" href="classDataVector.html">DataVector</a> &gt; &amp;&#160;</td>
+          <td class="paramname"><em>alfven_speed_squared</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const tnsr::i&lt; <a class="el" href="classDataVector.html">DataVector</a>, 3 &gt; &amp;&#160;</td>
+          <td class="paramname"><em>normal</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">noexcept</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Compute the characteristic speeds for the Valencia formulation of GRMHD with divergence cleaning. </p>
+<p>Obtaining the exact form of the characteristic speeds involves the solution of a nontrivial quartic equation for the fast and slow modes. Here we make use of a common approximation in the literature (e.g. <a class="el" href="namespacegrmhd_1_1ValenciaDivClean.html#char_ref">[1]</a>) where the resulting characteristic speeds are analogous to those of the Valencia formulation of the 3-D relativistic Euler system (see <a class="el" href="namespaceRelativisticEuler_1_1Valencia.html#a45ee2fcecfa0e0a03101d15c88d9bd57" title="Compute the characteristic speeds for the Valencia formulation of the relativistic Euler system...">RelativisticEuler::Valencia::characteristic_speeds</a>),</p>
+<p class="formulaDsp">
+\begin{align*} \lambda_2 &amp;= \alpha \Lambda^- - \beta_n,\\ \lambda_{3, 4, 5, 6, 7} &amp;= \alpha v_n - \beta_n,\\ \lambda_{8} &amp;= \alpha \Lambda^+ - \beta_n, \end{align*}
+</p>
+<p>with the substitution</p>
+<p class="formulaDsp">
+\begin{align*} c_s^2 \longrightarrow c_s^2 + v_A^2(1 - c_s^2) \end{align*}
+</p>
+<p>in the definition of \(\Lambda^\pm\). Here \(v_A\) is the Alfvén speed. In addition, two more speeds corresponding to the divergence cleaning mode and the longitudinal magnetic field are added,</p>
+<p class="formulaDsp">
+\begin{align*} \lambda_1 = -\alpha - \beta_n,\\ \lambda_9 = \alpha - \beta_n. \end{align*}
+</p>
+<dl class="section note"><dt>Note</dt><dd>The ordering assumed here is such that, in the Newtonian limit, the exact expressions for \(\lambda_{2, 8}\), \(\lambda_{3, 7}\), and \(\lambda_{4, 6}\) should reduce to the corresponding fast modes, Alfvén modes, and slow modes, respectively. See <a class="el" href="namespacegrmhd_1_1ValenciaDivClean.html#mhd_ref">[2]</a> for a detailed description of the hyperbolic characterization of Newtonian MHD.</dd></dl>
+<p><a class="anchor" id="char_ref"></a>[1] C.F Gammie, J.C McKinney, G. Tóth, HARM: A Numerical Scheme for General Relativistic Magnetohydrodynamics, ApJ. <a href="http://iopscience.iop.org/article/10.1086/374594/meta">589 (2003) 444</a></p>
+<p><a class="anchor" id="mhd_ref"></a>[2] A. Dedner et al., Hyperbolic Divergence Cleaning for the MHD Equations, J. Comput. Phys. <a href="https://doi.org/10.1006/jcph.2001.6961">175 (2002) 645</a> </p>
+
+</div>
+</div>
+<a id="a06aa24e2fb3811af8b5569f5cde1321a"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a06aa24e2fb3811af8b5569f5cde1321a">&#9670;&nbsp;</a></span>compute_source_terms_of_u()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void grmhd::ValenciaDivClean::compute_source_terms_of_u </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="classgsl_1_1not__null.html">gsl::not_null</a>&lt; <a class="el" href="group__TensorGroup.html#ga06ebcb38a1f13c246e53378b9e8959ce">Scalar</a>&lt; <a class="el" href="classDataVector.html">DataVector</a> &gt; *&gt;&#160;</td>
+          <td class="paramname"><em>source_tilde_d</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="classgsl_1_1not__null.html">gsl::not_null</a>&lt; <a class="el" href="group__TensorGroup.html#ga06ebcb38a1f13c246e53378b9e8959ce">Scalar</a>&lt; <a class="el" href="classDataVector.html">DataVector</a> &gt; *&gt;&#160;</td>
+          <td class="paramname"><em>source_tilde_tau</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="classgsl_1_1not__null.html">gsl::not_null</a>&lt; tnsr::i&lt; <a class="el" href="classDataVector.html">DataVector</a>, 3, <a class="el" href="structFrame_1_1Inertial.html">Frame::Inertial</a> &gt; *&gt;&#160;</td>
+          <td class="paramname"><em>source_tilde_s</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="classgsl_1_1not__null.html">gsl::not_null</a>&lt; tnsr::I&lt; <a class="el" href="classDataVector.html">DataVector</a>, 3, <a class="el" href="structFrame_1_1Inertial.html">Frame::Inertial</a> &gt; *&gt;&#160;</td>
+          <td class="paramname"><em>source_tilde_b</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="classgsl_1_1not__null.html">gsl::not_null</a>&lt; <a class="el" href="group__TensorGroup.html#ga06ebcb38a1f13c246e53378b9e8959ce">Scalar</a>&lt; <a class="el" href="classDataVector.html">DataVector</a> &gt; *&gt;&#160;</td>
+          <td class="paramname"><em>source_tilde_phi</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const <a class="el" href="group__TensorGroup.html#ga06ebcb38a1f13c246e53378b9e8959ce">Scalar</a>&lt; <a class="el" href="classDataVector.html">DataVector</a> &gt; &amp;&#160;</td>
+          <td class="paramname"><em>tilde_d</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const <a class="el" href="group__TensorGroup.html#ga06ebcb38a1f13c246e53378b9e8959ce">Scalar</a>&lt; <a class="el" href="classDataVector.html">DataVector</a> &gt; &amp;&#160;</td>
+          <td class="paramname"><em>tilde_tau</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const tnsr::i&lt; <a class="el" href="classDataVector.html">DataVector</a>, 3, <a class="el" href="structFrame_1_1Inertial.html">Frame::Inertial</a> &gt; &amp;&#160;</td>
+          <td class="paramname"><em>tilde_s</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const tnsr::I&lt; <a class="el" href="classDataVector.html">DataVector</a>, 3, <a class="el" href="structFrame_1_1Inertial.html">Frame::Inertial</a> &gt; &amp;&#160;</td>
+          <td class="paramname"><em>tilde_b</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const <a class="el" href="group__TensorGroup.html#ga06ebcb38a1f13c246e53378b9e8959ce">Scalar</a>&lt; <a class="el" href="classDataVector.html">DataVector</a> &gt; &amp;&#160;</td>
+          <td class="paramname"><em>tilde_phi</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const tnsr::I&lt; <a class="el" href="classDataVector.html">DataVector</a>, 3, <a class="el" href="structFrame_1_1Inertial.html">Frame::Inertial</a> &gt; &amp;&#160;</td>
+          <td class="paramname"><em>spatial_velocity</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const tnsr::I&lt; <a class="el" href="classDataVector.html">DataVector</a>, 3, <a class="el" href="structFrame_1_1Inertial.html">Frame::Inertial</a> &gt; &amp;&#160;</td>
+          <td class="paramname"><em>magnetic_field</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const <a class="el" href="group__TensorGroup.html#ga06ebcb38a1f13c246e53378b9e8959ce">Scalar</a>&lt; <a class="el" href="classDataVector.html">DataVector</a> &gt; &amp;&#160;</td>
+          <td class="paramname"><em>rest_mass_density</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const <a class="el" href="group__TensorGroup.html#ga06ebcb38a1f13c246e53378b9e8959ce">Scalar</a>&lt; <a class="el" href="classDataVector.html">DataVector</a> &gt; &amp;&#160;</td>
+          <td class="paramname"><em>specific_enthalpy</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const <a class="el" href="group__TensorGroup.html#ga06ebcb38a1f13c246e53378b9e8959ce">Scalar</a>&lt; <a class="el" href="classDataVector.html">DataVector</a> &gt; &amp;&#160;</td>
+          <td class="paramname"><em>lorentz_factor</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const <a class="el" href="group__TensorGroup.html#ga06ebcb38a1f13c246e53378b9e8959ce">Scalar</a>&lt; <a class="el" href="classDataVector.html">DataVector</a> &gt; &amp;&#160;</td>
+          <td class="paramname"><em>pressure</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const <a class="el" href="group__TensorGroup.html#ga06ebcb38a1f13c246e53378b9e8959ce">Scalar</a>&lt; <a class="el" href="classDataVector.html">DataVector</a> &gt; &amp;&#160;</td>
+          <td class="paramname"><em>lapse</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const tnsr::i&lt; <a class="el" href="classDataVector.html">DataVector</a>, 3, <a class="el" href="structFrame_1_1Inertial.html">Frame::Inertial</a> &gt; &amp;&#160;</td>
+          <td class="paramname"><em>d_lapse</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const tnsr::iJ&lt; <a class="el" href="classDataVector.html">DataVector</a>, 3, <a class="el" href="structFrame_1_1Inertial.html">Frame::Inertial</a> &gt; &amp;&#160;</td>
+          <td class="paramname"><em>d_shift</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const tnsr::ii&lt; <a class="el" href="classDataVector.html">DataVector</a>, 3, <a class="el" href="structFrame_1_1Inertial.html">Frame::Inertial</a> &gt; &amp;&#160;</td>
+          <td class="paramname"><em>spatial_metric</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const tnsr::ijj&lt; <a class="el" href="classDataVector.html">DataVector</a>, 3, <a class="el" href="structFrame_1_1Inertial.html">Frame::Inertial</a> &gt; &amp;&#160;</td>
+          <td class="paramname"><em>d_spatial_metric</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const tnsr::II&lt; <a class="el" href="classDataVector.html">DataVector</a>, 3, <a class="el" href="structFrame_1_1Inertial.html">Frame::Inertial</a> &gt; &amp;&#160;</td>
+          <td class="paramname"><em>inv_spatial_metric</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const <a class="el" href="group__TensorGroup.html#ga06ebcb38a1f13c246e53378b9e8959ce">Scalar</a>&lt; <a class="el" href="classDataVector.html">DataVector</a> &gt; &amp;&#160;</td>
+          <td class="paramname"><em>sqrt_det_spatial_metric</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const tnsr::ii&lt; <a class="el" href="classDataVector.html">DataVector</a>, 3, <a class="el" href="structFrame_1_1Inertial.html">Frame::Inertial</a> &gt; &amp;&#160;</td>
+          <td class="paramname"><em>extrinsic_curvature</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">double&#160;</td>
+          <td class="paramname"><em>constraint_damping_parameter</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">noexcept</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Compute the source terms for the flux-conservative Valencia formulation of GRMHD with divergence cleaning. </p>
+<p>A flux-conservative system has the generic form: </p><p class="formulaDsp">
+\[ \partial_t U_i + \partial_m F^m(U_i) = S(U_i) \]
+</p>
+<p>where \(F^a()\) denotes the flux of a conserved variable \(U_i\) and \(S()\) denotes the source term for the conserved variable.</p>
+<p>For the Valencia formulation: </p><p class="formulaDsp">
+\begin{align*} S({\tilde D}) = &amp; 0\\ S({\tilde S}_i) = &amp; \frac{1}{2} \alpha {\tilde S}^{mn} \partial_i \gamma_{mn} + {\tilde S}_m \partial_i \beta^m - ({\tilde D} + {\tilde \tau}) \partial_i \alpha \\ S({\tilde \tau}) = &amp; \alpha {\tilde S}^{mn} K_{mn} - {\tilde S}^m \partial_m \alpha \\ S({\tilde B}^i) = &amp; -{\tilde B}^m \partial_m \beta^i + {\tilde \Phi} \gamma^{im} \partial_m \alpha + \alpha {\tilde \Phi} \left( \frac{1}{2} \gamma^{il} \gamma^{jk} - \gamma^{ij} \gamma^{lk} \right) \partial_l \gamma_{jk} \\ S({\tilde \Phi}) = &amp; {\tilde B}^k \partial_k \alpha - \alpha K {\tilde \Phi} - \alpha \kappa {\tilde \Phi} \end{align*}
+</p>
+<p>where </p><p class="formulaDsp">
+\begin{align*} {\tilde S}^i = &amp; {\tilde S}_m \gamma^{im} \\ {\tilde S}^{ij} = &amp; \sqrt{\gamma} \left[ \left(h \rho W^2 + B^n B_n \right) v^i v^j + \left(p + p_m \right) \gamma^{ij} - B^n v_n \left( B^i v^j + B^j v^i \right) - \frac{B^i B^j}{W^2} \right] \end{align*}
+</p>
+<p>where \({\tilde D}\), \({\tilde S}_i\), \({\tilde \tau}\), \({\tilde B}^i\), and \({\tilde \Phi}\) are a generalized mass-energy density, momentum density, specific internal energy density, magnetic field, and divergence cleaning field. Furthermore, \(\gamma\) is the determinant of the spatial metric \(\gamma_{ij}\), \(\rho\) is the rest mass density, \(W\) is the Lorentz factor, \(h\) is the specific enthalpy, \(v^i\) is the spatial velocity, \(B^k\) is the magnetic field, \(p\) is the pressure, \(p_m = \frac{1}{2} \left[ \left( B^n v_n \right)^2 + B^n B_n / W^2 \right]\) is the magnetic pressure, \(\alpha\) is the lapse, \(\beta^i\) is the shift, \(K\) is the trace of the extrinsic curvature \(K_{ij}\), and \(\kappa\) is a damping parameter that damps violations of the divergence-free (no-monopole) condition \(\Phi = \partial_i {\tilde B}^i = 0\) . </p>
+
+</div>
+</div>
+<a id="a23fa7db2fa526e02c699b340f1c030fe"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a23fa7db2fa526e02c699b340f1c030fe">&#9670;&nbsp;</a></span>conservative_from_primitive()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void grmhd::ValenciaDivClean::conservative_from_primitive </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="classgsl_1_1not__null.html">gsl::not_null</a>&lt; <a class="el" href="group__TensorGroup.html#ga06ebcb38a1f13c246e53378b9e8959ce">Scalar</a>&lt; <a class="el" href="classDataVector.html">DataVector</a> &gt; *&gt;&#160;</td>
+          <td class="paramname"><em>tilde_d</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="classgsl_1_1not__null.html">gsl::not_null</a>&lt; <a class="el" href="group__TensorGroup.html#ga06ebcb38a1f13c246e53378b9e8959ce">Scalar</a>&lt; <a class="el" href="classDataVector.html">DataVector</a> &gt; *&gt;&#160;</td>
+          <td class="paramname"><em>tilde_tau</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="classgsl_1_1not__null.html">gsl::not_null</a>&lt; tnsr::i&lt; <a class="el" href="classDataVector.html">DataVector</a>, 3, <a class="el" href="structFrame_1_1Inertial.html">Frame::Inertial</a> &gt; *&gt;&#160;</td>
+          <td class="paramname"><em>tilde_s</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="classgsl_1_1not__null.html">gsl::not_null</a>&lt; tnsr::I&lt; <a class="el" href="classDataVector.html">DataVector</a>, 3, <a class="el" href="structFrame_1_1Inertial.html">Frame::Inertial</a> &gt; *&gt;&#160;</td>
+          <td class="paramname"><em>tilde_b</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="classgsl_1_1not__null.html">gsl::not_null</a>&lt; <a class="el" href="group__TensorGroup.html#ga06ebcb38a1f13c246e53378b9e8959ce">Scalar</a>&lt; <a class="el" href="classDataVector.html">DataVector</a> &gt; *&gt;&#160;</td>
+          <td class="paramname"><em>tilde_phi</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const <a class="el" href="group__TensorGroup.html#ga06ebcb38a1f13c246e53378b9e8959ce">Scalar</a>&lt; <a class="el" href="classDataVector.html">DataVector</a> &gt; &amp;&#160;</td>
+          <td class="paramname"><em>rest_mass_density</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const <a class="el" href="group__TensorGroup.html#ga06ebcb38a1f13c246e53378b9e8959ce">Scalar</a>&lt; <a class="el" href="classDataVector.html">DataVector</a> &gt; &amp;&#160;</td>
+          <td class="paramname"><em>specific_internal_energy</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const <a class="el" href="group__TensorGroup.html#ga06ebcb38a1f13c246e53378b9e8959ce">Scalar</a>&lt; <a class="el" href="classDataVector.html">DataVector</a> &gt; &amp;&#160;</td>
+          <td class="paramname"><em>specific_enthalpy</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const <a class="el" href="group__TensorGroup.html#ga06ebcb38a1f13c246e53378b9e8959ce">Scalar</a>&lt; <a class="el" href="classDataVector.html">DataVector</a> &gt; &amp;&#160;</td>
+          <td class="paramname"><em>pressure</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const tnsr::I&lt; <a class="el" href="classDataVector.html">DataVector</a>, 3, <a class="el" href="structFrame_1_1Inertial.html">Frame::Inertial</a> &gt; &amp;&#160;</td>
+          <td class="paramname"><em>spatial_velocity</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const <a class="el" href="group__TensorGroup.html#ga06ebcb38a1f13c246e53378b9e8959ce">Scalar</a>&lt; <a class="el" href="classDataVector.html">DataVector</a> &gt; &amp;&#160;</td>
+          <td class="paramname"><em>lorentz_factor</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const tnsr::I&lt; <a class="el" href="classDataVector.html">DataVector</a>, 3, <a class="el" href="structFrame_1_1Inertial.html">Frame::Inertial</a> &gt; &amp;&#160;</td>
+          <td class="paramname"><em>magnetic_field</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const <a class="el" href="group__TensorGroup.html#ga06ebcb38a1f13c246e53378b9e8959ce">Scalar</a>&lt; <a class="el" href="classDataVector.html">DataVector</a> &gt; &amp;&#160;</td>
+          <td class="paramname"><em>sqrt_det_spatial_metric</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const tnsr::ii&lt; <a class="el" href="classDataVector.html">DataVector</a>, 3, <a class="el" href="structFrame_1_1Inertial.html">Frame::Inertial</a> &gt; &amp;&#160;</td>
+          <td class="paramname"><em>spatial_metric</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const <a class="el" href="group__TensorGroup.html#ga06ebcb38a1f13c246e53378b9e8959ce">Scalar</a>&lt; <a class="el" href="classDataVector.html">DataVector</a> &gt; &amp;&#160;</td>
+          <td class="paramname"><em>divergence_cleaning_field</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">noexcept</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Compute the conservative variables from primitive variables. </p>
+<p class="formulaDsp">
+\begin{align*} {\tilde D} = &amp; \sqrt{\gamma} \rho W \\ {\tilde S}_i = &amp; \sqrt{\gamma} \left( \rho h W^2 v_i + B^m B_m v_i - B^m v_m B_i \right) \\ {\tilde \tau} = &amp; \sqrt{\gamma} \left[ \rho h W^2 - p - \rho W - \frac{1}{2} (B^m v_m)^2 + \frac{1}{2} B^m B_m \left( 1 + v^m v_m \right) \right] \\ {\tilde B}^i = &amp; \sqrt{\gamma} B^i \\ {\tilde \Phi} = &amp; \sqrt{\gamma} \Phi \end{align*}
+</p>
+<p>where the conserved variables \({\tilde D}\), \({\tilde S}_i\), \({\tilde \tau}\), \({\tilde B}^i\), and \({\tilde \Phi}\) are a generalized mass-energy density, momentum density, specific internal energy density, magnetic field, and divergence cleaning field. Furthermore \(\gamma\) is the determinant of the spatial metric, \(\rho\) is the rest mass density, \(W = 1/\sqrt{1-v_i v^i}\) is the Lorentz factor, \(h = 1 + \epsilon + \frac{p}{\rho}\) is the specific enthalpy, \(v^i\) is the spatial velocity, \(\epsilon\) is the specific internal energy, \(p\) is the pressure, \(B^i\) is the spatial magnetic field measured by an Eulerian observer, and \(\Phi\) is a divergence cleaning field.</p>
+<p>The quantity \({\tilde \tau}\) is rewritten as in <code><a class="el" href="namespaceRelativisticEuler.html" title="Items related to evolving the relativistic Euler system. ">RelativisticEuler</a></code> to avoid cancellation error in the non-relativistic limit: </p><p class="formulaDsp">
+\[ \left( \rho h W^2 - p - \rho W \right) \longrightarrow W^2 \left[ \rho \left( \epsilon + v^2 \frac{W}{W + 1} \right) + p v^2 \right] .\]
+</p>
+ 
+</div>
+</div>
+<a id="abf04c03bff1824172a42ea62d816478a"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#abf04c03bff1824172a42ea62d816478a">&#9670;&nbsp;</a></span>fluxes()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void grmhd::ValenciaDivClean::fluxes </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="classgsl_1_1not__null.html">gsl::not_null</a>&lt; tnsr::I&lt; <a class="el" href="classDataVector.html">DataVector</a>, 3, <a class="el" href="structFrame_1_1Inertial.html">Frame::Inertial</a> &gt; *&gt;&#160;</td>
+          <td class="paramname"><em>tilde_d_flux</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="classgsl_1_1not__null.html">gsl::not_null</a>&lt; tnsr::I&lt; <a class="el" href="classDataVector.html">DataVector</a>, 3, <a class="el" href="structFrame_1_1Inertial.html">Frame::Inertial</a> &gt; *&gt;&#160;</td>
+          <td class="paramname"><em>tilde_tau_flux</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="classgsl_1_1not__null.html">gsl::not_null</a>&lt; tnsr::Ij&lt; <a class="el" href="classDataVector.html">DataVector</a>, 3, <a class="el" href="structFrame_1_1Inertial.html">Frame::Inertial</a> &gt; *&gt;&#160;</td>
+          <td class="paramname"><em>tilde_s_flux</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="classgsl_1_1not__null.html">gsl::not_null</a>&lt; tnsr::IJ&lt; <a class="el" href="classDataVector.html">DataVector</a>, 3, <a class="el" href="structFrame_1_1Inertial.html">Frame::Inertial</a> &gt; *&gt;&#160;</td>
+          <td class="paramname"><em>tilde_b_flux</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="classgsl_1_1not__null.html">gsl::not_null</a>&lt; tnsr::I&lt; <a class="el" href="classDataVector.html">DataVector</a>, 3, <a class="el" href="structFrame_1_1Inertial.html">Frame::Inertial</a> &gt; *&gt;&#160;</td>
+          <td class="paramname"><em>tilde_phi_flux</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const <a class="el" href="group__TensorGroup.html#ga06ebcb38a1f13c246e53378b9e8959ce">Scalar</a>&lt; <a class="el" href="classDataVector.html">DataVector</a> &gt; &amp;&#160;</td>
+          <td class="paramname"><em>tilde_d</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const <a class="el" href="group__TensorGroup.html#ga06ebcb38a1f13c246e53378b9e8959ce">Scalar</a>&lt; <a class="el" href="classDataVector.html">DataVector</a> &gt; &amp;&#160;</td>
+          <td class="paramname"><em>tilde_tau</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const tnsr::i&lt; <a class="el" href="classDataVector.html">DataVector</a>, 3, <a class="el" href="structFrame_1_1Inertial.html">Frame::Inertial</a> &gt; &amp;&#160;</td>
+          <td class="paramname"><em>tilde_s</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const tnsr::I&lt; <a class="el" href="classDataVector.html">DataVector</a>, 3, <a class="el" href="structFrame_1_1Inertial.html">Frame::Inertial</a> &gt; &amp;&#160;</td>
+          <td class="paramname"><em>tilde_b</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const <a class="el" href="group__TensorGroup.html#ga06ebcb38a1f13c246e53378b9e8959ce">Scalar</a>&lt; <a class="el" href="classDataVector.html">DataVector</a> &gt; &amp;&#160;</td>
+          <td class="paramname"><em>tilde_phi</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const <a class="el" href="group__TensorGroup.html#ga06ebcb38a1f13c246e53378b9e8959ce">Scalar</a>&lt; <a class="el" href="classDataVector.html">DataVector</a> &gt; &amp;&#160;</td>
+          <td class="paramname"><em>lapse</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const tnsr::I&lt; <a class="el" href="classDataVector.html">DataVector</a>, 3, <a class="el" href="structFrame_1_1Inertial.html">Frame::Inertial</a> &gt; &amp;&#160;</td>
+          <td class="paramname"><em>shift</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const <a class="el" href="group__TensorGroup.html#ga06ebcb38a1f13c246e53378b9e8959ce">Scalar</a>&lt; <a class="el" href="classDataVector.html">DataVector</a> &gt; &amp;&#160;</td>
+          <td class="paramname"><em>sqrt_det_spatial_metric</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const tnsr::ii&lt; <a class="el" href="classDataVector.html">DataVector</a>, 3, <a class="el" href="structFrame_1_1Inertial.html">Frame::Inertial</a> &gt; &amp;&#160;</td>
+          <td class="paramname"><em>spatial_metric</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const tnsr::II&lt; <a class="el" href="classDataVector.html">DataVector</a>, 3, <a class="el" href="structFrame_1_1Inertial.html">Frame::Inertial</a> &gt; &amp;&#160;</td>
+          <td class="paramname"><em>inv_spatial_metric</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const <a class="el" href="group__TensorGroup.html#ga06ebcb38a1f13c246e53378b9e8959ce">Scalar</a>&lt; <a class="el" href="classDataVector.html">DataVector</a> &gt; &amp;&#160;</td>
+          <td class="paramname"><em>pressure</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const tnsr::I&lt; <a class="el" href="classDataVector.html">DataVector</a>, 3, <a class="el" href="structFrame_1_1Inertial.html">Frame::Inertial</a> &gt; &amp;&#160;</td>
+          <td class="paramname"><em>spatial_velocity</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const <a class="el" href="group__TensorGroup.html#ga06ebcb38a1f13c246e53378b9e8959ce">Scalar</a>&lt; <a class="el" href="classDataVector.html">DataVector</a> &gt; &amp;&#160;</td>
+          <td class="paramname"><em>lorentz_factor</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const tnsr::I&lt; <a class="el" href="classDataVector.html">DataVector</a>, 3, <a class="el" href="structFrame_1_1Inertial.html">Frame::Inertial</a> &gt; &amp;&#160;</td>
+          <td class="paramname"><em>magnetic_field</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">noexcept</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>The fluxes of the conservative variables. </p>
+<p class="formulaDsp">
+\begin{align*} F^i({\tilde D}) = &amp;~ {\tilde D} v^i_{tr} \\ F^i({\tilde S}_j) = &amp;~ {\tilde S}_j v^i_{tr} + \sqrt{\gamma} \alpha \left( p + p_m \right) \delta^i_j - \frac{B_j {\tilde B}^i}{W^2} - v_j {\tilde B}^i B^m v_m\\ F^i({\tilde \tau}) = &amp;~ {\tilde \tau} v^i_{tr} + \sqrt{\gamma} \alpha \left( p + p_m \right) v^i - \alpha {\tilde B}^i B^m v_m \\ F^i({\tilde B}^j) = &amp;~ {\tilde B}^j v^i_{tr} - \alpha v^j {\tilde B}^i + \alpha \gamma^{ij} {\tilde \Phi} \\ F^i({\tilde \Phi}) = &amp;~ \alpha {\tilde B^i} - \beta^i {\tilde \Phi} \end{align*}
+</p>
+<p>where the conserved variables \({\tilde D}\), \({\tilde S}_i\), \({\tilde \tau}\), \({\tilde B}^i\), and \({\tilde \Phi}\) are a generalized mass-energy density, momentum density, specific internal energy density, magnetic field, and divergence cleaning field. Furthermore, \(v^i_{tr} = \alpha v^i - \beta^i\) is the transport velocity, \(\alpha\) is the lapse, \(\beta^i\) is the shift, \(\gamma\) is the determinant of the spatial metric \(\gamma_{ij}\), \(v^i\) is the spatial velocity, \(B^i\) is the spatial magnetic field measured by an Eulerian observer, \(p\) is the fluid pressure, and \(p_m = \frac{1}{2} \left[ \left( B^n v_n \right)^2 + B^n B_n / W^2 \right]\) is the magnetic pressure. </p>
+
+</div>
+</div>
+</div><!-- contents -->
+<!-- HTML footer for doxygen 1.8.10-->
+<!-- start footer part -->
+<hr class="footer"/><address class="footer"><small>
+&copy; Copyright 2017 - 2018
+<a href="https://black-holes.org">SXS Collaboration</a>,
+<a href="LICENSE.txt" target="_blank">
+<span class="hidden-xs">Distributed under the</span>
+MIT License</a>
+</small></address>
+</body>
+</html>

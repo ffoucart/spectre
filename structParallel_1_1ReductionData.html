@@ -1,0 +1,230 @@
+<!-- HTML header for doxygen 1.8.10-->
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=9"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="author" content="SXS Collaboration">
+    <meta name="generator" content="Doxygen 1.8.13"/>
+    <style>
+        /*!
+         * IE10 viewport hack for Surface/desktop Windows 8 bug
+         * Copyright 2014-2015 Twitter, Inc.
+         * Licensed under MIT (https://github.com/twbs/bootstrap/blob/master/LICENSE)
+         */
+        @-webkit-viewport { width: device-width; }
+        @-moz-viewport    { width: device-width; }
+        @-ms-viewport     { width: device-width; }
+        @-o-viewport      { width: device-width; }
+        @viewport         { width: device-width; }
+      </style>
+  <title>SpECTRE: Parallel::ReductionData&lt; Ts &gt; Struct Template Reference</title>
+  <link href="tabs.css" rel="stylesheet" type="text/css"/>
+  <script type="text/javascript" src="jquery.js"></script>
+  <script type="text/javascript" src="dynsections.js"></script>
+  <link href="search/search.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="search/searchdata.js"></script>
+<script type="text/javascript" src="search/search.js"></script>
+  <script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+    extensions: ["tex2jax.js", "TeX/AMSmath.js", "TeX/AMSsymbols.js", "color.js"],
+    jax: ["input/TeX","output/HTML-CSS"],
+});
+MathJax.Hub.Config({
+    TeX: { equationNumbers: { autoNumber: "AMS" } }
+});
+MathJax.Hub.Config({
+    tex2jax: {inlineMath: [['^^','^^'], ['\\(', '\\)']]}
+});
+</script><script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.2/MathJax.js"></script>
+  <link href="octicons.css" rel="stylesheet">
+  <link href="bootstrap.min.css" rel="stylesheet">
+  <link href="doxygen.css" rel="stylesheet" type="text/css" />
+  <script type="text/javascript" src="jquery.js"></script>
+  <script type="text/javascript" src="bootstrap.min.js"></script>
+  <script type="text/javascript" src="spectre.js"></script>
+  </head>
+  <body>
+  <div id="top" class="navbar-fixed-top"><!-- do not remove this div, it is closed by doxygen! -->
+  <!-- BEGIN TITLEAREA -->
+  <div id="titlearea">
+  <script type="text/javascript">
+  var searchBox = new SearchBox("searchBox", "search",false,'Search');
+  </script>
+  <div id="main-nav">
+    <ul class="sm sm-dox" id="main-menu">
+      <li>
+      <a href="index.html">
+      SpECTRE &#160;
+        <span id="projectnumber">v0.0.0</span>
+      </a>
+      </li>
+      <li class="dropdown">
+        <a class="dropdown-toggle" data-toggle="dropdown" href="#" id="selected">
+          <span id="selected">
+            <i class="octicon octicon-book"></i><span>Documentation</span>
+          </span>
+          <span class="caret"></span>
+        </a>
+        <ul class="dropdown-menu">
+          <li style="min-width: 135px;">
+            <a href="index.html">
+            <i class="octicon octicon-book"></i><span>Introduction</span></a>
+          </li>
+          <li style="min-width: 135px;">
+            <a href="installation.html">
+              <i class="octicon octicon-desktop-download"></i><span>Installation</span>
+            </a>
+          </li>
+          <li style="min-width: 135px;">
+            <a href="tutorials.html">
+              <i class="octicon octicon-mortar-board"></i><span>User Tutorials</span>
+            </a>
+          </li>
+          <li style="min-width: 135px;">
+            <a href="dev_guide.html">
+              <i class="octicon octicon-gist-secret"></i><span>Dev Guide</span>
+            </a>
+          </li>
+        </ul>
+      </li>
+      <li class="dropdown">
+        <a class="dropdown-toggle" data-toggle="dropdown" href="#" id="selected">
+          <span id="selected">
+            <i class="octicon octicon-code"></i>
+              <span>Reference</span>
+          </span>
+          <span class="caret"></span>
+        </a>
+        <ul class="dropdown-menu">
+          <li style="min-width: 130px;">
+            <a href="modules.html">
+              <i class="octicon octicon-code"></i>
+              <span>Topics</span>
+            </a>
+          </li>
+          <li style="min-width: 130px;">
+            <a href="namespaces.html">
+              <i class="octicon octicon-gist"></i>
+              <span>Namespaces</span>
+            </a>
+          </li>
+        </ul>
+      </li>
+      <li>
+        <a href="files.html">
+          <i class="octicon octicon-file-directory"></i><span>Files</span>
+        </a>
+      </li>
+      <li>
+        <a href="https://github.com/sxs-collaboration/spectre" target="_blank">
+          <i class="octicon octicon-mark-github"></i><span>View on GitHub</span>
+        </a>
+      </li>
+      <!--The Search <li> is added by doxygen later-->
+    </ul>
+  </div><!-- main-nav -->
+  </div><!-- titlearea -->
+  <!-- window showing the filter options -->
+  <div id="MSearchSelectWindow"  style="position: fixed;"
+       onmouseover="return searchBox.OnSearchSelectShow()"
+       onmouseout="return searchBox.OnSearchSelectHide()"
+       onkeydown="return searchBox.OnSearchSelectKey(event)">
+  </div>
+  <!-- iframe showing the search results (closed by default) -->
+  <div id="MSearchResultsWindow"  style="position: fixed;">
+  <iframe src="javascript:void(0)" frameborder="0"
+          name="MSearchResults" id="MSearchResults">
+  </iframe>
+  </div>
+<!-- Generated by Doxygen 1.8.13 -->
+<script type="text/javascript">
+var searchBox = new SearchBox("searchBox", "search",false,'Search');
+</script>
+<script type="text/javascript" src="menudata.js"></script>
+<script type="text/javascript" src="menu.js"></script>
+<script type="text/javascript">
+$(function() {
+  initMenu('',true,false,'search.php','Search');
+  $(document).ready(function() { init_search(); });
+});
+</script>
+<div id="main-nav"></div>
+<!-- window showing the filter options -->
+<div id="MSearchSelectWindow"
+     onmouseover="return searchBox.OnSearchSelectShow()"
+     onmouseout="return searchBox.OnSearchSelectHide()"
+     onkeydown="return searchBox.OnSearchSelectKey(event)">
+</div>
+
+<!-- iframe showing the search results (closed by default) -->
+<div id="MSearchResultsWindow">
+<iframe src="javascript:void(0)" frameborder="0" 
+        name="MSearchResults" id="MSearchResults">
+</iframe>
+</div>
+
+<div id="nav-path" class="navpath">
+  <ul>
+<li class="navelem"><a class="el" href="namespaceParallel.html">Parallel</a></li><li class="navelem"><a class="el" href="structParallel_1_1ReductionData.html">ReductionData</a></li>  </ul>
+</div>
+</div><!-- top -->
+<div class="header">
+  <div class="summary">
+<a href="#pub-methods">Public Member Functions</a> &#124;
+<a href="structParallel_1_1ReductionData-members.html">List of all members</a>  </div>
+  <div class="headertitle">
+<div class="title">Parallel::ReductionData&lt; Ts &gt; Struct Template Reference<div class="ingroups"><a class="el" href="group__ParallelGroup.html">Parallelization</a></div></div>  </div>
+</div><!--header-->
+<div class="contents">
+
+<p>Used for reducing heterogeneous collection of types in a single reduction call.  
+ <a href="structParallel_1_1ReductionData.html#details">More...</a></p>
+
+<p><code>#include &lt;<a class="el" href="Reduction_8hpp_source.html">Reduction.hpp</a>&gt;</code></p>
+<table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
+Public Member Functions</h2></td></tr>
+<tr class="memitem:a94cd2a989418ae16f1e552c18e96877c"><td class="memTemplParams" colspan="2"><a id="a94cd2a989418ae16f1e552c18e96877c"></a>
+template&lt;class Arg0 , class... Args, Requires&lt; not cpp17::is_same_v&lt; std::decay_t&lt; Arg0 &gt;, ReductionData &gt;&gt;  = nullptr&gt; </td></tr>
+<tr class="memitem:a94cd2a989418ae16f1e552c18e96877c"><td class="memTemplItemLeft" align="right" valign="top">&#160;</td><td class="memTemplItemRight" valign="bottom"><b>ReductionData</b> (Arg0 &amp;&amp;arg0, Args &amp;&amp;... args)</td></tr>
+<tr class="separator:a94cd2a989418ae16f1e552c18e96877c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa773c229c050cc7aac23d78d5b36b4dd"><td class="memItemLeft" align="right" valign="top"><a id="aa773c229c050cc7aac23d78d5b36b4dd"></a>
+&#160;</td><td class="memItemRight" valign="bottom"><b>ReductionData</b> (const <a class="el" href="structParallel_1_1ReductionData.html">ReductionData</a> &amp;)=default</td></tr>
+<tr class="separator:aa773c229c050cc7aac23d78d5b36b4dd"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3321e95344a0cc59be3e6e644b66ee3a"><td class="memItemLeft" align="right" valign="top"><a id="a3321e95344a0cc59be3e6e644b66ee3a"></a>
+<a class="el" href="structParallel_1_1ReductionData.html">ReductionData</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>operator=</b> (const <a class="el" href="structParallel_1_1ReductionData.html">ReductionData</a> &amp;)=default</td></tr>
+<tr class="separator:a3321e95344a0cc59be3e6e644b66ee3a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac8efa574df90d409506df2dca00931c4"><td class="memItemLeft" align="right" valign="top"><a id="ac8efa574df90d409506df2dca00931c4"></a>
+&#160;</td><td class="memItemRight" valign="bottom"><b>ReductionData</b> (<a class="el" href="structParallel_1_1ReductionData.html">ReductionData</a> &amp;&amp;)=default</td></tr>
+<tr class="separator:ac8efa574df90d409506df2dca00931c4"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a28b6d6dff8f5176ee97765396bd325d8"><td class="memItemLeft" align="right" valign="top"><a id="a28b6d6dff8f5176ee97765396bd325d8"></a>
+<a class="el" href="structParallel_1_1ReductionData.html">ReductionData</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>operator=</b> (<a class="el" href="structParallel_1_1ReductionData.html">ReductionData</a> &amp;&amp;)=default</td></tr>
+<tr class="separator:a28b6d6dff8f5176ee97765396bd325d8"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a5d094e20632a2f05bbbf7d7e2c5df6ce"><td class="memItemLeft" align="right" valign="top"><a id="a5d094e20632a2f05bbbf7d7e2c5df6ce"></a>
+&#160;</td><td class="memItemRight" valign="bottom"><b>ReductionData</b> (CkReductionMsg *const message) noexcept</td></tr>
+<tr class="separator:a5d094e20632a2f05bbbf7d7e2c5df6ce"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table>
+<a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
+<div class="textblock"><h3>template&lt;class... Ts&gt;<br />
+struct Parallel::ReductionData&lt; Ts &gt;</h3>
+
+<p>Used for reducing heterogeneous collection of types in a single reduction call. </p>
+<p>For each <code><a class="el" href="structParallel_1_1ReductionData.html" title="Used for reducing heterogeneous collection of types in a single reduction call. ">ReductionData</a></code> you must write a custom reducer to reduce the data. Here is an example of such a function:</p>
+<div class="fragment"><div class="line">CkReductionMsg* reduce_reduction_data(<span class="keyword">const</span> <span class="keywordtype">int</span> number_of_messages,</div><div class="line">                                      CkReductionMsg** <span class="keyword">const</span> msgs) noexcept {</div><div class="line">  <span class="comment">// clang-tidy: do not use pointer arithmetic</span></div><div class="line">  <a class="code" href="structParallel_1_1ReductionData.html">Parallel::ReductionData&lt;int, std::unordered_map&lt;std::string, int&gt;</a>,</div><div class="line">                          <a class="codeRef" doxygen="/work/spectre/docs/config/cppreference-doxygen-web.tag.xml:http://en.cppreference.com/w/" href="http://en.cppreference.com/w/cpp/container/vector.html">std::vector&lt;int&gt;</a>&gt;</div><div class="line">      reduced(msgs[0]);  <span class="comment">// NOLINT</span></div><div class="line">  <span class="keywordflow">for</span> (<span class="keywordtype">int</span> msg_id = 1; msg_id &lt; number_of_messages; ++msg_id) {</div><div class="line">    <span class="comment">// clang-tidy: do not use pointer arithmetic</span></div><div class="line">    <a class="code" href="structParallel_1_1ReductionData.html">Parallel::ReductionData&lt;int, std::unordered_map&lt;std::string, int&gt;</a>,</div><div class="line">                            <a class="codeRef" doxygen="/work/spectre/docs/config/cppreference-doxygen-web.tag.xml:http://en.cppreference.com/w/" href="http://en.cppreference.com/w/cpp/container/vector.html">std::vector&lt;int&gt;</a>&gt;</div><div class="line">        current(msgs[msg_id]);  <span class="comment">// NOLINT</span></div><div class="line">    <span class="keywordflow">if</span> (Parallel::get&lt;0&gt;(current) != Parallel::get&lt;0&gt;(reduced)) {</div><div class="line">      <a class="code" href="group__ParallelGroup.html#gaccc68e564135958d18110d2847dcc1b3">Parallel::abort</a>(<span class="stringliteral">&quot;Tried to reduce from different iteration values.&quot;</span>);</div><div class="line">    }</div><div class="line">    <span class="comment">// compute maximum of each value in an unordered_map</span></div><div class="line">    <span class="keywordflow">for</span> (<span class="keyword">const</span> <span class="keyword">auto</span>&amp; string_double : Parallel::get&lt;1&gt;(current)) {</div><div class="line">      <span class="keywordflow">if</span> (string_double.second &gt;</div><div class="line">          Parallel::get&lt;1&gt;(reduced)[string_double.first]) {</div><div class="line">        Parallel::get&lt;1&gt;(reduced)[string_double.first] = string_double.second;</div><div class="line">      }</div><div class="line">    }</div><div class="line">    <span class="comment">// compute sum of each element in a vector</span></div><div class="line">    <span class="keywordflow">for</span> (<span class="keywordtype">size_t</span> i = 0; i &lt; Parallel::get&lt;2&gt;(current).<a class="codeRef" doxygen="/work/spectre/docs/config/cppreference-doxygen-web.tag.xml:http://en.cppreference.com/w/" href="http://en.cppreference.com/w/cpp/iterator/size.html">size</a>(); ++i) {</div><div class="line">      Parallel::get&lt;2&gt;(reduced)[i] += Parallel::get&lt;2&gt;(current)[i];</div><div class="line">    }</div><div class="line">  }</div><div class="line">  <span class="keywordflow">return</span> <a class="code" href="group__ParallelGroup.html#ga487910432c5ea8b35c12eb721c4afabe">Parallel::new_reduction_msg</a>(reduced);</div><div class="line">}</div></div><!-- fragment --><p> A variable number of <code>CkReductionMsg*</code>s are passed to the reducer, and so it is necessary to loop over each message, contributing the data into a new <code><a class="el" href="structParallel_1_1ReductionData.html" title="Used for reducing heterogeneous collection of types in a single reduction call. ">ReductionData</a></code> (called <code>reduced</code> in the above example). The <code><a class="el" href="group__ParallelGroup.html#ga5650367ede7ee5b92720ed3636df24e2" title="Access data in the cache. ">Parallel::get()</a></code> function is used to retrieve elements from the <code><a class="el" href="structParallel_1_1ReductionData.html" title="Used for reducing heterogeneous collection of types in a single reduction call. ">ReductionData</a></code> in a manner that is completely analogous to retrieving elements from a <code><a class="elRef" doxygen="/work/spectre/docs/config/cppreference-doxygen-web.tag.xml:http://en.cppreference.com/w/" href="http://en.cppreference.com/w/cpp/utility/tuple.html">std::tuple</a></code> using <code>std::get</code>. Once the new <code><a class="el" href="structParallel_1_1ReductionData.html" title="Used for reducing heterogeneous collection of types in a single reduction call. ">ReductionData</a></code> has been filled, a new <code>CkReductionMsg*</code> must be returned using <code><a class="el" href="group__ParallelGroup.html#ga487910432c5ea8b35c12eb721c4afabe" title="Convert a ReductionData to a CkReductionMsg. Used in custom reducers. ">Parallel::new_reduction_msg()</a></code>. </p>
+</div><hr/>The documentation for this struct was generated from the following file:<ul>
+<li>src/Parallel/<a class="el" href="Reduction_8hpp_source.html">Reduction.hpp</a></li>
+</ul>
+</div><!-- contents -->
+<!-- HTML footer for doxygen 1.8.10-->
+<!-- start footer part -->
+<hr class="footer"/><address class="footer"><small>
+&copy; Copyright 2017 - 2018
+<a href="https://black-holes.org">SXS Collaboration</a>,
+<a href="LICENSE.txt" target="_blank">
+<span class="hidden-xs">Distributed under the</span>
+MIT License</a>
+</small></address>
+</body>
+</html>

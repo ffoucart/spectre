@@ -1,0 +1,576 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+
+<html lang="en">
+
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <title>LCOV - 4a100dde3b231e0ada6ff7b2b4c32892a30db7f6 - Evolution/DiscontinuousGalerkin/InitializeElement.hpp</title>
+  <link rel="stylesheet" type="text/css" href="../../gcov.css">
+</head>
+
+<body>
+
+  <table width="100%" border=0 cellspacing=0 cellpadding=0>
+    <tr><td class="title"> SpECTRE Documentation Coverage Report</td></tr>
+    <tr><td class="ruler"><img src="../../glass.png" width=3 height=3 alt=""></td></tr>
+
+    <tr>
+      <td width="100%">
+        <table cellpadding=1 border=0 width="100%">
+          <tr>
+            <td width="10%" class="headerItem">Current view:</td>
+            <td width="35%" class="headerValue"><a href="../../index.html">top level</a> - <a href="index.html">Evolution/DiscontinuousGalerkin</a> - InitializeElement.hpp</td>
+            <td width="5%"></td>
+            <td width="15%"></td>
+            <td width="10%" class="headerCovTableHead">Hit</td>
+            <td width="10%" class="headerCovTableHead">Total</td>
+            <td width="15%" class="headerCovTableHead">Coverage</td>
+          </tr>
+          <tr>
+             <td class="headerItem">Commit:</td>
+             <td class="headerValue"><a target="_blank" href="https://github.com/sxs-collaboration/spectre/commit/4a100dde3b231e0ada6ff7b2b4c32892a30db7f6">4a100dde3b231e0ada6ff7b2b4c32892a30db7f6</a></td>
+            <td></td>
+            <td class="headerItem">Lines:</td>
+            <td class="headerCovTableEntry">1</td>
+            <td class="headerCovTableEntry">51</td>
+            <td class="headerCovTableEntryLo">2.0 %</td>
+          </tr>
+          <tr>
+            <td class="headerItem">Date:</td>
+            <td class="headerValue">2018-08-16 19:07:23</td>
+            <td></td>
+          </tr>
+          <tr>
+            <td class="headerItem">Legend:</td>
+            <td class="headerValueLeg">            Lines:
+            <span class="coverLegendCov">hit</span>
+            <span class="coverLegendNoCov">not hit</span>
+</td>
+            <td></td>
+          </tr>
+          <tr><td><img src="../../glass.png" width=3 height=3 alt=""></td></tr>
+        </table>
+      </td>
+    </tr>
+
+    <tr><td class="ruler"><img src="../../glass.png" width=3 height=3 alt=""></td></tr>
+  </table>
+
+  <table cellpadding=0 cellspacing=0 border=0>
+    <tr>
+      <td><br></td>
+    </tr>
+    <tr>
+      <td>
+<pre class="sourceHeading">          Line data    Source code</pre>
+<pre class="source">
+<span class="lineNum">       1 </span>            : // Distributed under the MIT License.
+<span class="lineNum">       2 </span>            : // See LICENSE.txt for details.
+<span class="lineNum">       3 </span>            : 
+<span class="lineNum">       4 </span>            : #pragma once
+<span class="lineNum">       5 </span>            : 
+<span class="lineNum">       6 </span>            : #include &lt;array&gt;
+<span class="lineNum">       7 </span>            : #include &lt;cstddef&gt;
+<span class="lineNum">       8 </span>            : #include &lt;tuple&gt;
+<span class="lineNum">       9 </span>            : #include &lt;utility&gt;  // IWYU pragma: keep
+<span class="lineNum">      10 </span>            : #include &lt;vector&gt;
+<span class="lineNum">      11 </span>            : 
+<span class="lineNum">      12 </span>            : #include &quot;DataStructures/DataBox/DataBox.hpp&quot;
+<span class="lineNum">      13 </span>            : #include &quot;DataStructures/DataBox/DataBoxTag.hpp&quot;
+<span class="lineNum">      14 </span>            : #include &quot;DataStructures/DataBox/Prefixes.hpp&quot;
+<span class="lineNum">      15 </span>            : #include &quot;DataStructures/Index.hpp&quot;
+<span class="lineNum">      16 </span>            : #include &quot;DataStructures/Tensor/EagerMath/Magnitude.hpp&quot;  // IWYU pragma: keep
+<span class="lineNum">      17 </span>            : #include &quot;DataStructures/Variables.hpp&quot;                   // IWYU pragma: keep
+<span class="lineNum">      18 </span>            : #include &quot;Domain/Mesh.hpp&quot;
+<span class="lineNum">      19 </span>            : // IWYU pragma: no_include &quot;DataStructures/VariablesHelpers.hpp&quot;
+<span class="lineNum">      20 </span>            : #include &quot;Domain/CreateInitialElement.hpp&quot;
+<span class="lineNum">      21 </span>            : #include &quot;Domain/Domain.hpp&quot;
+<span class="lineNum">      22 </span>            : #include &quot;Domain/Element.hpp&quot;
+<span class="lineNum">      23 </span>            : #include &quot;Domain/ElementId.hpp&quot;
+<span class="lineNum">      24 </span>            : #include &quot;Domain/ElementMap.hpp&quot;
+<span class="lineNum">      25 </span>            : #include &quot;Domain/FaceNormal.hpp&quot;
+<span class="lineNum">      26 </span>            : #include &quot;Domain/LogicalCoordinates.hpp&quot;  // IWYU pragma: keep
+<span class="lineNum">      27 </span>            : #include &quot;Domain/OrientationMap.hpp&quot;  // IWYU pragma: keep
+<span class="lineNum">      28 </span>            : #include &quot;Domain/Tags.hpp&quot;
+<span class="lineNum">      29 </span>            : #include &quot;Evolution/Conservative/Tags.hpp&quot;  // IWYU pragma: keep
+<span class="lineNum">      30 </span>            : #include &quot;NumericalAlgorithms/DiscontinuousGalerkin/FluxCommunicationTypes.hpp&quot;
+<span class="lineNum">      31 </span>            : #include &quot;NumericalAlgorithms/DiscontinuousGalerkin/MortarHelpers.hpp&quot;
+<span class="lineNum">      32 </span>            : #include &quot;NumericalAlgorithms/DiscontinuousGalerkin/Tags.hpp&quot;
+<span class="lineNum">      33 </span>            : #include &quot;NumericalAlgorithms/LinearOperators/Divergence.hpp&quot;  // IWYU pragma: keep
+<span class="lineNum">      34 </span>            : #include &quot;NumericalAlgorithms/LinearOperators/PartialDerivatives.hpp&quot;
+<span class="lineNum">      35 </span>            : #include &quot;NumericalAlgorithms/Spectral/Spectral.hpp&quot;
+<span class="lineNum">      36 </span>            : #include &quot;Parallel/ConstGlobalCache.hpp&quot;
+<span class="lineNum">      37 </span>            : #include &quot;PointwiseFunctions/AnalyticSolutions/Tags.hpp&quot;
+<span class="lineNum">      38 </span>            : // IWYU pragma: no_include &quot;Time/Slab.hpp&quot;
+<span class="lineNum">      39 </span>            : #include &quot;Time/Tags.hpp&quot;
+<span class="lineNum">      40 </span>            : #include &quot;Time/Time.hpp&quot;
+<span class="lineNum">      41 </span>            : #include &quot;Time/TimeId.hpp&quot;
+<span class="lineNum">      42 </span>            : #include &quot;Utilities/Gsl.hpp&quot;
+<span class="lineNum">      43 </span>            : #include &quot;Utilities/TMPL.hpp&quot;
+<span class="lineNum">      44 </span>            : 
+<span class="lineNum">      45 </span>            : /// \cond
+<span class="lineNum">      46 </span>            : // IWYU pragma: no_forward_declare db::DataBox
+<span class="lineNum">      47 </span>            : template &lt;size_t VolumeDim&gt;
+<span class="lineNum">      48 </span>            : class ElementIndex;
+<span class="lineNum">      49 </span>            : namespace Frame {
+<span class="lineNum">      50 </span>            : struct Inertial;
+<span class="lineNum">      51 </span>            : }  // namespace Frame
+<span class="lineNum">      52 </span>            : namespace tuples {
+<span class="lineNum">      53 </span>            : template &lt;typename... Tags&gt;
+<span class="lineNum">      54 </span>            : class TaggedTuple;  // IWYU pragma: keep
+<span class="lineNum">      55 </span>            : }  // namespace tuples
+<span class="lineNum">      56 </span>            : /// \endcond
+<span class="lineNum">      57 </span>            : 
+<span class="lineNum">      58 </span>            : namespace dg {
+<span class="lineNum">      59 </span>            : namespace Actions {
+<span class="lineNum">      60 </span>            : /// \ingroup ActionsGroup
+<span class="lineNum">      61 </span>            : /// \ingroup DiscontinuousGalerkinGroup
+<span class="lineNum">      62 </span>            : /// \brief Initialize a dG element with analytic initial data
+<span class="lineNum">      63 </span>            : ///
+<span class="lineNum">      64 </span>            : /// Uses:
+<span class="lineNum">      65 </span>            : /// - ConstGlobalCache:
+<span class="lineNum">      66 </span>            : ///   * A tag deriving off of Cache::AnalyticSolutionBase
+<span class="lineNum">      67 </span>            : ///   * CacheTags::TimeStepper
+<span class="lineNum">      68 </span>            : ///
+<span class="lineNum">      69 </span>            : /// DataBox changes:
+<span class="lineNum">      70 </span>            : /// - Adds:
+<span class="lineNum">      71 </span>            : ///   * Tags::TimeId
+<span class="lineNum">      72 </span>            : ///   * Tags::Time
+<span class="lineNum">      73 </span>            : ///   * Tags::TimeStep
+<span class="lineNum">      74 </span>            : ///   * Tags::LogicalCoordinates&lt;Dim&gt;
+<span class="lineNum">      75 </span>            : ///   * Tags::Mesh&lt;Dim&gt;
+<span class="lineNum">      76 </span>            : ///   * Tags::Element&lt;Dim&gt;
+<span class="lineNum">      77 </span>            : ///   * Tags::ElementMap&lt;Dim&gt;
+<span class="lineNum">      78 </span>            : ///   * System::variables_tag
+<span class="lineNum">      79 </span>            : ///   * Tags::HistoryEvolvedVariables&lt;System::variables_tag,
+<span class="lineNum">      80 </span>            : ///                  db::add_tag_prefix&lt;Tags::dt, System::variables_tag&gt;&gt;
+<span class="lineNum">      81 </span>            : ///   * Tags::Coordinates&lt;Tags::ElementMap&lt;Dim&gt;,
+<span class="lineNum">      82 </span>            : ///                       Tags::LogicalCoordinates&lt;Dim&gt;&gt;
+<span class="lineNum">      83 </span>            : ///   * Tags::InverseJacobian&lt;Tags::ElementMap&lt;Dim&gt;,
+<span class="lineNum">      84 </span>            : ///                           Tags::LogicalCoordinates&lt;Dim&gt;&gt;
+<span class="lineNum">      85 </span>            : ///   * Tags::deriv&lt;System::variables_tag::tags_list,
+<span class="lineNum">      86 </span>            : ///                 System::gradients_tags,
+<span class="lineNum">      87 </span>            : ///                 Tags::InverseJacobian&lt;Tags::ElementMap&lt;Dim&gt;,
+<span class="lineNum">      88 </span>            : ///                                       Tags::LogicalCoordinates&lt;Dim&gt;&gt;&gt;
+<span class="lineNum">      89 </span>            : ///   * db::add_tag_prefix&lt;Tags::dt, System::variables_tag&gt;
+<span class="lineNum">      90 </span>            : ///   * Tags::UnnormalizedFaceNormal&lt;Dim&gt;
+<span class="lineNum">      91 </span>            : /// - Removes: nothing
+<span class="lineNum">      92 </span>            : /// - Modifies: nothing
+<span class="lineNum">      93 </span>            : template &lt;size_t Dim&gt;
+<span class="lineNum">      94 </span><span class="lineCov">          1 : struct InitializeElement {</span>
+<span class="lineNum">      95 </span><span class="lineNoCov">          0 :   static Mesh&lt;Dim&gt; element_mesh(</span>
+<span class="lineNum">      96 </span>            :       const std::vector&lt;std::array&lt;size_t, Dim&gt;&gt;&amp; initial_extents,
+<span class="lineNum">      97 </span>            :       const ElementId&lt;Dim&gt;&amp; element_id,
+<span class="lineNum">      98 </span>            :       const OrientationMap&lt;Dim&gt;&amp; orientation = {}) noexcept {
+<span class="lineNum">      99 </span>            :     const auto&amp; unoriented_extents = initial_extents[element_id.block_id()];
+<span class="lineNum">     100 </span>            :     Index&lt;Dim&gt; extents;
+<span class="lineNum">     101 </span>            :     for (size_t i = 0; i &lt; Dim; ++i) {
+<span class="lineNum">     102 </span>            :       extents[i] = gsl::at(unoriented_extents, orientation(i));
+<span class="lineNum">     103 </span>            :     }
+<span class="lineNum">     104 </span>            :     return {extents.indices(), Spectral::Basis::Legendre,
+<span class="lineNum">     105 </span>            :             Spectral::Quadrature::GaussLobatto};
+<span class="lineNum">     106 </span>            :   }
+<span class="lineNum">     107 </span>            : 
+<span class="lineNum">     108 </span>            :   // Items related to the basic structure of the domain
+<span class="lineNum">     109 </span><span class="lineNoCov">          0 :   struct DomainTags {</span>
+<span class="lineNum">     110 </span><span class="lineNoCov">          0 :     using simple_tags =</span>
+<span class="lineNum">     111 </span>            :         db::AddSimpleTags&lt;Tags::Mesh&lt;Dim&gt;, Tags::Element&lt;Dim&gt;,
+<span class="lineNum">     112 </span>            :                           Tags::ElementMap&lt;Dim&gt;&gt;;
+<span class="lineNum">     113 </span>            : 
+<span class="lineNum">     114 </span><span class="lineNoCov">          0 :     using compute_tags = db::AddComputeTags&lt;</span>
+<span class="lineNum">     115 </span>            :         Tags::LogicalCoordinates&lt;Dim&gt;,
+<span class="lineNum">     116 </span>            :         Tags::MappedCoordinates&lt;Tags::ElementMap&lt;Dim&gt;,
+<span class="lineNum">     117 </span>            :                                 Tags::LogicalCoordinates&lt;Dim&gt;&gt;,
+<span class="lineNum">     118 </span>            :         Tags::InverseJacobian&lt;Tags::ElementMap&lt;Dim&gt;,
+<span class="lineNum">     119 </span>            :                               Tags::LogicalCoordinates&lt;Dim&gt;&gt;&gt;;
+<span class="lineNum">     120 </span>            : 
+<span class="lineNum">     121 </span>            :     template &lt;typename TagsList&gt;
+<span class="lineNum">     122 </span><span class="lineNoCov">          0 :     static auto initialize(</span>
+<span class="lineNum">     123 </span>            :         db::DataBox&lt;TagsList&gt;&amp;&amp; box, const ElementIndex&lt;Dim&gt;&amp; array_index,
+<span class="lineNum">     124 </span>            :         const std::vector&lt;std::array&lt;size_t, Dim&gt;&gt;&amp; initial_extents,
+<span class="lineNum">     125 </span>            :         const Domain&lt;Dim, Frame::Inertial&gt;&amp; domain) noexcept {
+<span class="lineNum">     126 </span>            :       const ElementId&lt;Dim&gt; element_id{array_index};
+<span class="lineNum">     127 </span>            :       const auto&amp; my_block = domain.blocks()[element_id.block_id()];
+<span class="lineNum">     128 </span>            :       Mesh&lt;Dim&gt; mesh = element_mesh(initial_extents, element_id);
+<span class="lineNum">     129 </span>            :       Element&lt;Dim&gt; element = create_initial_element(element_id, my_block);
+<span class="lineNum">     130 </span>            :       ElementMap&lt;Dim, Frame::Inertial&gt; map{
+<span class="lineNum">     131 </span>            :           element_id, my_block.coordinate_map().get_clone()};
+<span class="lineNum">     132 </span>            : 
+<span class="lineNum">     133 </span>            :       return db::create_from&lt;db::RemoveTags&lt;&gt;, simple_tags, compute_tags&gt;(
+<span class="lineNum">     134 </span>            :           std::move(box), std::move(mesh), std::move(element), std::move(map));
+<span class="lineNum">     135 </span>            :     }
+<span class="lineNum">     136 </span>            :   };
+<span class="lineNum">     137 </span>            : 
+<span class="lineNum">     138 </span>            :   // Tags related only to the system
+<span class="lineNum">     139 </span>            :   template &lt;typename System, bool IsConservative = System::is_conservative&gt;
+<span class="lineNum">     140 </span><span class="lineNoCov">          0 :   struct SystemTags {</span>
+<span class="lineNum">     141 </span><span class="lineNoCov">          0 :     using simple_tags = db::AddSimpleTags&lt;typename System::variables_tag&gt;;</span>
+<span class="lineNum">     142 </span>            : 
+<span class="lineNum">     143 </span><span class="lineNoCov">          0 :     using compute_tags = db::AddComputeTags&lt;&gt;;</span>
+<span class="lineNum">     144 </span>            : 
+<span class="lineNum">     145 </span>            :     template &lt;typename TagsList, typename Metavariables&gt;
+<span class="lineNum">     146 </span><span class="lineNoCov">          0 :     static auto initialize(</span>
+<span class="lineNum">     147 </span>            :         db::DataBox&lt;TagsList&gt;&amp;&amp; box,
+<span class="lineNum">     148 </span>            :         const Parallel::ConstGlobalCache&lt;Metavariables&gt;&amp; cache,
+<span class="lineNum">     149 </span>            :         const Time&amp; initial_time) noexcept {
+<span class="lineNum">     150 </span>            :       using Vars = typename System::variables_tag::type;
+<span class="lineNum">     151 </span>            : 
+<span class="lineNum">     152 </span>            :       const size_t num_grid_points =
+<span class="lineNum">     153 </span>            :           db::get&lt;Tags::Mesh&lt;Dim&gt;&gt;(box).number_of_grid_points();
+<span class="lineNum">     154 </span>            :       const auto&amp; inertial_coords =
+<span class="lineNum">     155 </span>            :           db::get&lt;Tags::Coordinates&lt;Dim, Frame::Inertial&gt;&gt;(box);
+<span class="lineNum">     156 </span>            : 
+<span class="lineNum">     157 </span>            :       // Set initial data from analytic solution
+<span class="lineNum">     158 </span>            :       using solution_tag = CacheTags::AnalyticSolutionBase;
+<span class="lineNum">     159 </span>            :       Vars vars{num_grid_points};
+<span class="lineNum">     160 </span>            :       vars.assign_subset(Parallel::get&lt;solution_tag&gt;(cache).variables(
+<span class="lineNum">     161 </span>            :           inertial_coords, initial_time.value(), typename Vars::tags_list{}));
+<span class="lineNum">     162 </span>            : 
+<span class="lineNum">     163 </span>            :       return db::create_from&lt;db::RemoveTags&lt;&gt;, simple_tags, compute_tags&gt;(
+<span class="lineNum">     164 </span>            :           std::move(box), std::move(vars));
+<span class="lineNum">     165 </span>            :     }
+<span class="lineNum">     166 </span>            :   };
+<span class="lineNum">     167 </span>            : 
+<span class="lineNum">     168 </span>            :   template &lt;typename System&gt;
+<span class="lineNum">     169 </span><span class="lineNoCov">          0 :   struct SystemTags&lt;System, true&gt; {</span>
+<span class="lineNum">     170 </span><span class="lineNoCov">          0 :     using variables_tag = typename System::variables_tag;</span>
+<span class="lineNum">     171 </span><span class="lineNoCov">          0 :     using fluxes_tag = db::add_tag_prefix&lt;Tags::Flux, variables_tag,</span>
+<span class="lineNum">     172 </span>            :                                           tmpl::size_t&lt;Dim&gt;, Frame::Inertial&gt;;
+<span class="lineNum">     173 </span><span class="lineNoCov">          0 :     using sources_tag = db::add_tag_prefix&lt;Tags::Source, variables_tag&gt;;</span>
+<span class="lineNum">     174 </span>            : 
+<span class="lineNum">     175 </span><span class="lineNoCov">          0 :     using simple_tags =</span>
+<span class="lineNum">     176 </span>            :         db::AddSimpleTags&lt;variables_tag, fluxes_tag, sources_tag&gt;;
+<span class="lineNum">     177 </span>            : 
+<span class="lineNum">     178 </span><span class="lineNoCov">          0 :     using compute_tags = db::AddComputeTags&lt;&gt;;</span>
+<span class="lineNum">     179 </span>            : 
+<span class="lineNum">     180 </span>            :     template &lt;typename TagsList, typename Metavariables&gt;
+<span class="lineNum">     181 </span><span class="lineNoCov">          0 :     static auto initialize(</span>
+<span class="lineNum">     182 </span>            :         db::DataBox&lt;TagsList&gt;&amp;&amp; box,
+<span class="lineNum">     183 </span>            :         const Parallel::ConstGlobalCache&lt;Metavariables&gt;&amp; cache,
+<span class="lineNum">     184 </span>            :         const Time&amp; initial_time) noexcept {
+<span class="lineNum">     185 </span>            :       using Vars = typename System::variables_tag::type;
+<span class="lineNum">     186 </span>            : 
+<span class="lineNum">     187 </span>            :       const size_t num_grid_points =
+<span class="lineNum">     188 </span>            :           db::get&lt;Tags::Mesh&lt;Dim&gt;&gt;(box).number_of_grid_points();
+<span class="lineNum">     189 </span>            :       const auto&amp; inertial_coords =
+<span class="lineNum">     190 </span>            :           db::get&lt;Tags::Coordinates&lt;Dim, Frame::Inertial&gt;&gt;(box);
+<span class="lineNum">     191 </span>            : 
+<span class="lineNum">     192 </span>            :       // Set initial data from analytic solution
+<span class="lineNum">     193 </span>            :       using solution_tag = CacheTags::AnalyticSolutionBase;
+<span class="lineNum">     194 </span>            :       Vars vars{num_grid_points};
+<span class="lineNum">     195 </span>            :       vars.assign_subset(Parallel::get&lt;solution_tag&gt;(cache).variables(
+<span class="lineNum">     196 </span>            :           inertial_coords, initial_time.value(), typename Vars::tags_list{}));
+<span class="lineNum">     197 </span>            : 
+<span class="lineNum">     198 </span>            :       // Will be set before use
+<span class="lineNum">     199 </span>            :       typename fluxes_tag::type fluxes(num_grid_points);
+<span class="lineNum">     200 </span>            :       typename sources_tag::type sources(num_grid_points);
+<span class="lineNum">     201 </span>            : 
+<span class="lineNum">     202 </span>            :       return db::create_from&lt;db::RemoveTags&lt;&gt;, simple_tags, compute_tags&gt;(
+<span class="lineNum">     203 </span>            :           std::move(box), std::move(vars), std::move(fluxes),
+<span class="lineNum">     204 </span>            :           std::move(sources));
+<span class="lineNum">     205 </span>            :     }
+<span class="lineNum">     206 </span>            :   };
+<span class="lineNum">     207 </span>            : 
+<span class="lineNum">     208 </span>            :   // Items related to the structure of the interfaces
+<span class="lineNum">     209 </span>            :   template &lt;typename System&gt;
+<span class="lineNum">     210 </span><span class="lineNoCov">          0 :   struct DomainInterfaceTags {</span>
+<span class="lineNum">     211 </span><span class="lineNoCov">          0 :     using simple_tags = db::AddSimpleTags&lt;&gt;;</span>
+<span class="lineNum">     212 </span>            : 
+<span class="lineNum">     213 </span>            :     template &lt;typename Directions&gt;
+<span class="lineNum">     214 </span><span class="lineNoCov">          0 :     using face_tags = tmpl::list&lt;</span>
+<span class="lineNum">     215 </span>            :         Directions, Tags::Interface&lt;Directions, Tags::Direction&lt;Dim&gt;&gt;,
+<span class="lineNum">     216 </span>            :         Tags::Interface&lt;Directions, Tags::Mesh&lt;Dim - 1&gt;&gt;,
+<span class="lineNum">     217 </span>            :         Tags::Interface&lt;Directions, typename System::variables_tag&gt;,
+<span class="lineNum">     218 </span>            :         Tags::Interface&lt;Directions, Tags::UnnormalizedFaceNormal&lt;Dim&gt;&gt;,
+<span class="lineNum">     219 </span>            :         Tags::Interface&lt;Directions, typename System::template magnitude_tag&lt;
+<span class="lineNum">     220 </span>            :                                         Tags::UnnormalizedFaceNormal&lt;Dim&gt;&gt;&gt;,
+<span class="lineNum">     221 </span>            :         Tags::Interface&lt;Directions,
+<span class="lineNum">     222 </span>            :                         Tags::Normalized&lt;Tags::UnnormalizedFaceNormal&lt;Dim&gt;&gt;&gt;&gt;;
+<span class="lineNum">     223 </span>            : 
+<span class="lineNum">     224 </span><span class="lineNoCov">          0 :     using compute_tags = tmpl::append&lt;face_tags&lt;Tags::InternalDirections&lt;Dim&gt;&gt;,</span>
+<span class="lineNum">     225 </span>            :                                       face_tags&lt;Tags::BoundaryDirections&lt;Dim&gt;&gt;&gt;;
+<span class="lineNum">     226 </span>            : 
+<span class="lineNum">     227 </span>            :     template &lt;typename TagsList&gt;
+<span class="lineNum">     228 </span><span class="lineNoCov">          0 :     static auto initialize(db::DataBox&lt;TagsList&gt;&amp;&amp; box) noexcept {</span>
+<span class="lineNum">     229 </span>            :       return db::create_from&lt;db::RemoveTags&lt;&gt;, simple_tags, compute_tags&gt;(
+<span class="lineNum">     230 </span>            :           std::move(box));
+<span class="lineNum">     231 </span>            :     }
+<span class="lineNum">     232 </span>            :   };
+<span class="lineNum">     233 </span>            : 
+<span class="lineNum">     234 </span>            :   // Tags related to time-evolution of the system.
+<span class="lineNum">     235 </span>            :   template &lt;typename System&gt;
+<span class="lineNum">     236 </span><span class="lineNoCov">          0 :   struct EvolutionTags {</span>
+<span class="lineNum">     237 </span><span class="lineNoCov">          0 :     using variables_tag = typename System::variables_tag;</span>
+<span class="lineNum">     238 </span><span class="lineNoCov">          0 :     using dt_variables_tag = db::add_tag_prefix&lt;Tags::dt, variables_tag&gt;;</span>
+<span class="lineNum">     239 </span>            : 
+<span class="lineNum">     240 </span><span class="lineNoCov">          0 :     using simple_tags = db::AddSimpleTags&lt;</span>
+<span class="lineNum">     241 </span>            :         Tags::TimeId, Tags::Next&lt;Tags::TimeId&gt;, Tags::TimeStep,
+<span class="lineNum">     242 </span>            :         dt_variables_tag,
+<span class="lineNum">     243 </span>            :         Tags::HistoryEvolvedVariables&lt;variables_tag, dt_variables_tag&gt;&gt;;
+<span class="lineNum">     244 </span>            : 
+<span class="lineNum">     245 </span>            :     template &lt;typename LocalSystem,
+<span class="lineNum">     246 </span>            :               bool IsConservative = LocalSystem::is_conservative&gt;
+<span class="lineNum">     247 </span><span class="lineNoCov">          0 :     struct ComputeTags {</span>
+<span class="lineNum">     248 </span><span class="lineNoCov">          0 :       using type = db::AddComputeTags&lt;</span>
+<span class="lineNum">     249 </span>            :           Tags::Time,
+<span class="lineNum">     250 </span>            :           Tags::deriv&lt;typename variables_tag::tags_list,
+<span class="lineNum">     251 </span>            :                       typename System::gradients_tags,
+<span class="lineNum">     252 </span>            :                       Tags::InverseJacobian&lt;Tags::ElementMap&lt;Dim&gt;,
+<span class="lineNum">     253 </span>            :                                             Tags::LogicalCoordinates&lt;Dim&gt;&gt;&gt;&gt;;
+<span class="lineNum">     254 </span>            :     };
+<span class="lineNum">     255 </span>            : 
+<span class="lineNum">     256 </span>            :     template &lt;typename LocalSystem&gt;
+<span class="lineNum">     257 </span><span class="lineNoCov">          0 :     struct ComputeTags&lt;LocalSystem, true&gt; {</span>
+<span class="lineNum">     258 </span><span class="lineNoCov">          0 :       using type = db::AddComputeTags&lt;</span>
+<span class="lineNum">     259 </span>            :           Tags::Time,
+<span class="lineNum">     260 </span>            :           Tags::ComputeDiv&lt;
+<span class="lineNum">     261 </span>            :               db::add_tag_prefix&lt;Tags::Flux, variables_tag, tmpl::size_t&lt;Dim&gt;,
+<span class="lineNum">     262 </span>            :                                  Frame::Inertial&gt;,
+<span class="lineNum">     263 </span>            :               Tags::InverseJacobian&lt;Tags::ElementMap&lt;Dim&gt;,
+<span class="lineNum">     264 </span>            :                                     Tags::LogicalCoordinates&lt;Dim&gt;&gt;&gt;&gt;;
+<span class="lineNum">     265 </span>            :     };
+<span class="lineNum">     266 </span>            : 
+<span class="lineNum">     267 </span><span class="lineNoCov">          0 :     using compute_tags = typename ComputeTags&lt;System&gt;::type;</span>
+<span class="lineNum">     268 </span>            : 
+<span class="lineNum">     269 </span>            :     template &lt;typename TagsList, typename Metavariables&gt;
+<span class="lineNum">     270 </span><span class="lineNoCov">          0 :     static auto initialize(</span>
+<span class="lineNum">     271 </span>            :         db::DataBox&lt;TagsList&gt;&amp;&amp; box,
+<span class="lineNum">     272 </span>            :         const Parallel::ConstGlobalCache&lt;Metavariables&gt;&amp; cache,
+<span class="lineNum">     273 </span>            :         const Time&amp; initial_time, const TimeDelta&amp; initial_dt) noexcept {
+<span class="lineNum">     274 </span>            :       using Vars = typename variables_tag::type;
+<span class="lineNum">     275 </span>            :       using DtVars = typename dt_variables_tag::type;
+<span class="lineNum">     276 </span>            : 
+<span class="lineNum">     277 </span>            :       const auto&amp; time_stepper = Parallel::get&lt;CacheTags::TimeStepper&gt;(cache);
+<span class="lineNum">     278 </span>            : 
+<span class="lineNum">     279 </span>            :       const TimeId time_id(initial_dt.is_positive(), 0, initial_time);
+<span class="lineNum">     280 </span>            :       TimeId next_time_id = time_stepper.next_time_id(time_id, initial_dt);
+<span class="lineNum">     281 </span>            :       if (next_time_id.is_at_slab_boundary()) {
+<span class="lineNum">     282 </span>            :         const auto next_time = next_time_id.step_time();
+<span class="lineNum">     283 </span>            :         next_time_id = TimeId(
+<span class="lineNum">     284 </span>            :             initial_dt.is_positive(), 1,
+<span class="lineNum">     285 </span>            :             next_time.with_slab(next_time.slab().advance_towards(initial_dt)));
+<span class="lineNum">     286 </span>            :       }
+<span class="lineNum">     287 </span>            : 
+<span class="lineNum">     288 </span>            :       const size_t num_grid_points =
+<span class="lineNum">     289 </span>            :           db::get&lt;Tags::Mesh&lt;Dim&gt;&gt;(box).number_of_grid_points();
+<span class="lineNum">     290 </span>            :       const auto&amp; inertial_coords =
+<span class="lineNum">     291 </span>            :           db::get&lt;Tags::Coordinates&lt;Dim, Frame::Inertial&gt;&gt;(box);
+<span class="lineNum">     292 </span>            : 
+<span class="lineNum">     293 </span>            :       // Will be overwritten before use
+<span class="lineNum">     294 </span>            :       DtVars dt_vars{num_grid_points};
+<span class="lineNum">     295 </span>            : 
+<span class="lineNum">     296 </span>            :       typename Tags::HistoryEvolvedVariables&lt;variables_tag,
+<span class="lineNum">     297 </span>            :                                              dt_variables_tag&gt;::type history;
+<span class="lineNum">     298 </span>            :       using solution_tag = CacheTags::AnalyticSolutionBase;
+<span class="lineNum">     299 </span>            :       if (not time_stepper.is_self_starting()) {
+<span class="lineNum">     300 </span>            :         // We currently just put initial points at past slab boundaries.
+<span class="lineNum">     301 </span>            :         Time past_t = initial_time;
+<span class="lineNum">     302 </span>            :         TimeDelta past_dt = initial_dt;
+<span class="lineNum">     303 </span>            :         for (size_t i = time_stepper.number_of_past_steps(); i &gt; 0; --i) {
+<span class="lineNum">     304 </span>            :           past_dt = past_dt.with_slab(past_dt.slab().advance_towards(-past_dt));
+<span class="lineNum">     305 </span>            :           past_t -= past_dt;
+<span class="lineNum">     306 </span>            :           Vars hist_vars{num_grid_points};
+<span class="lineNum">     307 </span>            :           DtVars dt_hist_vars{num_grid_points};
+<span class="lineNum">     308 </span>            :           hist_vars.assign_subset(Parallel::get&lt;solution_tag&gt;(cache).variables(
+<span class="lineNum">     309 </span>            :               inertial_coords, past_t.value(), typename Vars::tags_list{}));
+<span class="lineNum">     310 </span>            :           dt_hist_vars.assign_subset(
+<span class="lineNum">     311 </span>            :               Parallel::get&lt;solution_tag&gt;(cache).variables(
+<span class="lineNum">     312 </span>            :                   inertial_coords, past_t.value(),
+<span class="lineNum">     313 </span>            :                   typename DtVars::tags_list{}));
+<span class="lineNum">     314 </span>            :           history.insert_initial(past_t, std::move(hist_vars),
+<span class="lineNum">     315 </span>            :                                  std::move(dt_hist_vars));
+<span class="lineNum">     316 </span>            :         }
+<span class="lineNum">     317 </span>            :       }
+<span class="lineNum">     318 </span>            : 
+<span class="lineNum">     319 </span>            :       return db::create_from&lt;db::RemoveTags&lt;&gt;, simple_tags, compute_tags&gt;(
+<span class="lineNum">     320 </span>            :           std::move(box), time_id, next_time_id, initial_dt, std::move(dt_vars),
+<span class="lineNum">     321 </span>            :           std::move(history));
+<span class="lineNum">     322 </span>            :     }
+<span class="lineNum">     323 </span>            :   };
+<span class="lineNum">     324 </span>            : 
+<span class="lineNum">     325 </span>            :   // Tags related to DG details (numerical fluxes, etc.).
+<span class="lineNum">     326 </span>            :   template &lt;typename Metavariables&gt;
+<span class="lineNum">     327 </span><span class="lineNoCov">          0 :   struct DgTags {</span>
+<span class="lineNum">     328 </span><span class="lineNoCov">          0 :     using temporal_id_tag = typename Metavariables::temporal_id;</span>
+<span class="lineNum">     329 </span><span class="lineNoCov">          0 :     using flux_comm_types = FluxCommunicationTypes&lt;Metavariables&gt;;</span>
+<span class="lineNum">     330 </span>            : 
+<span class="lineNum">     331 </span>            :     template &lt;typename Tag&gt;
+<span class="lineNum">     332 </span><span class="lineNoCov">          0 :     using interface_tag = Tags::Interface&lt;Tags::InternalDirections&lt;Dim&gt;, Tag&gt;;</span>
+<span class="lineNum">     333 </span>            : 
+<span class="lineNum">     334 </span>            :     template &lt;typename TagsList&gt;
+<span class="lineNum">     335 </span><span class="lineNoCov">          0 :     static auto add_mortar_data(</span>
+<span class="lineNum">     336 </span>            :         db::DataBox&lt;TagsList&gt;&amp;&amp; box,
+<span class="lineNum">     337 </span>            :         const std::vector&lt;std::array&lt;size_t, Dim&gt;&gt;&amp; initial_extents) noexcept {
+<span class="lineNum">     338 </span>            :       const auto&amp; element = db::get&lt;Tags::Element&lt;Dim&gt;&gt;(box);
+<span class="lineNum">     339 </span>            :       const auto&amp; mesh = db::get&lt;Tags::Mesh&lt;Dim&gt;&gt;(box);
+<span class="lineNum">     340 </span>            : 
+<span class="lineNum">     341 </span>            :       typename flux_comm_types::simple_mortar_data_tag::type mortar_data{};
+<span class="lineNum">     342 </span>            :       typename Tags::Mortars&lt;Tags::Next&lt;temporal_id_tag&gt;, Dim&gt;::type
+<span class="lineNum">     343 </span>            :           mortar_next_temporal_ids{};
+<span class="lineNum">     344 </span>            :       typename Tags::Mortars&lt;Tags::Mesh&lt;Dim - 1&gt;, Dim&gt;::type mortar_meshes{};
+<span class="lineNum">     345 </span>            :       typename Tags::Mortars&lt;Tags::MortarSize&lt;Dim - 1&gt;, Dim&gt;::type
+<span class="lineNum">     346 </span>            :           mortar_sizes{};
+<span class="lineNum">     347 </span>            :       const auto&amp; temporal_id = get&lt;temporal_id_tag&gt;(box);
+<span class="lineNum">     348 </span>            :       for (const auto&amp; direction_neighbors : element.neighbors()) {
+<span class="lineNum">     349 </span>            :         const auto&amp; direction = direction_neighbors.first;
+<span class="lineNum">     350 </span>            :         const auto&amp; neighbors = direction_neighbors.second;
+<span class="lineNum">     351 </span>            :         for (const auto&amp; neighbor : neighbors) {
+<span class="lineNum">     352 </span>            :           const auto mortar_id = std::make_pair(direction, neighbor);
+<span class="lineNum">     353 </span>            :           mortar_data.insert({mortar_id, {}});
+<span class="lineNum">     354 </span>            :           mortar_next_temporal_ids.insert({mortar_id, temporal_id});
+<span class="lineNum">     355 </span>            :           mortar_meshes.emplace(
+<span class="lineNum">     356 </span>            :               mortar_id,
+<span class="lineNum">     357 </span>            :               dg::mortar_mesh(mesh.slice_away(direction.dimension()),
+<span class="lineNum">     358 </span>            :                               element_mesh(initial_extents, neighbor,
+<span class="lineNum">     359 </span>            :                                            neighbors.orientation())
+<span class="lineNum">     360 </span>            :                                   .slice_away(direction.dimension())));
+<span class="lineNum">     361 </span>            :           mortar_sizes.emplace(
+<span class="lineNum">     362 </span>            :               mortar_id,
+<span class="lineNum">     363 </span>            :               dg::mortar_size(element.id(), neighbor, direction.dimension(),
+<span class="lineNum">     364 </span>            :                               neighbors.orientation()));
+<span class="lineNum">     365 </span>            :         }
+<span class="lineNum">     366 </span>            :       }
+<span class="lineNum">     367 </span>            : 
+<span class="lineNum">     368 </span>            :       return db::create_from&lt;
+<span class="lineNum">     369 </span>            :           db::RemoveTags&lt;&gt;,
+<span class="lineNum">     370 </span>            :           db::AddSimpleTags&lt;typename flux_comm_types::simple_mortar_data_tag,
+<span class="lineNum">     371 </span>            :                             Tags::Mortars&lt;Tags::Next&lt;temporal_id_tag&gt;, Dim&gt;,
+<span class="lineNum">     372 </span>            :                             Tags::Mortars&lt;Tags::Mesh&lt;Dim - 1&gt;, Dim&gt;,
+<span class="lineNum">     373 </span>            :                             Tags::Mortars&lt;Tags::MortarSize&lt;Dim - 1&gt;, Dim&gt;&gt;&gt;(
+<span class="lineNum">     374 </span>            :           std::move(box), std::move(mortar_data),
+<span class="lineNum">     375 </span>            :           std::move(mortar_next_temporal_ids), std::move(mortar_meshes),
+<span class="lineNum">     376 </span>            :           std::move(mortar_sizes));
+<span class="lineNum">     377 </span>            :     }
+<span class="lineNum">     378 </span>            : 
+<span class="lineNum">     379 </span>            :     template &lt;typename LocalSystem,
+<span class="lineNum">     380 </span>            :               bool IsConservative = LocalSystem::is_conservative&gt;
+<span class="lineNum">     381 </span><span class="lineNoCov">          0 :     struct Impl {</span>
+<span class="lineNum">     382 </span><span class="lineNoCov">          0 :       using simple_tags = db::AddSimpleTags&lt;</span>
+<span class="lineNum">     383 </span>            :           typename flux_comm_types::simple_mortar_data_tag,
+<span class="lineNum">     384 </span>            :           Tags::Mortars&lt;Tags::Next&lt;temporal_id_tag&gt;, Dim&gt;,
+<span class="lineNum">     385 </span>            :           Tags::Mortars&lt;Tags::Mesh&lt;Dim - 1&gt;, Dim&gt;,
+<span class="lineNum">     386 </span>            :           Tags::Mortars&lt;Tags::MortarSize&lt;Dim - 1&gt;, Dim&gt;,
+<span class="lineNum">     387 </span>            :           interface_tag&lt;typename flux_comm_types::normal_dot_fluxes_tag&gt;&gt;;
+<span class="lineNum">     388 </span>            : 
+<span class="lineNum">     389 </span><span class="lineNoCov">          0 :       using compute_tags = db::AddComputeTags&lt;&gt;;</span>
+<span class="lineNum">     390 </span>            : 
+<span class="lineNum">     391 </span>            :       template &lt;typename TagsList&gt;
+<span class="lineNum">     392 </span><span class="lineNoCov">          0 :       static auto initialize(db::DataBox&lt;TagsList&gt;&amp;&amp; box,</span>
+<span class="lineNum">     393 </span>            :                              const std::vector&lt;std::array&lt;size_t, Dim&gt;&gt;&amp;
+<span class="lineNum">     394 </span>            :                                  initial_extents) noexcept {
+<span class="lineNum">     395 </span>            :         auto box2 = add_mortar_data(std::move(box), initial_extents);
+<span class="lineNum">     396 </span>            : 
+<span class="lineNum">     397 </span>            :         const auto&amp; internal_directions =
+<span class="lineNum">     398 </span>            :             db::get&lt;Tags::InternalDirections&lt;Dim&gt;&gt;(box2);
+<span class="lineNum">     399 </span>            : 
+<span class="lineNum">     400 </span>            :         typename interface_tag&lt;
+<span class="lineNum">     401 </span>            :             typename flux_comm_types::normal_dot_fluxes_tag&gt;::type
+<span class="lineNum">     402 </span>            :             normal_dot_fluxes{};
+<span class="lineNum">     403 </span>            :         for (const auto&amp; direction : internal_directions) {
+<span class="lineNum">     404 </span>            :           const auto&amp; interface_num_points =
+<span class="lineNum">     405 </span>            :               db::get&lt;interface_tag&lt;Tags::Mesh&lt;Dim - 1&gt;&gt;&gt;(box2)
+<span class="lineNum">     406 </span>            :                   .at(direction)
+<span class="lineNum">     407 </span>            :                   .number_of_grid_points();
+<span class="lineNum">     408 </span>            :           normal_dot_fluxes[direction].initialize(interface_num_points, 0.);
+<span class="lineNum">     409 </span>            :         }
+<span class="lineNum">     410 </span>            : 
+<span class="lineNum">     411 </span>            :         return db::create_from&lt;
+<span class="lineNum">     412 </span>            :             db::RemoveTags&lt;&gt;,
+<span class="lineNum">     413 </span>            :             db::AddSimpleTags&lt;interface_tag&lt;
+<span class="lineNum">     414 </span>            :                 typename flux_comm_types::normal_dot_fluxes_tag&gt;&gt;&gt;(
+<span class="lineNum">     415 </span>            :             std::move(box2), std::move(normal_dot_fluxes));
+<span class="lineNum">     416 </span>            :       }
+<span class="lineNum">     417 </span>            :     };
+<span class="lineNum">     418 </span>            : 
+<span class="lineNum">     419 </span>            :     template &lt;typename LocalSystem&gt;
+<span class="lineNum">     420 </span><span class="lineNoCov">          0 :     struct Impl&lt;LocalSystem, true&gt; {</span>
+<span class="lineNum">     421 </span><span class="lineNoCov">          0 :       using simple_tags =</span>
+<span class="lineNum">     422 </span>            :           db::AddSimpleTags&lt;typename flux_comm_types::simple_mortar_data_tag,
+<span class="lineNum">     423 </span>            :                             Tags::Mortars&lt;Tags::Next&lt;temporal_id_tag&gt;, Dim&gt;,
+<span class="lineNum">     424 </span>            :                             Tags::Mortars&lt;Tags::Mesh&lt;Dim - 1&gt;, Dim&gt;,
+<span class="lineNum">     425 </span>            :                             Tags::Mortars&lt;Tags::MortarSize&lt;Dim - 1&gt;, Dim&gt;&gt;;
+<span class="lineNum">     426 </span>            : 
+<span class="lineNum">     427 </span><span class="lineNoCov">          0 :       using compute_tags = db::AddComputeTags&lt;</span>
+<span class="lineNum">     428 </span>            :           interface_tag&lt;db::add_tag_prefix&lt;Tags::Flux,
+<span class="lineNum">     429 </span>            :                                            typename LocalSystem::variables_tag,
+<span class="lineNum">     430 </span>            :                                            tmpl::size_t&lt;Dim&gt;, Frame::Inertial&gt;&gt;,
+<span class="lineNum">     431 </span>            :           interface_tag&lt;Tags::ComputeNormalDotFlux&lt;
+<span class="lineNum">     432 </span>            :               typename LocalSystem::variables_tag, Dim, Frame::Inertial&gt;&gt;&gt;;
+<span class="lineNum">     433 </span>            : 
+<span class="lineNum">     434 </span>            :       template &lt;typename TagsList&gt;
+<span class="lineNum">     435 </span><span class="lineNoCov">          0 :       static auto initialize(db::DataBox&lt;TagsList&gt;&amp;&amp; box,</span>
+<span class="lineNum">     436 </span>            :                              const std::vector&lt;std::array&lt;size_t, Dim&gt;&gt;&amp;
+<span class="lineNum">     437 </span>            :                                  initial_extents) noexcept {
+<span class="lineNum">     438 </span>            :         return db::create_from&lt;db::RemoveTags&lt;&gt;, db::AddSimpleTags&lt;&gt;,
+<span class="lineNum">     439 </span>            :                                compute_tags&gt;(
+<span class="lineNum">     440 </span>            :             add_mortar_data(std::move(box), initial_extents));
+<span class="lineNum">     441 </span>            :       }
+<span class="lineNum">     442 </span>            :     };
+<span class="lineNum">     443 </span>            : 
+<span class="lineNum">     444 </span><span class="lineNoCov">          0 :     using impl = Impl&lt;typename Metavariables::system&gt;;</span>
+<span class="lineNum">     445 </span><span class="lineNoCov">          0 :     using simple_tags = typename impl::simple_tags;</span>
+<span class="lineNum">     446 </span><span class="lineNoCov">          0 :     using compute_tags = typename impl::compute_tags;</span>
+<span class="lineNum">     447 </span>            : 
+<span class="lineNum">     448 </span>            :     template &lt;typename TagsList&gt;
+<span class="lineNum">     449 </span><span class="lineNoCov">          0 :     static auto initialize(</span>
+<span class="lineNum">     450 </span>            :         db::DataBox&lt;TagsList&gt;&amp;&amp; box,
+<span class="lineNum">     451 </span>            :         const std::vector&lt;std::array&lt;size_t, Dim&gt;&gt;&amp; initial_extents) noexcept {
+<span class="lineNum">     452 </span>            :       return impl::initialize(std::move(box), initial_extents);
+<span class="lineNum">     453 </span>            :     }
+<span class="lineNum">     454 </span>            :   };
+<span class="lineNum">     455 </span>            : 
+<span class="lineNum">     456 </span>            :   template &lt;class Metavariables&gt;
+<span class="lineNum">     457 </span><span class="lineNoCov">          0 :   using return_tag_list = tmpl::append&lt;</span>
+<span class="lineNum">     458 </span>            :       typename DomainTags::simple_tags,
+<span class="lineNum">     459 </span>            :       typename SystemTags&lt;typename Metavariables::system&gt;::simple_tags,
+<span class="lineNum">     460 </span>            :       typename DomainInterfaceTags&lt;typename Metavariables::system&gt;::simple_tags,
+<span class="lineNum">     461 </span>            :       typename EvolutionTags&lt;typename Metavariables::system&gt;::simple_tags,
+<span class="lineNum">     462 </span>            :       typename DgTags&lt;Metavariables&gt;::simple_tags,
+<span class="lineNum">     463 </span>            :       typename DomainTags::compute_tags,
+<span class="lineNum">     464 </span>            :       typename SystemTags&lt;typename Metavariables::system&gt;::compute_tags,
+<span class="lineNum">     465 </span>            :       typename DomainInterfaceTags&lt;
+<span class="lineNum">     466 </span>            :           typename Metavariables::system&gt;::compute_tags,
+<span class="lineNum">     467 </span>            :       typename EvolutionTags&lt;typename Metavariables::system&gt;::compute_tags,
+<span class="lineNum">     468 </span>            :       typename DgTags&lt;Metavariables&gt;::compute_tags&gt;;
+<span class="lineNum">     469 </span>            : 
+<span class="lineNum">     470 </span>            :   template &lt;typename... InboxTags, typename Metavariables, typename ActionList,
+<span class="lineNum">     471 </span>            :             typename ParallelComponent&gt;
+<span class="lineNum">     472 </span><span class="lineNoCov">          0 :   static auto apply(const db::DataBox&lt;tmpl::list&lt;&gt;&gt;&amp; /*box*/,</span>
+<span class="lineNum">     473 </span>            :                     const tuples::TaggedTuple&lt;InboxTags...&gt;&amp; /*inboxes*/,
+<span class="lineNum">     474 </span>            :                     const Parallel::ConstGlobalCache&lt;Metavariables&gt;&amp; cache,
+<span class="lineNum">     475 </span>            :                     const ElementIndex&lt;Dim&gt;&amp; array_index,
+<span class="lineNum">     476 </span>            :                     const ActionList /*meta*/,
+<span class="lineNum">     477 </span>            :                     const ParallelComponent* const /*meta*/,
+<span class="lineNum">     478 </span>            :                     std::vector&lt;std::array&lt;size_t, Dim&gt;&gt; initial_extents,
+<span class="lineNum">     479 </span>            :                     Domain&lt;Dim, Frame::Inertial&gt; domain, Time initial_time,
+<span class="lineNum">     480 </span>            :                     TimeDelta initial_dt) noexcept {
+<span class="lineNum">     481 </span>            :     using system = typename Metavariables::system;
+<span class="lineNum">     482 </span>            :     auto domain_box = DomainTags::initialize(
+<span class="lineNum">     483 </span>            :         db::DataBox&lt;tmpl::list&lt;&gt;&gt;{}, array_index, initial_extents, domain);
+<span class="lineNum">     484 </span>            :     auto system_box = SystemTags&lt;system&gt;::initialize(std::move(domain_box),
+<span class="lineNum">     485 </span>            :                                                      cache, initial_time);
+<span class="lineNum">     486 </span>            :     auto domain_interface_box =
+<span class="lineNum">     487 </span>            :         DomainInterfaceTags&lt;system&gt;::initialize(std::move(system_box));
+<span class="lineNum">     488 </span>            :     auto evolution_box = EvolutionTags&lt;system&gt;::initialize(
+<span class="lineNum">     489 </span>            :         std::move(domain_interface_box), cache, initial_time, initial_dt);
+<span class="lineNum">     490 </span>            :     auto dg_box = DgTags&lt;Metavariables&gt;::initialize(std::move(evolution_box),
+<span class="lineNum">     491 </span>            :                                                     initial_extents);
+<span class="lineNum">     492 </span>            :     return std::make_tuple(std::move(dg_box));
+<span class="lineNum">     493 </span>            :   }
+<span class="lineNum">     494 </span>            : };
+<span class="lineNum">     495 </span>            : }  // namespace Actions
+<span class="lineNum">     496 </span>            : }  // namespace dg
+</pre>
+      </td>
+    </tr>
+  </table>
+  <br>
+
+  <table width="100%" border=0 cellspacing=0 cellpadding=0>
+    <tr><td class="ruler"><img src="../../glass.png" width=3 height=3 alt=""></td></tr>
+    <tr><td class="versionInfo">Generated by: <a href="http://ltp.sourceforge.net/coverage/lcov.php" target="_parent">LCOV version 1.13</a></td></tr>
+  </table>
+  <br>
+
+</body>
+</html>

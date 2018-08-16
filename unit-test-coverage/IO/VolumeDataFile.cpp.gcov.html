@@ -1,0 +1,328 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+
+<html lang="en">
+
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <title>LCOV - 4a100dde3b231e0ada6ff7b2b4c32892a30db7f6 - IO/VolumeDataFile.cpp</title>
+  <link rel="stylesheet" type="text/css" href="../gcov.css">
+</head>
+
+<body>
+
+  <table width="100%" border=0 cellspacing=0 cellpadding=0>
+    <tr><td class="title">SpECTRE Unit Test Code Coverage Report</td></tr>
+    <tr><td class="ruler"><img src="../glass.png" width=3 height=3 alt=""></td></tr>
+
+    <tr>
+      <td width="100%">
+        <table cellpadding=1 border=0 width="100%">
+          <tr>
+            <td width="10%" class="headerItem">Current view:</td>
+            <td width="35%" class="headerValue"><a href="../index.html">top level</a> - <a href="index.html">IO</a> - VolumeDataFile.cpp<span style="font-size: 80%;"> (source / <a href="VolumeDataFile.cpp.func-sort-c.html">functions</a>)</span></td>
+            <td width="5%"></td>
+            <td width="15%"></td>
+            <td width="10%" class="headerCovTableHead">Hit</td>
+            <td width="10%" class="headerCovTableHead">Total</td>
+            <td width="15%" class="headerCovTableHead">Coverage</td>
+          </tr>
+          <tr>
+            <td class="headerItem">Commit:</td>
+             <td class="headerValue"><a target="_blank" href="https://github.com/sxs-collaboration/spectre/commit/4a100dde3b231e0ada6ff7b2b4c32892a30db7f6">4a100dde3b231e0ada6ff7b2b4c32892a30db7f6</a></td>
+            <td></td>
+            <td class="headerItem">Lines:</td>
+            <td class="headerCovTableEntry">109</td>
+            <td class="headerCovTableEntry">109</td>
+            <td class="headerCovTableEntryHi">100.0 %</td>
+          </tr>
+          <tr>
+            <td class="headerItem">Date:</td>
+            <td class="headerValue">2018-08-16 19:06:01</td>
+            <td></td>
+            <td class="headerItem">Functions:</td>
+            <td class="headerCovTableEntry">25</td>
+            <td class="headerCovTableEntry">28</td>
+            <td class="headerCovTableEntryMed">89.3 %</td>
+          </tr>
+          <tr>
+            <td class="headerItem">Legend:</td>
+            <td class="headerValueLeg">            Lines:
+            <span class="coverLegendCov">hit</span>
+            <span class="coverLegendNoCov">not hit</span>
+</td>
+            <td></td>
+          </tr>
+          <tr><td><img src="../glass.png" width=3 height=3 alt=""></td></tr>
+        </table>
+      </td>
+    </tr>
+
+    <tr><td class="ruler"><img src="../glass.png" width=3 height=3 alt=""></td></tr>
+  </table>
+
+  <table cellpadding=0 cellspacing=0 border=0>
+    <tr>
+      <td><br></td>
+    </tr>
+    <tr>
+      <td>
+<pre class="sourceHeading">          Line data    Source code</pre>
+<pre class="source">
+<a name="1"><span class="lineNum">       1 </span>            : // Distributed under the MIT License.</a>
+<span class="lineNum">       2 </span>            : // See LICENSE.txt for details.
+<span class="lineNum">       3 </span>            : 
+<span class="lineNum">       4 </span>            : #include &quot;VolumeDataFile.hpp&quot;
+<span class="lineNum">       5 </span>            : 
+<span class="lineNum">       6 </span>            : #include &lt;cstring&gt;
+<span class="lineNum">       7 </span>            : #include &lt;errno.h&gt;
+<span class="lineNum">       8 </span>            : #include &lt;numeric&gt;
+<span class="lineNum">       9 </span>            : 
+<span class="lineNum">      10 </span>            : #include &quot;ErrorHandling/Assert.hpp&quot;
+<span class="lineNum">      11 </span>            : #include &quot;ErrorHandling/Error.hpp&quot;
+<span class="lineNum">      12 </span>            : #include &quot;IO/Connectivity.hpp&quot;
+<span class="lineNum">      13 </span>            : #include &quot;IO/H5/CheckH5.hpp&quot;
+<span class="lineNum">      14 </span>            : #include &quot;IO/H5/Type.hpp&quot;
+<span class="lineNum">      15 </span>            : #include &quot;Utilities/StdHelpers.hpp&quot;
+<span class="lineNum">      16 </span>            : 
+<span class="lineNum">      17 </span>            : class DataVector;
+<span class="lineNum">      18 </span>            : template &lt;size_t Dim&gt;
+<span class="lineNum">      19 </span>            : class Index;
+<span class="lineNum">      20 </span>            : 
+<span class="lineNum">      21 </span>            : // IWYU pragma: no_include &quot;H5Ppublic.h&quot;
+<span class="lineNum">      22 </span>            : 
+<a name="23"><span class="lineNum">      23 </span>            : namespace vis {</a>
+<span class="lineNum">      24 </span>            : 
+<span class="lineNum">      25 </span><span class="lineCov">          3 : VolumeFile::VolumeFile(std::string file_name, int format_id)</span>
+<span class="lineNum">      26 </span><span class="lineCov">          3 :     : h5_file_name_(std::move(file_name)), format_id_(format_id) {</span>
+<span class="lineNum">      27 </span><span class="lineCov">          3 :   create_file();</span>
+<a name="28"><span class="lineNum">      28 </span><span class="lineCov">          3 : }</span></a>
+<span class="lineNum">      29 </span>            : 
+<span class="lineNum">      30 </span><span class="lineCov">          6 : VolumeFile::~VolumeFile() {</span>
+<span class="lineNum">      31 </span><span class="lineCov">          3 :   CHECK_H5(H5Fclose(file_id_),</span>
+<span class="lineNum">      32 </span>            :            &quot;Failed to close file '&quot; &lt;&lt; h5_file_name_ &lt;&lt; &quot;'&quot;);
+<span class="lineNum">      33 </span><span class="lineCov">          3 :   std::fclose(xml_);</span>
+<a name="34"><span class="lineNum">      34 </span><span class="lineCov">          3 : }</span></a>
+<span class="lineNum">      35 </span>            : 
+<span class="lineNum">      36 </span><span class="lineCov">          3 : void VolumeFile::write_xdmf_time(const double time) {</span>
+<span class="lineNum">      37 </span><span class="lineCov">          3 :   std::fprintf(xml_, &quot;&lt;Time Value=\&quot;%1.18e\&quot;/&gt;\n&quot;, time);  // NOLINT</span>
+<a name="38"><span class="lineNum">      38 </span><span class="lineCov">          3 : }</span></a>
+<span class="lineNum">      39 </span>            : 
+<span class="lineNum">      40 </span><span class="lineCov">          3 : void VolumeFile::write_element_time(const double time,</span>
+<span class="lineNum">      41 </span>            :                                     const std::string&amp; element_id) {
+<span class="lineNum">      42 </span><span class="lineCov">          6 :   const h5::detail::OpenGroup group(file_id_, &quot;/&quot; + element_id,</span>
+<span class="lineNum">      43 </span><span class="lineCov">          6 :                                     h5::AccessType::ReadWrite);</span>
+<span class="lineNum">      44 </span><span class="lineCov">          3 :   h5::write_time(group.id(), time);</span>
+<span class="lineNum">      45 </span><span class="lineCov">          3 : }</span>
+<a name="46"><span class="lineNum">      46 </span>            : </a>
+<span class="lineNum">      47 </span>            : template &lt;size_t Dim&gt;
+<span class="lineNum">      48 </span><span class="lineCov">          3 : void VolumeFile::write_element_connectivity(const Index&lt;Dim&gt;&amp; extents,</span>
+<span class="lineNum">      49 </span>            :                                             const std::string&amp; element_id) {
+<a name="50"><span class="lineNum">      50 </span><span class="lineCov">          6 :   const std::vector&lt;vis::detail::CellInTopology&gt; cells =</span></a>
+<span class="lineNum">      51 </span>            :       vis::detail::compute_cells(extents);
+<span class="lineNum">      52 </span><span class="lineCov">          9 :   const std::vector&lt;int&gt; connectivity = [&amp;cells]() {</span>
+<span class="lineNum">      53 </span><span class="lineCov">          3 :     std::vector&lt;int&gt; local_connectivity;</span>
+<span class="lineNum">      54 </span><span class="lineCov">          9 :     for (const auto&amp; cell : cells) {</span>
+<span class="lineNum">      55 </span><span class="lineCov">         34 :       for (const auto&amp; bounding_indices : cell.bounding_indices) {</span>
+<span class="lineNum">      56 </span><span class="lineCov">         28 :         local_connectivity.emplace_back(bounding_indices);</span>
+<span class="lineNum">      57 </span>            :       }
+<span class="lineNum">      58 </span>            :     }
+<span class="lineNum">      59 </span><span class="lineCov">          3 :     return local_connectivity;</span>
+<span class="lineNum">      60 </span>            :   }();
+<span class="lineNum">      61 </span>            : 
+<span class="lineNum">      62 </span><span class="lineCov">          6 :   const h5::detail::OpenGroup group(file_id_, &quot;/&quot; + element_id,</span>
+<span class="lineNum">      63 </span>            :                                     h5::AccessType::ReadWrite);
+<span class="lineNum">      64 </span><span class="lineCov">          3 :   h5::write_connectivity(group.id(), connectivity);</span>
+<span class="lineNum">      65 </span><span class="lineCov">          6 :   std::stringstream ss;</span>
+<span class="lineNum">      66 </span><span class="lineCov">          3 :   ss &lt;&lt; &quot;&lt;Grid Name=\&quot;&quot; &lt;&lt; element_id &lt;&lt; &quot;\&quot; GrideType=\&quot;Uniform\&quot;&gt;\n&quot;</span>
+<span class="lineNum">      67 </span><span class="lineCov">          3 :      &lt;&lt; &quot;  &lt;Topology TopologyType=\&quot;&quot;;</span>
+<span class="lineNum">      68 </span>            :   if (Dim == 1) {
+<span class="lineNum">      69 </span><span class="lineCov">          1 :     ss &lt;&lt; &quot;Polyvertex&quot;;</span>
+<span class="lineNum">      70 </span>            :   } else if (Dim == 2) {
+<span class="lineNum">      71 </span><span class="lineCov">          1 :     ss &lt;&lt; &quot;Quadrilateral&quot;;</span>
+<span class="lineNum">      72 </span>            :   } else if (Dim == 3) {
+<span class="lineNum">      73 </span><span class="lineCov">          1 :     ss &lt;&lt; &quot;Hexahedron&quot;;</span>
+<span class="lineNum">      74 </span>            :   }
+<a name="75"><span class="lineNum">      75 </span><span class="lineCov">          3 :   const size_t number_of_elements =</span></a>
+<span class="lineNum">      76 </span><span class="lineCov">          6 :       std::accumulate(extents.begin(), extents.end(), 1.0,</span>
+<span class="lineNum">      77 </span><span class="lineCov">          6 :                       [](const size_t&amp; state, const size_t&amp; element) {</span>
+<span class="lineNum">      78 </span><span class="lineCov">          6 :                         return state * (element - 1);</span>
+<span class="lineNum">      79 </span><span class="lineCov">          6 :                       });</span>
+<span class="lineNum">      80 </span><span class="lineCov">          6 :   ss &lt;&lt; &quot;\&quot; NumberOfElements=\&quot;&quot; &lt;&lt; number_of_elements &lt;&lt; &quot;\&quot;&gt;\n&quot;</span>
+<span class="lineNum">      81 </span><span class="lineCov">          3 :      &lt;&lt; &quot;    &lt;DataItem Dimensions=\&quot;&quot; &lt;&lt; extents[0] - 1;</span>
+<span class="lineNum">      82 </span><span class="lineCov">          6 :   for (size_t j = 1; j &lt; Dim; ++j) {</span>
+<span class="lineNum">      83 </span><span class="lineCov">          3 :     ss &lt;&lt; &quot; &quot; &lt;&lt; extents[j] - 1;</span>
+<span class="lineNum">      84 </span>            :   }
+<span class="lineNum">      85 </span>            :   if (Dim == 1) {
+<span class="lineNum">      86 </span><span class="lineCov">          1 :     ss &lt;&lt; &quot; 2\&quot;&quot;;</span>
+<span class="lineNum">      87 </span>            :   } else if (Dim == 2) {
+<span class="lineNum">      88 </span><span class="lineCov">          1 :     ss &lt;&lt; &quot; 4\&quot;&quot;;</span>
+<span class="lineNum">      89 </span>            :   } else if (Dim == 3) {
+<span class="lineNum">      90 </span><span class="lineCov">          1 :     ss &lt;&lt; &quot; 8\&quot;&quot;;</span>
+<span class="lineNum">      91 </span>            :   }
+<span class="lineNum">      92 </span><span class="lineCov">          3 :   ss &lt;&lt; &quot; NumberType=\&quot;Int\&quot; Format=\&quot;HDF5\&quot;&gt;\n      &quot; &lt;&lt; h5_file_name_ &lt;&lt; &quot;:/&quot;</span>
+<span class="lineNum">      93 </span><span class="lineCov">          3 :      &lt;&lt; element_id &lt;&lt; &quot;/connectivity\n    &lt;/DataItem&gt;\n  &lt;/Topology&gt;\n&quot;;</span>
+<span class="lineNum">      94 </span><span class="lineCov">          3 :   std::fprintf(xml_, &quot;%s&quot;, ss.str().c_str());  // NOLINT</span>
+<span class="lineNum">      95 </span><span class="lineCov">          3 : }</span>
+<a name="96"><span class="lineNum">      96 </span>            : </a>
+<span class="lineNum">      97 </span>            : template &lt;size_t Dim&gt;
+<span class="lineNum">      98 </span><span class="lineCov">          3 : void VolumeFile::write_element_extents(const Index&lt;Dim&gt;&amp; extents,</span>
+<span class="lineNum">      99 </span>            :                                        const std::string&amp; element_id) {
+<span class="lineNum">     100 </span><span class="lineCov">          6 :   const h5::detail::OpenGroup group(file_id_, &quot;/&quot; + element_id,</span>
+<span class="lineNum">     101 </span>            :                                     h5::AccessType::ReadWrite);
+<span class="lineNum">     102 </span><span class="lineCov">          3 :   h5::write_extents(group.id(), extents);</span>
+<span class="lineNum">     103 </span><span class="lineCov">          3 : }</span>
+<a name="104"><span class="lineNum">     104 </span>            : </a>
+<span class="lineNum">     105 </span>            : template &lt;size_t Dim&gt;
+<span class="lineNum">     106 </span><span class="lineCov">          3 : void VolumeFile::write_element_data(</span>
+<span class="lineNum">     107 </span>            :     std::unordered_map&lt;std::string, std::pair&lt;std::vector&lt;std::string&gt;,
+<span class="lineNum">     108 </span>            :                                               std::vector&lt;DataVector&gt;&gt;&gt;
+<span class="lineNum">     109 </span>            :         vars_map,
+<span class="lineNum">     110 </span>            :     const Index&lt;Dim&gt;&amp; extents, const std::string&amp; element_id) {
+<a name="111"><span class="lineNum">     111 </span><span class="lineCov">          6 :   const h5::detail::OpenGroup group(file_id_, &quot;/&quot; + element_id,</span></a>
+<span class="lineNum">     112 </span>            :                                     h5::AccessType::ReadWrite);
+<span class="lineNum">     113 </span><span class="lineCov">         15 :   const std::string extents_in_dims = [&amp;extents]() {</span>
+<span class="lineNum">     114 </span><span class="lineCov">          6 :     std::stringstream local_extents_in_dims;</span>
+<span class="lineNum">     115 </span><span class="lineCov">          3 :     local_extents_in_dims &lt;&lt; extents[0];</span>
+<span class="lineNum">     116 </span><span class="lineCov">          6 :     for (size_t k = 1; k &lt; Dim; ++k) {</span>
+<span class="lineNum">     117 </span><span class="lineCov">          6 :       local_extents_in_dims &lt;&lt; &quot; &quot; &lt;&lt; extents[k];</span>
+<span class="lineNum">     118 </span>            :     }
+<span class="lineNum">     119 </span><span class="lineCov">          6 :     return local_extents_in_dims.str();</span>
+<span class="lineNum">     120 </span>            :   }();
+<span class="lineNum">     121 </span><span class="lineCov">          6 :   std::stringstream ss;</span>
+<span class="lineNum">     122 </span><span class="lineCov">         10 :   for (const auto&amp; key_value : vars_map) {</span>
+<span class="lineNum">     123 </span><span class="lineCov">          7 :     const auto&amp; name = key_value.first;</span>
+<span class="lineNum">     124 </span><span class="lineCov">          7 :     const auto&amp; suffixes = key_value.second.first;</span>
+<span class="lineNum">     125 </span><span class="lineCov">          7 :     const auto&amp; vars = key_value.second.second;</span>
+<span class="lineNum">     126 </span><span class="lineCov">          7 :     ASSERT(suffixes.size() == vars.size() or</span>
+<span class="lineNum">     127 </span>            :                (suffixes.empty() and vars.size() == 1),
+<span class="lineNum">     128 </span>            :            &quot;The number of suffixes must be equal to the number of &quot;
+<span class="lineNum">     129 </span>            :            &quot;variables in the serialized tensor. Variable is: '&quot;
+<span class="lineNum">     130 </span>            :                &lt;&lt; name &lt;&lt; &quot;' with suffixes: &quot; &lt;&lt; suffixes
+<span class="lineNum">     131 </span>            :                &lt;&lt; &quot; has suffix size: &quot; &lt;&lt; suffixes.size() &lt;&lt; &quot; and &quot;
+<span class="lineNum">     132 </span>            :                &lt;&lt; vars.size() &lt;&lt; &quot; variables.&quot;);
+<span class="lineNum">     133 </span><span class="lineCov">          7 :     if (Dim == suffixes.size() and suffixes[0] != &quot;Scalar&quot; and Dim == 3) {</span>
+<span class="lineNum">     134 </span>            :       // Write vector data into h5 file
+<span class="lineNum">     135 </span><span class="lineCov">          1 :       ss &lt;&lt; &quot;  &lt;Attribute Name=\&quot;&quot; &lt;&lt; name &lt;&lt; &quot;\&quot;\n&quot;</span>
+<span class="lineNum">     136 </span>            :          &lt;&lt; &quot; AttributeType=\&quot;Vector\&quot; Center=\&quot;Node\&quot;&gt;\n&quot;
+<span class="lineNum">     137 </span><span class="lineCov">          1 :          &lt;&lt; &quot;    &lt;DataItem Dimensions=\&quot;&quot; &lt;&lt; extents_in_dims &lt;&lt; &quot; &quot; &lt;&lt; Dim</span>
+<span class="lineNum">     138 </span>            :          &lt;&lt; &quot;\&quot; ItemType = \&quot;Function\&quot; Function = \&quot;JOIN($0,$1,$2)\&quot;&gt;\n&quot;;
+<span class="lineNum">     139 </span><span class="lineCov">          4 :       for (size_t i = 0; i &lt; suffixes.size(); ++i) {</span>
+<span class="lineNum">     140 </span><span class="lineCov">          3 :         h5::write_data(group.id(), vars[i], extents, name + &quot;_&quot; + suffixes[i]);</span>
+<span class="lineNum">     141 </span><span class="lineCov">          3 :         ss &lt;&lt; &quot;    &lt;DataItem Dimensions=\&quot;&quot; &lt;&lt; extents_in_dims</span>
+<span class="lineNum">     142 </span><span class="lineCov">          3 :            &lt;&lt; &quot;\&quot; NumberType=\&quot;Double\&quot; Precision=\&quot;&quot; &lt;&lt; precision_</span>
+<span class="lineNum">     143 </span>            :            &lt;&lt; &quot;\&quot; Format=\&quot;HDF5\&quot;&gt;\n&quot;
+<span class="lineNum">     144 </span>            :            &lt;&lt; &quot;      &quot; &lt;&lt; h5_file_name_ &lt;&lt; &quot;:/&quot; &lt;&lt; element_id &lt;&lt; &quot;/&quot; &lt;&lt; name
+<span class="lineNum">     145 </span><span class="lineCov">          3 :            &lt;&lt; &quot;_&quot; &lt;&lt; suffixes[i] &lt;&lt; &quot;\n    &lt;/DataItem&gt;\n&quot;;</span>
+<span class="lineNum">     146 </span>            :       }
+<span class="lineNum">     147 </span><span class="lineCov">          1 :       ss &lt;&lt; &quot;    &lt;/DataItem&gt;\n&quot;</span>
+<span class="lineNum">     148 </span><span class="lineCov">          1 :          &lt;&lt; &quot;  &lt;/Attribute&gt;\n&quot;;</span>
+<span class="lineNum">     149 </span><span class="lineCov">          6 :     } else if (suffixes.size() != vars.size() or suffixes[0] == &quot;Scalar&quot;) {</span>
+<span class="lineNum">     150 </span><span class="lineCov">          4 :       h5::write_data(group.id(), vars[0], extents, name);</span>
+<span class="lineNum">     151 </span><span class="lineCov">          4 :       ss &lt;&lt; &quot;  &lt;Attribute Name=\&quot;&quot; &lt;&lt; name</span>
+<span class="lineNum">     152 </span>            :          &lt;&lt; &quot;\&quot; AttributeType=\&quot;Scalar\&quot; Center=\&quot;Node\&quot;&gt;\n&quot;
+<span class="lineNum">     153 </span>            :          &lt;&lt; &quot;    &lt;DataItem Dimensions=\&quot;&quot; &lt;&lt; extents_in_dims
+<span class="lineNum">     154 </span><span class="lineCov">          4 :          &lt;&lt; &quot;\&quot; NumberType=\&quot;Double\&quot; Precision=\&quot;&quot; &lt;&lt; precision_</span>
+<span class="lineNum">     155 </span>            :          &lt;&lt; &quot;\&quot; Format=\&quot;HDF5\&quot;&gt;\n&quot;
+<span class="lineNum">     156 </span>            :          &lt;&lt; &quot;      &quot; &lt;&lt; h5_file_name_ &lt;&lt; &quot;:/&quot; &lt;&lt; element_id &lt;&lt; &quot;/&quot; &lt;&lt; name
+<span class="lineNum">     157 </span><span class="lineCov">          4 :          &lt;&lt; &quot;\n    &lt;/DataItem&gt;\n  &lt;/Attribute&gt;\n&quot;;</span>
+<span class="lineNum">     158 </span>            :     } else {
+<span class="lineNum">     159 </span>            :       // Write tensor data into h5 file
+<span class="lineNum">     160 </span><span class="lineCov">          5 :       for (size_t i = 0; i &lt; suffixes.size(); ++i) {</span>
+<span class="lineNum">     161 </span><span class="lineCov">          3 :         h5::write_data(group.id(), vars[i], extents, name + &quot;_&quot; + suffixes[i]);</span>
+<span class="lineNum">     162 </span><span class="lineCov">          6 :         ss &lt;&lt; &quot;  &lt;Attribute Name=\&quot;&quot; &lt;&lt; name &lt;&lt; &quot;_&quot; &lt;&lt; suffixes[i]</span>
+<span class="lineNum">     163 </span>            :            &lt;&lt; &quot;\&quot; AttributeType=\&quot;Scalar\&quot; Center=\&quot;Node\&quot;&gt;\n&quot;
+<span class="lineNum">     164 </span>            :            &lt;&lt; &quot;    &lt;DataItem Dimensions=\&quot;&quot; &lt;&lt; extents_in_dims
+<span class="lineNum">     165 </span><span class="lineCov">          6 :            &lt;&lt; &quot;\&quot; NumberType=\&quot;Double\&quot; Precision=\&quot;&quot; &lt;&lt; precision_</span>
+<span class="lineNum">     166 </span>            :            &lt;&lt; &quot;\&quot; Format=\&quot;HDF5\&quot;&gt;\n&quot;
+<span class="lineNum">     167 </span>            :            &lt;&lt; &quot;      &quot; &lt;&lt; h5_file_name_ &lt;&lt; &quot;:/&quot; &lt;&lt; element_id &lt;&lt; &quot;/&quot; &lt;&lt; name
+<span class="lineNum">     168 </span><span class="lineCov">          3 :            &lt;&lt; &quot;_&quot; &lt;&lt; suffixes[i] &lt;&lt; &quot;\n    &lt;/DataItem&gt;\n  &lt;/Attribute&gt;\n&quot;;</span>
+<span class="lineNum">     169 </span>            :       }
+<span class="lineNum">     170 </span>            :     }
+<span class="lineNum">     171 </span>            :   }
+<span class="lineNum">     172 </span><span class="lineCov">          3 :   ss &lt;&lt; &quot;&lt;/Grid&gt;\n&quot;;</span>
+<span class="lineNum">     173 </span><span class="lineCov">          3 :   std::fprintf(xml_, &quot;%s&quot;, ss.str().c_str());  // NOLINT</span>
+<span class="lineNum">     174 </span><span class="lineCov">          3 :   std::fflush(xml_);</span>
+<a name="175"><span class="lineNum">     175 </span><span class="lineCov">          3 : }</span></a>
+<span class="lineNum">     176 </span>            : 
+<span class="lineNum">     177 </span><span class="lineCov">          3 : void VolumeFile::create_file() {</span>
+<span class="lineNum">     178 </span>            : #pragma GCC diagnostic push
+<span class="lineNum">     179 </span>            : #pragma GCC diagnostic ignored &quot;-Wold-style-cast&quot;
+<span class="lineNum">     180 </span><span class="lineCov">          3 :   file_id_ =</span>
+<span class="lineNum">     181 </span><span class="lineCov">          3 :       H5Fcreate(h5_file_name_.c_str(), H5F_ACC_TRUNC, H5P_DEFAULT, H5P_DEFAULT);</span>
+<span class="lineNum">     182 </span>            : #pragma GCC diagnostic pop
+<span class="lineNum">     183 </span><span class="lineCov">          3 :   CHECK_H5(file_id_, &quot;Failed to create file '&quot; &lt;&lt; h5_file_name_ &lt;&lt; &quot;'&quot;);</span>
+<span class="lineNum">     184 </span><span class="lineCov">          6 :   const h5::detail::OpenGroup group(file_id_, &quot;/&quot;, h5::AccessType::ReadWrite);</span>
+<span class="lineNum">     185 </span><span class="lineCov">          3 :   hid_t s_id = H5Screate(H5S_SCALAR);</span>
+<span class="lineNum">     186 </span><span class="lineCov">          3 :   CHECK_H5(s_id, &quot;Failed to create dataspace&quot;);</span>
+<span class="lineNum">     187 </span>            : #pragma GCC diagnostic push
+<span class="lineNum">     188 </span>            : #pragma GCC diagnostic ignored &quot;-Wold-style-cast&quot;
+<span class="lineNum">     189 </span><span class="lineCov">          3 :   const hid_t att_id = H5Acreate2(group.id(), &quot;FileFormatVersion&quot;,</span>
+<span class="lineNum">     190 </span>            :                                   h5::h5_type&lt;decltype(format_id_)&gt;(), s_id,
+<span class="lineNum">     191 </span><span class="lineCov">          3 :                                   H5P_DEFAULT, H5P_DEFAULT);</span>
+<span class="lineNum">     192 </span>            : #pragma GCC diagnostic pop
+<span class="lineNum">     193 </span><span class="lineCov">          3 :   CHECK_H5(att_id, &quot;Failed to create attribute 'FileFormatVersion'&quot;);</span>
+<span class="lineNum">     194 </span><span class="lineCov">          6 :   CHECK_H5(H5Awrite(att_id, h5::h5_type&lt;decltype(format_id_)&gt;(),</span>
+<span class="lineNum">     195 </span>            :                     static_cast&lt;void*&gt;(&amp;format_id_)),
+<span class="lineNum">     196 </span>            :            &quot;Failed to write file format version&quot;);
+<span class="lineNum">     197 </span><span class="lineCov">          3 :   CHECK_H5(H5Sclose(s_id), &quot;Failed to close dataspace&quot;);</span>
+<span class="lineNum">     198 </span><span class="lineCov">          3 :   CHECK_H5(H5Aclose(att_id), &quot;Failed to close attribute&quot;);</span>
+<span class="lineNum">     199 </span>            : 
+<span class="lineNum">     200 </span><span class="lineCov">          3 :   xml_file_name_ +=</span>
+<span class="lineNum">     201 </span><span class="lineCov">          6 :       h5_file_name_.substr(0, h5_file_name_.find_last_of('.')) + &quot;.xmf&quot;;</span>
+<span class="lineNum">     202 </span>            : 
+<span class="lineNum">     203 </span><span class="lineCov">          3 :   xml_ = std::fopen(xml_file_name_.c_str(), &quot;w&quot;);</span>
+<span class="lineNum">     204 </span><span class="lineCov">          3 :   if (nullptr == xml_) {</span>
+<span class="lineNum">     205 </span>            :     // LCOV_EXCL_START
+<span class="lineNum">     206 </span>            :     ERROR(&quot;Failed to open file '&quot; &lt;&lt; xml_file_name_ &lt;&lt; &quot;' with error '&quot;
+<span class="lineNum">     207 </span>            :                                   &lt;&lt; std::strerror(errno) &lt;&lt; &quot;'.&quot;);
+<span class="lineNum">     208 </span>            :     // LCOV_EXCL_STOP
+<span class="lineNum">     209 </span>            :   }
+<span class="lineNum">     210 </span><span class="lineCov">          3 : }</span>
+<span class="lineNum">     211 </span>            : 
+<span class="lineNum">     212 </span>            : // Explicit instantiations
+<span class="lineNum">     213 </span>            : template void VolumeFile::write_element_connectivity&lt;1&gt;(
+<span class="lineNum">     214 </span>            :     const Index&lt;1&gt;&amp; extents, const std::string&amp; element_id);
+<span class="lineNum">     215 </span>            : template void VolumeFile::write_element_connectivity&lt;2&gt;(
+<span class="lineNum">     216 </span>            :     const Index&lt;2&gt;&amp; extents, const std::string&amp; element_id);
+<span class="lineNum">     217 </span>            : template void VolumeFile::write_element_connectivity&lt;3&gt;(
+<span class="lineNum">     218 </span>            :     const Index&lt;3&gt;&amp; extents, const std::string&amp; element_id);
+<span class="lineNum">     219 </span>            : 
+<span class="lineNum">     220 </span>            : /// \cond HIDDEN_SYMBOLS
+<span class="lineNum">     221 </span>            : template void VolumeFile::write_element_extents&lt;1&gt;(
+<span class="lineNum">     222 </span>            :     const Index&lt;1&gt;&amp; extents, const std::string&amp; element_id);
+<span class="lineNum">     223 </span>            : template void VolumeFile::write_element_extents&lt;2&gt;(
+<span class="lineNum">     224 </span>            :     const Index&lt;2&gt;&amp; extents, const std::string&amp; element_id);
+<span class="lineNum">     225 </span>            : template void VolumeFile::write_element_extents&lt;3&gt;(
+<span class="lineNum">     226 </span>            :     const Index&lt;3&gt;&amp; extents, const std::string&amp; element_id);
+<span class="lineNum">     227 </span>            : 
+<span class="lineNum">     228 </span>            : template void VolumeFile::write_element_data&lt;1&gt;(
+<span class="lineNum">     229 </span>            :     std::unordered_map&lt;std::string, std::pair&lt;std::vector&lt;std::string&gt;,
+<span class="lineNum">     230 </span>            :                                               std::vector&lt;DataVector&gt;&gt;&gt;
+<span class="lineNum">     231 </span>            :         vars_map,
+<span class="lineNum">     232 </span>            :     const Index&lt;1&gt;&amp; extents, const std::string&amp; element_id);
+<span class="lineNum">     233 </span>            : template void VolumeFile::write_element_data&lt;2&gt;(
+<span class="lineNum">     234 </span>            :     std::unordered_map&lt;std::string, std::pair&lt;std::vector&lt;std::string&gt;,
+<span class="lineNum">     235 </span>            :                                               std::vector&lt;DataVector&gt;&gt;&gt;
+<span class="lineNum">     236 </span>            :         vars_map,
+<span class="lineNum">     237 </span>            :     const Index&lt;2&gt;&amp; extents, const std::string&amp; element_id);
+<span class="lineNum">     238 </span>            : template void VolumeFile::write_element_data&lt;3&gt;(
+<span class="lineNum">     239 </span>            :     std::unordered_map&lt;std::string, std::pair&lt;std::vector&lt;std::string&gt;,
+<span class="lineNum">     240 </span>            :                                               std::vector&lt;DataVector&gt;&gt;&gt;
+<span class="lineNum">     241 </span>            :         vars_map,
+<a name="242"><span class="lineNum">     242 </span>            :     const Index&lt;3&gt;&amp; extents, const std::string&amp; element_id);</a>
+<span class="lineNum">     243 </span>            : /// \endcond
+<span class="lineNum">     244 </span><span class="lineCov">       2283 : }  // namespace vis</span>
+</pre>
+      </td>
+    </tr>
+  </table>
+  <br>
+
+  <table width="100%" border=0 cellspacing=0 cellpadding=0>
+    <tr><td class="ruler"><img src="../glass.png" width=3 height=3 alt=""></td></tr>
+    <tr><td class="versionInfo">Generated by: <a href="http://ltp.sourceforge.net/coverage/lcov.php" target="_parent">LCOV version 1.13</a></td></tr>
+  </table>
+  <br>
+
+</body>
+</html>

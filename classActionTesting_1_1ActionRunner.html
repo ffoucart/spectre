@@ -1,0 +1,270 @@
+<!-- HTML header for doxygen 1.8.10-->
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=9"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="author" content="SXS Collaboration">
+    <meta name="generator" content="Doxygen 1.8.13"/>
+    <style>
+        /*!
+         * IE10 viewport hack for Surface/desktop Windows 8 bug
+         * Copyright 2014-2015 Twitter, Inc.
+         * Licensed under MIT (https://github.com/twbs/bootstrap/blob/master/LICENSE)
+         */
+        @-webkit-viewport { width: device-width; }
+        @-moz-viewport    { width: device-width; }
+        @-ms-viewport     { width: device-width; }
+        @-o-viewport      { width: device-width; }
+        @viewport         { width: device-width; }
+      </style>
+  <title>SpECTRE: ActionTesting::ActionRunner&lt; Metavariables &gt; Class Template Reference</title>
+  <link href="tabs.css" rel="stylesheet" type="text/css"/>
+  <script type="text/javascript" src="jquery.js"></script>
+  <script type="text/javascript" src="dynsections.js"></script>
+  <link href="search/search.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="search/searchdata.js"></script>
+<script type="text/javascript" src="search/search.js"></script>
+  <script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+    extensions: ["tex2jax.js", "TeX/AMSmath.js", "TeX/AMSsymbols.js", "color.js"],
+    jax: ["input/TeX","output/HTML-CSS"],
+});
+MathJax.Hub.Config({
+    TeX: { equationNumbers: { autoNumber: "AMS" } }
+});
+MathJax.Hub.Config({
+    tex2jax: {inlineMath: [['^^','^^'], ['\\(', '\\)']]}
+});
+</script><script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.2/MathJax.js"></script>
+  <link href="octicons.css" rel="stylesheet">
+  <link href="bootstrap.min.css" rel="stylesheet">
+  <link href="doxygen.css" rel="stylesheet" type="text/css" />
+  <script type="text/javascript" src="jquery.js"></script>
+  <script type="text/javascript" src="bootstrap.min.js"></script>
+  <script type="text/javascript" src="spectre.js"></script>
+  </head>
+  <body>
+  <div id="top" class="navbar-fixed-top"><!-- do not remove this div, it is closed by doxygen! -->
+  <!-- BEGIN TITLEAREA -->
+  <div id="titlearea">
+  <script type="text/javascript">
+  var searchBox = new SearchBox("searchBox", "search",false,'Search');
+  </script>
+  <div id="main-nav">
+    <ul class="sm sm-dox" id="main-menu">
+      <li>
+      <a href="index.html">
+      SpECTRE &#160;
+        <span id="projectnumber">v0.0.0</span>
+      </a>
+      </li>
+      <li class="dropdown">
+        <a class="dropdown-toggle" data-toggle="dropdown" href="#" id="selected">
+          <span id="selected">
+            <i class="octicon octicon-book"></i><span>Documentation</span>
+          </span>
+          <span class="caret"></span>
+        </a>
+        <ul class="dropdown-menu">
+          <li style="min-width: 135px;">
+            <a href="index.html">
+            <i class="octicon octicon-book"></i><span>Introduction</span></a>
+          </li>
+          <li style="min-width: 135px;">
+            <a href="installation.html">
+              <i class="octicon octicon-desktop-download"></i><span>Installation</span>
+            </a>
+          </li>
+          <li style="min-width: 135px;">
+            <a href="tutorials.html">
+              <i class="octicon octicon-mortar-board"></i><span>User Tutorials</span>
+            </a>
+          </li>
+          <li style="min-width: 135px;">
+            <a href="dev_guide.html">
+              <i class="octicon octicon-gist-secret"></i><span>Dev Guide</span>
+            </a>
+          </li>
+        </ul>
+      </li>
+      <li class="dropdown">
+        <a class="dropdown-toggle" data-toggle="dropdown" href="#" id="selected">
+          <span id="selected">
+            <i class="octicon octicon-code"></i>
+              <span>Reference</span>
+          </span>
+          <span class="caret"></span>
+        </a>
+        <ul class="dropdown-menu">
+          <li style="min-width: 130px;">
+            <a href="modules.html">
+              <i class="octicon octicon-code"></i>
+              <span>Topics</span>
+            </a>
+          </li>
+          <li style="min-width: 130px;">
+            <a href="namespaces.html">
+              <i class="octicon octicon-gist"></i>
+              <span>Namespaces</span>
+            </a>
+          </li>
+        </ul>
+      </li>
+      <li>
+        <a href="files.html">
+          <i class="octicon octicon-file-directory"></i><span>Files</span>
+        </a>
+      </li>
+      <li>
+        <a href="https://github.com/sxs-collaboration/spectre" target="_blank">
+          <i class="octicon octicon-mark-github"></i><span>View on GitHub</span>
+        </a>
+      </li>
+      <!--The Search <li> is added by doxygen later-->
+    </ul>
+  </div><!-- main-nav -->
+  </div><!-- titlearea -->
+  <!-- window showing the filter options -->
+  <div id="MSearchSelectWindow"  style="position: fixed;"
+       onmouseover="return searchBox.OnSearchSelectShow()"
+       onmouseout="return searchBox.OnSearchSelectHide()"
+       onkeydown="return searchBox.OnSearchSelectKey(event)">
+  </div>
+  <!-- iframe showing the search results (closed by default) -->
+  <div id="MSearchResultsWindow"  style="position: fixed;">
+  <iframe src="javascript:void(0)" frameborder="0"
+          name="MSearchResults" id="MSearchResults">
+  </iframe>
+  </div>
+<!-- Generated by Doxygen 1.8.13 -->
+<script type="text/javascript">
+var searchBox = new SearchBox("searchBox", "search",false,'Search');
+</script>
+<script type="text/javascript" src="menudata.js"></script>
+<script type="text/javascript" src="menu.js"></script>
+<script type="text/javascript">
+$(function() {
+  initMenu('',true,false,'search.php','Search');
+  $(document).ready(function() { init_search(); });
+});
+</script>
+<div id="main-nav"></div>
+<!-- window showing the filter options -->
+<div id="MSearchSelectWindow"
+     onmouseover="return searchBox.OnSearchSelectShow()"
+     onmouseout="return searchBox.OnSearchSelectHide()"
+     onkeydown="return searchBox.OnSearchSelectKey(event)">
+</div>
+
+<!-- iframe showing the search results (closed by default) -->
+<div id="MSearchResultsWindow">
+<iframe src="javascript:void(0)" frameborder="0" 
+        name="MSearchResults" id="MSearchResults">
+</iframe>
+</div>
+
+<div id="nav-path" class="navpath">
+  <ul>
+<li class="navelem"><b>ActionTesting</b></li><li class="navelem"><a class="el" href="classActionTesting_1_1ActionRunner.html">ActionRunner</a></li>  </ul>
+</div>
+</div><!-- top -->
+<div class="header">
+  <div class="summary">
+<a href="#nested-classes">Classes</a> &#124;
+<a href="#pub-types">Public Types</a> &#124;
+<a href="#pub-methods">Public Member Functions</a> &#124;
+<a href="classActionTesting_1_1ActionRunner-members.html">List of all members</a>  </div>
+  <div class="headertitle">
+<div class="title">ActionTesting::ActionRunner&lt; Metavariables &gt; Class Template Reference<div class="ingroups"><a class="el" href="group__TestingFrameworkGroup.html">Testing Framework</a></div></div>  </div>
+</div><!--header-->
+<div class="contents">
+
+<p>A class that mocks the infrastructure needed to run actions. It simulates message passing using the inbox infrastructure and handles most of the arguments to the apply and is_ready action methods.  
+ <a href="classActionTesting_1_1ActionRunner.html#details">More...</a></p>
+
+<p><code>#include &lt;<a class="el" href="ActionTesting_8hpp_source.html">ActionTesting.hpp</a>&gt;</code></p>
+<table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-types"></a>
+Public Types</h2></td></tr>
+<tr class="memitem:a26445a350273d02b4b907e161bdf490c"><td class="memItemLeft" align="right" valign="top"><a id="a26445a350273d02b4b907e161bdf490c"></a>
+using&#160;</td><td class="memItemRight" valign="bottom"><b>GlobalCache</b> = <a class="el" href="classParallel_1_1ConstGlobalCache.html">Parallel::ConstGlobalCache</a>&lt; Metavariables &gt;</td></tr>
+<tr class="separator:a26445a350273d02b4b907e161bdf490c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae1f27a28e218a3b7f9c9cd57d686d0c5"><td class="memItemLeft" align="right" valign="top"><a id="ae1f27a28e218a3b7f9c9cd57d686d0c5"></a>
+using&#160;</td><td class="memItemRight" valign="bottom"><b>CacheTuple</b> = tuples::TaggedTupleTypelist&lt; typename <a class="el" href="classParallel_1_1ConstGlobalCache.html#aa5073b70d5d87a4be0b3f8750983d97d">GlobalCache::tag_list</a> &gt;</td></tr>
+<tr class="separator:ae1f27a28e218a3b7f9c9cd57d686d0c5"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
+Public Member Functions</h2></td></tr>
+<tr class="memitem:aaa810f13f97eab77b8ff92fdb4c914c7"><td class="memItemLeft" align="right" valign="top"><a id="aaa810f13f97eab77b8ff92fdb4c914c7"></a>
+&#160;</td><td class="memItemRight" valign="bottom"><b>ActionRunner</b> (const <a class="el" href="classActionTesting_1_1ActionRunner.html">ActionRunner</a> &amp;)=delete</td></tr>
+<tr class="separator:aaa810f13f97eab77b8ff92fdb4c914c7"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a56412947b8e3f020647e1e2606ba6049"><td class="memItemLeft" align="right" valign="top"><a id="a56412947b8e3f020647e1e2606ba6049"></a>
+&#160;</td><td class="memItemRight" valign="bottom"><b>ActionRunner</b> (<a class="el" href="classActionTesting_1_1ActionRunner.html">ActionRunner</a> &amp;&amp;)=delete</td></tr>
+<tr class="separator:a56412947b8e3f020647e1e2606ba6049"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6daaae23ca6b2d2a01b527d8db6038ef"><td class="memItemLeft" align="right" valign="top"><a id="a6daaae23ca6b2d2a01b527d8db6038ef"></a>
+<a class="el" href="classActionTesting_1_1ActionRunner.html">ActionRunner</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>operator=</b> (const <a class="el" href="classActionTesting_1_1ActionRunner.html">ActionRunner</a> &amp;)=delete</td></tr>
+<tr class="separator:a6daaae23ca6b2d2a01b527d8db6038ef"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae92a8801a47e7b2d03853bde9965809f"><td class="memItemLeft" align="right" valign="top"><a id="ae92a8801a47e7b2d03853bde9965809f"></a>
+<a class="el" href="classActionTesting_1_1ActionRunner.html">ActionRunner</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>operator=</b> (<a class="el" href="classActionTesting_1_1ActionRunner.html">ActionRunner</a> &amp;&amp;)=delete</td></tr>
+<tr class="separator:ae92a8801a47e7b2d03853bde9965809f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a8bcc9114b5c9ef942f9ee08d4bb1588b"><td class="memItemLeft" align="right" valign="top"><a id="a8bcc9114b5c9ef942f9ee08d4bb1588b"></a>
+&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classActionTesting_1_1ActionRunner.html#a8bcc9114b5c9ef942f9ee08d4bb1588b">ActionRunner</a> (CacheTuple cache_contents)</td></tr>
+<tr class="memdesc:a8bcc9114b5c9ef942f9ee08d4bb1588b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Construct from the tuple of ConstGlobalCache objects. <br /></td></tr>
+<tr class="separator:a8bcc9114b5c9ef942f9ee08d4bb1588b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6344c59c1a4fd6262910f740c9634002"><td class="memTemplParams" colspan="2"><a id="a6344c59c1a4fd6262910f740c9634002"></a>
+template&lt;typename Component , typename Action , typename DbTags &gt; </td></tr>
+<tr class="memitem:a6344c59c1a4fd6262910f740c9634002"><td class="memTemplItemLeft" align="right" valign="top">bool&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classActionTesting_1_1ActionRunner.html#a6344c59c1a4fd6262910f740c9634002">is_ready</a> (const db::DataBox&lt; DbTags &gt; &amp;box, const typename Component::index &amp;array_index) noexcept</td></tr>
+<tr class="memdesc:a6344c59c1a4fd6262910f740c9634002"><td class="mdescLeft">&#160;</td><td class="mdescRight">Call Action::is_ready as if on the portion of Component labeled by array_index. <br /></td></tr>
+<tr class="separator:a6344c59c1a4fd6262910f740c9634002"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9003b9fc2511aa6fc1982b340f1e734f"><td class="memTemplParams" colspan="2"><a id="a9003b9fc2511aa6fc1982b340f1e734f"></a>
+template&lt;typename Component &gt; </td></tr>
+<tr class="memitem:a9003b9fc2511aa6fc1982b340f1e734f"><td class="memTemplItemLeft" align="right" valign="top"><a class="elRef" doxygen="/work/spectre/docs/config/cppreference-doxygen-web.tag.xml:http://en.cppreference.com/w/" href="http://en.cppreference.com/w/cpp/container/unordered_map.html">std::unordered_map</a>&lt; typename Component::index, tuples::TaggedTupleTypelist&lt; <a class="el" href="group__ParallelGroup.html#ga38356d0b7aa1951e586ba2acce9eab8f">Parallel::get_inbox_tags</a>&lt; typename Component::action_list &gt; &gt; &gt; &amp;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classActionTesting_1_1ActionRunner.html#a9003b9fc2511aa6fc1982b340f1e734f">inboxes</a> () noexcept</td></tr>
+<tr class="memdesc:a9003b9fc2511aa6fc1982b340f1e734f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Access the inboxes for a given component. <br /></td></tr>
+<tr class="separator:a9003b9fc2511aa6fc1982b340f1e734f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a94a45898ca4dd87b893e662b68c05d3d"><td class="memTemplParams" colspan="2"><a id="a94a45898ca4dd87b893e662b68c05d3d"></a>
+template&lt;typename Component , typename InboxTag &gt; </td></tr>
+<tr class="memitem:a94a45898ca4dd87b893e662b68c05d3d"><td class="memTemplItemLeft" align="right" valign="top"><a class="elRef" doxygen="/work/spectre/docs/config/cppreference-doxygen-web.tag.xml:http://en.cppreference.com/w/" href="http://en.cppreference.com/w/cpp/container/unordered_set.html">std::unordered_set</a>&lt; typename Component::index &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classActionTesting_1_1ActionRunner.html#a94a45898ca4dd87b893e662b68c05d3d">nonempty_inboxes</a> () noexcept</td></tr>
+<tr class="memdesc:a94a45898ca4dd87b893e662b68c05d3d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Find the set of array indices on Component where the specified inbox is not empty. <br /></td></tr>
+<tr class="separator:a94a45898ca4dd87b893e662b68c05d3d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a503ae6daa01be5606d575374564cacac"><td class="memTemplParams" colspan="2"><a id="a503ae6daa01be5606d575374564cacac"></a>
+template&lt;typename Component &gt; </td></tr>
+<tr class="memitem:a503ae6daa01be5606d575374564cacac"><td class="memTemplItemLeft" align="right" valign="top">auto &amp;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classActionTesting_1_1ActionRunner.html#a503ae6daa01be5606d575374564cacac">algorithms</a> () noexcept</td></tr>
+<tr class="memdesc:a503ae6daa01be5606d575374564cacac"><td class="mdescLeft">&#160;</td><td class="mdescRight">Access the mocked algorithms for a component, indexed by array index. <br /></td></tr>
+<tr class="separator:a503ae6daa01be5606d575374564cacac"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a8093663a03d19f55c4220be92ef8340f"><td class="memItemLeft" align="right" valign="top"><a id="a8093663a03d19f55c4220be92ef8340f"></a>
+const <a class="el" href="classParallel_1_1ConstGlobalCache.html">GlobalCache</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>cache</b> () noexcept</td></tr>
+<tr class="separator:a8093663a03d19f55c4220be92ef8340f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr><td colspan="2"><div class="groupHeader"></div></td></tr>
+<tr class="memitem:af1d7b52df6b46ff7777851916e04274f"><td class="memTemplParams" colspan="2"><a id="af1d7b52df6b46ff7777851916e04274f"></a>
+template&lt;typename Component , typename Action , typename DbTags , typename... Args&gt; </td></tr>
+<tr class="memitem:af1d7b52df6b46ff7777851916e04274f"><td class="memTemplItemLeft" align="right" valign="top">decltype(auto)&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classActionTesting_1_1ActionRunner.html#af1d7b52df6b46ff7777851916e04274f">apply</a> (db::DataBox&lt; DbTags &gt; &amp;box, const typename Component::index &amp;array_index, Args &amp;&amp;... args) noexcept</td></tr>
+<tr class="memdesc:af1d7b52df6b46ff7777851916e04274f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Call Action::apply as if on the portion of Component labeled by array_index. <br /></td></tr>
+<tr class="separator:af1d7b52df6b46ff7777851916e04274f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a50e2c4c374b8f03ea99a894d9e8356b3"><td class="memTemplParams" colspan="2"><a id="a50e2c4c374b8f03ea99a894d9e8356b3"></a>
+template&lt;typename Component , typename Action , typename DbTags , typename... Args&gt; </td></tr>
+<tr class="memitem:a50e2c4c374b8f03ea99a894d9e8356b3"><td class="memTemplItemLeft" align="right" valign="top">decltype(auto)&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classActionTesting_1_1ActionRunner.html#a50e2c4c374b8f03ea99a894d9e8356b3">apply</a> (const db::DataBox&lt; DbTags &gt; &amp;box, const typename Component::index &amp;array_index, Args &amp;&amp;... args) noexcept</td></tr>
+<tr class="memdesc:a50e2c4c374b8f03ea99a894d9e8356b3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Call Action::apply as if on the portion of Component labeled by array_index. <br /></td></tr>
+<tr class="separator:a50e2c4c374b8f03ea99a894d9e8356b3"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table>
+<a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
+<div class="textblock"><h3>template&lt;typename Metavariables&gt;<br />
+class ActionTesting::ActionRunner&lt; Metavariables &gt;</h3>
+
+<p>A class that mocks the infrastructure needed to run actions. It simulates message passing using the inbox infrastructure and handles most of the arguments to the apply and is_ready action methods. </p>
+</div><hr/>The documentation for this class was generated from the following file:<ul>
+<li>tests/Unit/<a class="el" href="ActionTesting_8hpp_source.html">ActionTesting.hpp</a></li>
+</ul>
+</div><!-- contents -->
+<!-- HTML footer for doxygen 1.8.10-->
+<!-- start footer part -->
+<hr class="footer"/><address class="footer"><small>
+&copy; Copyright 2017 - 2018
+<a href="https://black-holes.org">SXS Collaboration</a>,
+<a href="LICENSE.txt" target="_blank">
+<span class="hidden-xs">Distributed under the</span>
+MIT License</a>
+</small></address>
+</body>
+</html>

@@ -1,0 +1,164 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+
+<html lang="en">
+
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <title>LCOV - 4a100dde3b231e0ada6ff7b2b4c32892a30db7f6 - Domain/Element.cpp</title>
+  <link rel="stylesheet" type="text/css" href="../gcov.css">
+</head>
+
+<body>
+
+  <table width="100%" border=0 cellspacing=0 cellpadding=0>
+    <tr><td class="title">SpECTRE Unit Test Code Coverage Report</td></tr>
+    <tr><td class="ruler"><img src="../glass.png" width=3 height=3 alt=""></td></tr>
+
+    <tr>
+      <td width="100%">
+        <table cellpadding=1 border=0 width="100%">
+          <tr>
+            <td width="10%" class="headerItem">Current view:</td>
+            <td width="35%" class="headerValue"><a href="../index.html">top level</a> - <a href="index.html">Domain</a> - Element.cpp<span style="font-size: 80%;"> (source / <a href="Element.cpp.func-sort-c.html">functions</a>)</span></td>
+            <td width="5%"></td>
+            <td width="15%"></td>
+            <td width="10%" class="headerCovTableHead">Hit</td>
+            <td width="10%" class="headerCovTableHead">Total</td>
+            <td width="15%" class="headerCovTableHead">Coverage</td>
+          </tr>
+          <tr>
+            <td class="headerItem">Commit:</td>
+             <td class="headerValue"><a target="_blank" href="https://github.com/sxs-collaboration/spectre/commit/4a100dde3b231e0ada6ff7b2b4c32892a30db7f6">4a100dde3b231e0ada6ff7b2b4c32892a30db7f6</a></td>
+            <td></td>
+            <td class="headerItem">Lines:</td>
+            <td class="headerCovTableEntry">36</td>
+            <td class="headerCovTableEntry">36</td>
+            <td class="headerCovTableEntryHi">100.0 %</td>
+          </tr>
+          <tr>
+            <td class="headerItem">Date:</td>
+            <td class="headerValue">2018-08-16 19:06:01</td>
+            <td></td>
+            <td class="headerItem">Functions:</td>
+            <td class="headerCovTableEntry">23</td>
+            <td class="headerCovTableEntry">23</td>
+            <td class="headerCovTableEntryHi">100.0 %</td>
+          </tr>
+          <tr>
+            <td class="headerItem">Legend:</td>
+            <td class="headerValueLeg">            Lines:
+            <span class="coverLegendCov">hit</span>
+            <span class="coverLegendNoCov">not hit</span>
+</td>
+            <td></td>
+          </tr>
+          <tr><td><img src="../glass.png" width=3 height=3 alt=""></td></tr>
+        </table>
+      </td>
+    </tr>
+
+    <tr><td class="ruler"><img src="../glass.png" width=3 height=3 alt=""></td></tr>
+  </table>
+
+  <table cellpadding=0 cellspacing=0 border=0>
+    <tr>
+      <td><br></td>
+    </tr>
+    <tr>
+      <td>
+<pre class="sourceHeading">          Line data    Source code</pre>
+<pre class="source">
+<a name="1"><span class="lineNum">       1 </span>            : // Distributed under the MIT License.</a>
+<span class="lineNum">       2 </span>            : // See LICENSE.txt for details.
+<span class="lineNum">       3 </span>            : 
+<span class="lineNum">       4 </span>            : #include &quot;Domain/Element.hpp&quot;
+<span class="lineNum">       5 </span>            : 
+<span class="lineNum">       6 </span>            : #include &lt;ostream&gt;
+<span class="lineNum">       7 </span>            : #include &lt;pup.h&gt;  // IWYU pragma: keep
+<span class="lineNum">       8 </span>            : 
+<span class="lineNum">       9 </span>            : #include &quot;Parallel/PupStlCpp11.hpp&quot;  // IWYU pragma: keep
+<span class="lineNum">      10 </span>            : #include &quot;Utilities/StdHelpers.hpp&quot;  // IWYU pragma: keep
+<a name="11"><span class="lineNum">      11 </span>            : </a>
+<span class="lineNum">      12 </span>            : template &lt;size_t VolumeDim&gt;
+<span class="lineNum">      13 </span><span class="lineCov">      11556 : Element&lt;VolumeDim&gt;::Element(ElementId&lt;VolumeDim&gt; id,</span>
+<span class="lineNum">      14 </span>            :                             Neighbors_t neighbors) noexcept
+<a name="15"><span class="lineNum">      15 </span><span class="lineCov">      11556 :     : id_(std::move(id)),</span></a>
+<span class="lineNum">      16 </span><span class="lineCov">      11556 :       neighbors_(std::move(neighbors)),</span>
+<span class="lineNum">      17 </span><span class="lineCov">      23112 :       number_of_neighbors_([this](){</span>
+<span class="lineNum">      18 </span><span class="lineCov">      11556 :         size_t number_of_neighbors = 0;</span>
+<span class="lineNum">      19 </span><span class="lineCov">      74621 :         for (const auto&amp; p : neighbors_) {</span>
+<span class="lineNum">      20 </span><span class="lineCov">      63065 :           number_of_neighbors += p.second.size();</span>
+<span class="lineNum">      21 </span>            :         }
+<a name="22"><span class="lineNum">      22 </span><span class="lineCov">      11556 :         return number_of_neighbors;</span></a>
+<span class="lineNum">      23 </span><span class="lineCov">      23112 :       }()),</span>
+<span class="lineNum">      24 </span><span class="lineCov">      23112 :       external_boundaries_([this](){</span>
+<span class="lineNum">      25 </span><span class="lineCov">      34668 :         std::unordered_set&lt;Direction&lt;VolumeDim&gt;&gt; external_boundaries(</span>
+<span class="lineNum">      26 </span><span class="lineCov">      11556 :             Direction&lt;VolumeDim&gt;::all_directions().begin(),</span>
+<span class="lineNum">      27 </span><span class="lineCov">      11556 :             Direction&lt;VolumeDim&gt;::all_directions().end());</span>
+<span class="lineNum">      28 </span><span class="lineCov">      74621 :         for (const auto&amp; neighbor_direction : neighbors_) {</span>
+<span class="lineNum">      29 </span><span class="lineCov">      63065 :           external_boundaries.erase(neighbor_direction.first);</span>
+<span class="lineNum">      30 </span>            :         }
+<span class="lineNum">      31 </span><span class="lineCov">      11556 :         return external_boundaries;</span>
+<span class="lineNum">      32 </span><span class="lineCov">      46224 :       }()) {}</span>
+<a name="33"><span class="lineNum">      33 </span>            : </a>
+<span class="lineNum">      34 </span>            : template &lt;size_t VolumeDim&gt;
+<span class="lineNum">      35 </span><span class="lineCov">          9 : void Element&lt;VolumeDim&gt;::pup(PUP::er&amp; p) noexcept {</span>
+<span class="lineNum">      36 </span><span class="lineCov">          9 :   p | id_;</span>
+<span class="lineNum">      37 </span><span class="lineCov">          9 :   p | neighbors_;</span>
+<span class="lineNum">      38 </span><span class="lineCov">          9 :   p | number_of_neighbors_;</span>
+<span class="lineNum">      39 </span><span class="lineCov">          9 :   p | external_boundaries_;</span>
+<span class="lineNum">      40 </span><span class="lineCov">          9 : }</span>
+<a name="41"><span class="lineNum">      41 </span>            : </a>
+<span class="lineNum">      42 </span>            : template &lt;size_t VolumeDim&gt;
+<span class="lineNum">      43 </span><span class="lineCov">         30 : bool operator==(const Element&lt;VolumeDim&gt;&amp; lhs,</span>
+<span class="lineNum">      44 </span>            :                 const Element&lt;VolumeDim&gt;&amp; rhs) noexcept {
+<span class="lineNum">      45 </span><span class="lineCov">         54 :   return lhs.id() == rhs.id() and</span>
+<span class="lineNum">      46 </span><span class="lineCov">         42 :          lhs.neighbors() == rhs.neighbors() and</span>
+<span class="lineNum">      47 </span><span class="lineCov">         66 :          lhs.number_of_neighbors() == rhs.number_of_neighbors() and</span>
+<span class="lineNum">      48 </span><span class="lineCov">         48 :          lhs.external_boundaries() == rhs.external_boundaries();</span>
+<span class="lineNum">      49 </span>            : }
+<a name="50"><span class="lineNum">      50 </span>            : </a>
+<span class="lineNum">      51 </span>            : template &lt;size_t VolumeDim&gt;
+<span class="lineNum">      52 </span><span class="lineCov">          9 : bool operator!=(const Element&lt;VolumeDim&gt;&amp; lhs,</span>
+<span class="lineNum">      53 </span>            :                 const Element&lt;VolumeDim&gt;&amp; rhs) noexcept {
+<span class="lineNum">      54 </span><span class="lineCov">          9 :   return not(lhs == rhs);</span>
+<span class="lineNum">      55 </span>            : }
+<a name="56"><span class="lineNum">      56 </span>            : </a>
+<span class="lineNum">      57 </span>            : template &lt;size_t VolumeDim&gt;
+<span class="lineNum">      58 </span><span class="lineCov">          3 : std::ostream&amp; operator&lt;&lt;(std::ostream&amp; os,</span>
+<span class="lineNum">      59 </span>            :                          const Element&lt;VolumeDim&gt;&amp; element) noexcept {
+<span class="lineNum">      60 </span><span class="lineCov">          3 :   os &lt;&lt; &quot;Element &quot; &lt;&lt; element.id() &lt;&lt; &quot;:\n&quot;;</span>
+<span class="lineNum">      61 </span><span class="lineCov">          3 :   os &lt;&lt; &quot;  Neighbors: &quot; &lt;&lt; element.neighbors() &lt;&lt; &quot;\n&quot;;</span>
+<span class="lineNum">      62 </span><span class="lineCov">          3 :   os &lt;&lt; &quot;  External boundaries: &quot; &lt;&lt; element.external_boundaries() &lt;&lt; &quot;\n&quot;;</span>
+<span class="lineNum">      63 </span><span class="lineCov">          3 :   return os;</span>
+<span class="lineNum">      64 </span>            : }
+<span class="lineNum">      65 </span>            : 
+<span class="lineNum">      66 </span>            : template class Element&lt;1&gt;;
+<span class="lineNum">      67 </span>            : template class Element&lt;2&gt;;
+<span class="lineNum">      68 </span>            : template class Element&lt;3&gt;;
+<span class="lineNum">      69 </span>            : 
+<span class="lineNum">      70 </span>            : template bool operator==(const Element&lt;1&gt;&amp;, const Element&lt;1&gt;&amp;) noexcept;
+<span class="lineNum">      71 </span>            : template bool operator==(const Element&lt;2&gt;&amp;, const Element&lt;2&gt;&amp;) noexcept;
+<span class="lineNum">      72 </span>            : template bool operator==(const Element&lt;3&gt;&amp;, const Element&lt;3&gt;&amp;) noexcept;
+<span class="lineNum">      73 </span>            : 
+<span class="lineNum">      74 </span>            : template bool operator!=(const Element&lt;1&gt;&amp;, const Element&lt;1&gt;&amp;) noexcept;
+<span class="lineNum">      75 </span>            : template bool operator!=(const Element&lt;2&gt;&amp;, const Element&lt;2&gt;&amp;) noexcept;
+<span class="lineNum">      76 </span>            : template bool operator!=(const Element&lt;3&gt;&amp;, const Element&lt;3&gt;&amp;) noexcept;
+<span class="lineNum">      77 </span>            : 
+<a name="78"><span class="lineNum">      78 </span>            : template std::ostream&amp; operator&lt;&lt;(std::ostream&amp;, const Element&lt;1&gt;&amp;) noexcept;</a>
+<span class="lineNum">      79 </span>            : template std::ostream&amp; operator&lt;&lt;(std::ostream&amp;, const Element&lt;2&gt;&amp;) noexcept;
+<span class="lineNum">      80 </span><span class="lineCov">       2307 : template std::ostream&amp; operator&lt;&lt;(std::ostream&amp;, const Element&lt;3&gt;&amp;) noexcept;</span>
+</pre>
+      </td>
+    </tr>
+  </table>
+  <br>
+
+  <table width="100%" border=0 cellspacing=0 cellpadding=0>
+    <tr><td class="ruler"><img src="../glass.png" width=3 height=3 alt=""></td></tr>
+    <tr><td class="versionInfo">Generated by: <a href="http://ltp.sourceforge.net/coverage/lcov.php" target="_parent">LCOV version 1.13</a></td></tr>
+  </table>
+  <br>
+
+</body>
+</html>
