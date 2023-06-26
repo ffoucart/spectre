@@ -52,15 +52,29 @@ set(LIBS_TO_LINK
   ValenciaDivClean
   )
 
+set(LIBS_TO_LINK_WITH_CONTROL_SYSTEM
+    ControlSystem
+    ControlSystemMeasurements
+    ${LIBS_TO_LINK}
+)
+
 add_ghmhd_executable(
   ""
-  evolution::NumericInitialData
+  "evolution::NumericInitialData,false"
   "${LIBS_TO_LINK}"
+  )
+
+add_ghmhd_executable(
+  "BNS"
+  "evolution::NumericInitialData,true"
+  "${LIBS_TO_LINK_WITH_CONTROL_SYSTEM}"
   )
 
 if (TARGET SpEC::Exporter)
   target_compile_definitions(
     EvolveGhValenciaDivClean PRIVATE HAS_SPEC_EXPORTER)
+  target_compile_definitions(
+    EvolveGhValenciaDivCleanBNS PRIVATE HAS_SPEC_EXPORTER)
 endif()
 
 add_ghmhd_with_horizon_executable(

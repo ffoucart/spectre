@@ -263,6 +263,7 @@ struct MassFlux : db::SimpleTag {
   using type = tnsr::I<DataType, Dim, Fr>;
   static std::string name() { return Frame::prefix<Fr>() + "MassFlux"; }
 };
+
 }  // namespace Tags
 
 }  // namespace hydro

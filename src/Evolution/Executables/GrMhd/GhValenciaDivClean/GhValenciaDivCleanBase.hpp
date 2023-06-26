@@ -8,12 +8,20 @@
 
 #include "ApparentHorizons/ComputeItems.hpp"
 #include "ApparentHorizons/Tags.hpp"
+#include "ControlSystem/Actions/InitializeMeasurements.hpp"
+#include "ControlSystem/Component.hpp"
+#include "ControlSystem/Event.hpp"
+#include "ControlSystem/Measurements/BNSCenterOfMass.hpp"
+#include "ControlSystem/Systems/Expansion.hpp"
+#include "ControlSystem/Systems/Rotation.hpp"
+#include "ControlSystem/Trigger.hpp"
 #include "DataStructures/DataBox/PrefixHelpers.hpp"
 #include "DataStructures/DataBox/Tag.hpp"
 #include "DataStructures/Tensor/IndexType.hpp"
 #include "Domain/Creators/Factory3D.hpp"
 #include "Domain/Creators/RegisterDerivedWithCharm.hpp"
 #include "Domain/Creators/TimeDependence/RegisterDerivedWithCharm.hpp"
+#include "Domain/FunctionsOfTime/FunctionsOfTimeAreReady.hpp"
 #include "Domain/FunctionsOfTime/RegisterDerivedWithCharm.hpp"
 #include "Domain/Protocols/Metavariables.hpp"
 #include "Domain/Tags.hpp"
@@ -184,6 +192,7 @@
 #include "PointwiseFunctions/GeneralRelativity/Ricci.hpp"
 #include "PointwiseFunctions/GeneralRelativity/Tags.hpp"
 #include "PointwiseFunctions/Hydro/EquationsOfState/Factory.hpp"
+#include "PointwiseFunctions/Hydro/LowerSpatialFourVelocity.hpp"
 #include "PointwiseFunctions/Hydro/MassFlux.hpp"
 #include "PointwiseFunctions/Hydro/MassWeightedFluidItems.hpp"
 #include "PointwiseFunctions/Hydro/Tags.hpp"
@@ -321,7 +330,8 @@ struct GhValenciaDivCleanDefaults {
   };
 };
 
-template <typename EvolutionMetavarsDerived, bool UseDgSubcell>
+template <typename EvolutionMetavarsDerived, bool UseDgSubcell,
+          bool UseControlSystems>
 struct GhValenciaDivCleanTemplateBase;
 
 namespace detail {
@@ -347,14 +357,17 @@ constexpr auto make_default_phase_order() {
 }
 }  // namespace detail
 
-template <bool UseDgSubcell,
-          template <typename, typename...> class EvolutionMetavarsDerived,
+template <bool UseDgSubcell, bool UseControlSystems,
+          template <typename, bool, typename...> class EvolutionMetavarsDerived,
           typename InitialData, typename... InterpolationTargetTags>
 struct GhValenciaDivCleanTemplateBase<
-    EvolutionMetavarsDerived<InitialData, InterpolationTargetTags...>,
-    UseDgSubcell> : public virtual GhValenciaDivCleanDefaults<UseDgSubcell> {
+    EvolutionMetavarsDerived<InitialData, UseControlSystems,
+                             InterpolationTargetTags...>,
+    UseDgSubcell, UseControlSystems>
+    : public virtual GhValenciaDivCleanDefaults<UseDgSubcell> {
   using derived_metavars =
-      EvolutionMetavarsDerived<InitialData, InterpolationTargetTags...>;
+      EvolutionMetavarsDerived<InitialData, UseControlSystems,
+                               InterpolationTargetTags...>;
   using defaults = GhValenciaDivCleanDefaults<UseDgSubcell>;
   static constexpr size_t volume_dim = defaults::volume_dim;
   using domain = typename defaults::domain;
@@ -373,6 +386,7 @@ struct GhValenciaDivCleanTemplateBase<
       typename defaults::initialize_initial_data_dependent_quantities_actions;
 
   static constexpr bool use_dg_subcell = UseDgSubcell;
+  static constexpr bool use_control_systems = UseControlSystems;
 
   using initial_data = InitialData;
   static constexpr bool use_numeric_initial_data =
@@ -400,6 +414,13 @@ struct GhValenciaDivCleanTemplateBase<
                           Tags::AnalyticSolution<initial_data>,
                           Tags::AnalyticData<initial_data>>;
 
+  using measurement = control_system::measurements::BothNSCenters;
+  using control_systems = tmpl::conditional_t<
+      use_control_systems,
+      tmpl::list<control_system::Systems::Rotation<3, measurement>,
+                 control_system::Systems::Expansion<2, measurement>>,
+      tmpl::list<>>;
+
   using interpolator_source_vars =
       tmpl::remove_duplicates<tmpl::flatten<tmpl::list<
           typename InterpolationTargetTags::vars_to_interpolate_to_target...>>>;
@@ -418,6 +439,7 @@ struct GhValenciaDivCleanTemplateBase<
                      hydro::Tags::MassWeightedKineticEnergyCompute<DataVector>,
                      hydro::Tags::TildeDUnboundUtCriterionCompute<
                          DataVector, volume_dim, domain_frame>,
+                     hydro::Tags::LowerSpatialFourVelocityCompute,
                      hydro::Tags::MassWeightedCoordsCompute<
                          DataVector, volume_dim, ::domain::ObjectLabel::None,
                          Events::Tags::ObserverCoordinates<3, Frame::Grid>,
@@ -439,17 +461,6 @@ struct GhValenciaDivCleanTemplateBase<
       tmpl::conditional_t<
           use_dg_subcell,
           evolution::dg::subcell::Tags::ObserverCoordinatesCompute<
-              volume_dim, Frame::ElementLogical>,
-          ::Events::Tags::ObserverCoordinatesCompute<volume_dim,
-                                                     Frame::ElementLogical>>,
-      tmpl::conditional_t<
-          use_dg_subcell,
-          evolution::dg::subcell::Tags::ObserverCoordinatesCompute<volume_dim,
-                                                                   Frame::Grid>,
-          ::Events::Tags::ObserverCoordinatesCompute<volume_dim, Frame::Grid>>,
-      tmpl::conditional_t<
-          use_dg_subcell,
-          evolution::dg::subcell::Tags::ObserverCoordinatesCompute<
               volume_dim, Frame::Inertial>,
           ::Events::Tags::ObserverCoordinatesCompute<volume_dim,
                                                      Frame::Inertial>>>;
@@ -465,15 +476,20 @@ struct GhValenciaDivCleanTemplateBase<
                      Events::Tags::ObserverCoordinates<3, Frame::Inertial>,
                      Frame::Inertial>>>;
 
+  using compute_tags_for_control_sys = tmpl::list<
+      evolution::dg::subcell::Tags::ObserverMeshCompute<volume_dim>,
+      evolution::dg::subcell::Tags::ObserverInverseJacobianCompute<
+          volume_dim, Frame::ElementLogical, Frame::Inertial>,
+      evolution::dg::subcell::Tags::ObserverCoordinatesCompute<
+          volume_dim, Frame::ElementLogical>,
+      evolution::dg::subcell::Tags::ObserverCoordinatesCompute<volume_dim,
+                                                               Frame::Grid>,
+      evolution::dg::subcell::Tags::ObserverJacobianAndDetInvJacobian<
+          volume_dim, Frame::ElementLogical, Frame::Inertial>>;
+
   using non_tensor_compute_tags = tmpl::append<
       tmpl::conditional_t<
-          use_dg_subcell,
-          tmpl::list<
-              evolution::dg::subcell::Tags::ObserverMeshCompute<volume_dim>,
-              evolution::dg::subcell::Tags::ObserverInverseJacobianCompute<
-                  volume_dim, Frame::ElementLogical, Frame::Inertial>,
-              evolution::dg::subcell::Tags::ObserverJacobianAndDetInvJacobian<
-                  volume_dim, Frame::ElementLogical, Frame::Inertial>>,
+          use_dg_subcell, tmpl::list<>,
           tmpl::list<::Events::Tags::ObserverMeshCompute<volume_dim>,
                      ::Events::Tags::ObserverInverseJacobianCompute<
                          volume_dim, Frame::ElementLogical, Frame::Inertial>,
@@ -504,7 +520,10 @@ struct GhValenciaDivCleanTemplateBase<
 
    public:
     using factory_classes = tmpl::map<
-        tmpl::pair<DenseTrigger, DenseTriggers::standard_dense_triggers>,
+        tmpl::pair<DenseTrigger,
+                   tmpl::append<DenseTriggers::standard_dense_triggers,
+                                control_system::control_system_triggers<
+                                    control_systems>>>,
         tmpl::pair<DomainCreator<volume_dim>, domain_creators<volume_dim>>,
         tmpl::pair<
             Event,
@@ -519,6 +538,7 @@ struct GhValenciaDivCleanTemplateBase<
                 Events::ObserveAtExtremum<Tags::Time, observe_fields,
                                           non_tensor_compute_tags>,
                 Events::time_events<system>,
+                control_system::control_system_events<control_systems>,
                 intrp::Events::Interpolate<3, InterpolationTargetTags,
                                            interpolator_source_vars>...>>>,
         tmpl::pair<
@@ -608,8 +628,9 @@ struct GhValenciaDivCleanTemplateBase<
         grmhd::GhValenciaDivClean::subcell::PrimitiveGhostVariables;
   };
 
-  using events_and_dense_triggers_subcell_postprocessors =
-      tmpl::list<AlwaysReadyPostprocessor<
+  using events_and_dense_triggers_subcell_postprocessors = tmpl::list<
+      ::domain::CheckFunctionsOfTimeAreReadyPostprocessor,
+      AlwaysReadyPostprocessor<
           grmhd::GhValenciaDivClean::subcell::FixConservativesAndComputePrims<
               ordered_list_of_primitive_recovery_schemes>>>;
 
@@ -696,7 +717,7 @@ struct GhValenciaDivCleanTemplateBase<
   using initialization_actions = tmpl::list<
       Initialization::Actions::InitializeItems<
           Initialization::TimeStepping<derived_metavars, local_time_stepping>,
-          evolution::dg::Initialization::Domain<3>,
+          evolution::dg::Initialization::Domain<3, use_control_systems>,
           Initialization::TimeStepperHistory<derived_metavars>>,
       Initialization::Actions::ConservativeSystem<system>,
       std::conditional_t<
@@ -704,13 +725,18 @@ struct GhValenciaDivCleanTemplateBase<
           evolution::Initialization::Actions::SetVariables<
               ::domain::Tags::Coordinates<volume_dim, Frame::ElementLogical>>>,
       Initialization::Actions::AddComputeTags<
-          StepChoosers::step_chooser_compute_tags<
-              GhValenciaDivCleanTemplateBase, local_time_stepping>>,
+          tmpl::append<StepChoosers::step_chooser_compute_tags<
+                           GhValenciaDivCleanTemplateBase, local_time_stepping>,
+                       compute_tags_for_control_sys>>,
       ::evolution::dg::Initialization::Mortars<volume_dim, system>,
       Initialization::Actions::Minmod<3>,
       evolution::Actions::InitializeRunEventsAndDenseTriggers,
       intrp::Actions::ElementInitInterpPoints<
           intrp::Tags::InterpPointInfo<derived_metavars>>,
+      tmpl::conditional_t<
+          use_control_systems,
+          control_system::Actions::InitializeMeasurements<control_systems>,
+          tmpl::list<>>,
       Parallel::Actions::TerminatePhase>;
 
   using import_initial_data_action_lists = tmpl::list<
@@ -743,7 +769,8 @@ struct GhValenciaDivCleanTemplateBase<
                                             Parallel::Actions::TerminatePhase>>,
           Parallel::PhaseActions<
               Parallel::Phase::Evolve,
-              tmpl::list<VariableFixing::Actions::FixVariables<
+              tmpl::list<::domain::Actions::CheckFunctionsOfTimeAreReady,
+                         VariableFixing::Actions::FixVariables<
                              VariableFixing::FixToAtmosphere<volume_dim>>,
                          Actions::UpdateConservatives,
                          Actions::RunEventsAndTriggers, Actions::ChangeSlabSize,
@@ -767,6 +794,7 @@ struct GhValenciaDivCleanTemplateBase<
       std::conditional_t<use_numeric_initial_data,
                          importers::ElementDataReader<derived_metavars>,
                          tmpl::list<>>,
+      control_system::control_components<derived_metavars, control_systems>,
       intrp::Interpolator<derived_metavars>,
       intrp::InterpolationTarget<derived_metavars, InterpolationTargetTags>...,
       dg_element_array_component>>;

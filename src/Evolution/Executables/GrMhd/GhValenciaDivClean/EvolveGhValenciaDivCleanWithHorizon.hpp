@@ -51,10 +51,12 @@
 #include "Utilities/Serialization/RegisterDerivedClassesWithCharm.hpp"
 #include "Utilities/TMPL.hpp"
 
-template <typename InitialData, typename... InterpolationTargetTags>
+template <typename InitialData, bool Unused,
+          typename... InterpolationTargetTags>
 struct EvolutionMetavars
     : public GhValenciaDivCleanTemplateBase<
-          EvolutionMetavars<InitialData, InterpolationTargetTags...>, false> {
+          EvolutionMetavars<InitialData, Unused, InterpolationTargetTags...>,
+          false, false> {
   static constexpr bool use_dg_subcell = false;
 
   using defaults = GhValenciaDivCleanDefaults<use_dg_subcell>;

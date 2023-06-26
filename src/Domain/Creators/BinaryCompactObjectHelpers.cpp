@@ -31,11 +31,10 @@ std::unordered_map<std::string, tnsr::I<double, 3, Frame::Grid>>
 create_grid_anchors(const std::array<double, 3>& center_a,
                     const std::array<double, 3>& center_b) {
   std::unordered_map<std::string, tnsr::I<double, 3, Frame::Grid>> result{};
-  result["Center" + get_output(ObjectLabel::A)] =
-      tnsr::I<double, 3, Frame::Grid>{center_a};
-  result["Center" + get_output(ObjectLabel::B)] =
-      tnsr::I<double, 3, Frame::Grid>{center_b};
-  result["Center"] = tnsr::I<double, 3, Frame::Grid>{std::array{0.0, 0.0, 0.0}};
+  const auto add_center = [&result](const std::array<double, 3>& center,
+                                    const std::string& suffix) {
+    result["Center" + suffix] = tnsr::I<double, 3, Frame::Grid>{center};
+  };
 
   return result;
 }

@@ -51,8 +51,8 @@ class DomainCreator {
 
   virtual Domain<VolumeDim> create_domain() const = 0;
 
-  /// A set of named coordinates in the grid frame, like the center of the
-  /// domain or the positions of specific objects in a domain
+  /// A set of coordinates in the grid frame that are fixed and will remain
+  /// fixed for the entire simulation. They are indexed by a string.
   virtual std::unordered_map<std::string,
                              tnsr::I<double, VolumeDim, Frame::Grid>>
   grid_anchors() const {

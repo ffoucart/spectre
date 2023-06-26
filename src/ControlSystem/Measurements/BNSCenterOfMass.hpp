@@ -60,30 +60,26 @@ struct NeutronStarCenter : db::SimpleTag {
 };
 }  // namespace Tags
 
-/*!
- * \brief  Factored Center of Mass calculation (for easier testing)
- *
- * \details This function computes the integral of tildeD (assumed to be the
- * conservative baryon density in the inertial frame), as well as its first
- * moment in the grid frame. The integrals are limited to \f$x>0\f$ (label A) or
- * \f$x<0\f$ (label B).
- *
- * \param mass_a Integral of tildeD (x > 0)
- * \param mass_b Integral of tildeD (x < 0)
- * \param first_moment_A First moment of integral of tildeD (x > 0)
- * \param first_moment_B First moment of integral of tildeD (x < 0)
- * \param mesh The mesh
- * \param inv_det_jacobian The inverse determinant of the jacobian of the map
- * between logical and inertial coordinates \param tilde_d TildeD on the mesh
- * \param x_grid The coordinates in the grid frame
- */
+/// Factored Center of Mass calculation (for easier testing)
+/// This function computes the integral of tildeD (assumed to be the
+/// conservative baryon density in the inertial frame), as well as
+/// its first moment in the grid frame. The integrals are limited to
+/// \f$x>0\f$ (label A) or \f$x<0\f$ (label B).
+/// inv_det_jacobian is the inverse determinant of the jacobian of the
+///                  map between logical and inertial coordinates
+/// x_distorted contains the coordinates in the distorted frame
+///
+/// \note The `x` position is in the Grid frame to fit in with the control
+/// system which works in the distorted frame. For BNS simulations, the
+/// Grid frame should be identical to the Grid frame (i.e. the identity
+/// map), but it still needs to be there to interface with the control system.
 void center_of_mass_integral_on_element(
     const gsl::not_null<double*> mass_a, const gsl::not_null<double*> mass_b,
     const gsl::not_null<std::array<double, 3>*> first_moment_A,
     const gsl::not_null<std::array<double, 3>*> first_moment_B,
     const Mesh<3>& mesh, const Scalar<DataVector>& inv_det_jacobian,
     const Scalar<DataVector>& tilde_d,
-    const tnsr::I<DataVector, 3, Frame::Grid>& x_grid);
+    const tnsr::I<DataVector, 3, Frame::Grid>& x_distorted);
 
 /*!
  * \brief Measurement providing the location of the center of mass of the matter

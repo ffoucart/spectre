@@ -373,6 +373,9 @@ class CylindricalBinaryCompactObject : public DomainCreator<3> {
     return block_groups_;
   }
 
+  std::unordered_map<std::string, tnsr::I<double, 3, Frame::Grid>>
+      grid_anchors_{};
+
  private:
   // Note that center_A_ and center_B_ are rotated with respect to the
   // input centers (which are in the grid frame), so that we can

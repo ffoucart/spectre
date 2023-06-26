@@ -492,7 +492,6 @@ class BinaryCompactObject : public DomainCreator<3> {
   grid_anchors() const override {
     return grid_anchors_;
   }
-
   std::vector<DirectionMap<
       3, std::unique_ptr<domain::BoundaryConditions::BoundaryCondition>>>
   external_boundary_conditions() const override;
@@ -512,6 +511,9 @@ class BinaryCompactObject : public DomainCreator<3> {
   block_groups() const override {
     return block_groups_;
   }
+
+  std::unordered_map<std::string, tnsr::I<double, 3, Frame::Grid>>
+      grid_anchors_{};
 
   auto functions_of_time(const std::unordered_map<std::string, double>&
                              initial_expiration_times = {}) const
