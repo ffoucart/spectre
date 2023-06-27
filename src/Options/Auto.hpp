@@ -9,6 +9,7 @@
 #include <utility>
 
 #include "Options/Options.hpp"
+#include "Options/ParseOptions.hpp"
 #include "Utilities/GetOutput.hpp"
 #include "Utilities/PrettyType.hpp"
 
@@ -57,7 +58,9 @@ class Auto {
 
   // NOLINTNEXTLINE(google-explicit-constructor)
   template <typename U>
-  operator std::optional<U>() && { return std::move(value_); }
+  operator std::optional<U>() && {
+    return std::move(value_);
+  }
 
   // NOLINTNEXTLINE(google-explicit-constructor)
   operator const value_type&() const { return value_; }
@@ -96,11 +99,13 @@ struct create_from_yaml<Auto<T, Label>> {
 #if defined(__GNUC__) && !defined(__clang__) && __GNUC__ >= 8 && __GNUC__ < 10
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wmaybe-uninitialized"
-#endif  // defined(__GNUC__) && !defined(__clang__) && __GNUC__ => 8 && __GNUC__ < 10
+#endif  // defined(__GNUC__) && !defined(__clang__) && __GNUC__ => 8 && __GNUC__
+        // < 10
         return {};
 #if defined(__GNUC__) && !defined(__clang__) && __GNUC__ >= 8 && __GNUC__ < 10
 #pragma GCC diagnostic pop
-#endif  // defined(__GNUC__) && !defined(__clang__) && __GNUC__ => 8 && __GNUC__ < 10
+#endif  // defined(__GNUC__) && !defined(__clang__) && __GNUC__ => 8 && __GNUC__
+        // < 10
       }
     } catch (...) {
       // The node failed to parse as a string.  It is not the AutoLabel.
