@@ -36,6 +36,10 @@ create_grid_anchors(const std::array<double, 3>& center_a,
     result["Center" + suffix] = tnsr::I<double, 3, Frame::Grid>{center};
   };
 
+  add_center(center_a, get_output(domain::ObjectLabel::A));
+  add_center(center_b, get_output(domain::ObjectLabel::B));
+  add_center(std::array{0.0, 0.0, 0.0}, "");
+
   return result;
 }
 

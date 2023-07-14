@@ -409,9 +409,6 @@ class Sphere : public DomainCreator<3> {
     return block_groups_;
   }
 
-  std::unordered_map<std::string, tnsr::I<double, 3, Frame::Grid>>
-      grid_anchors_{};
-
   auto functions_of_time(const std::unordered_map<std::string, double>&
                              initial_expiration_times = {}) const
       -> std::unordered_map<
