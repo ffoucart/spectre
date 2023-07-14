@@ -16,6 +16,8 @@
 #include "Evolution/DgSubcell/GhostData.hpp"
 #include "Evolution/DgSubcell/Mesh.hpp"
 #include "Evolution/DgSubcell/Projection.hpp"
+#include "Evolution/DgSubcell/Reconstruction.hpp"
+#include "Evolution/DgSubcell/ReconstructionMethod.hpp"
 #include "Evolution/DgSubcell/Tags/ActiveGrid.hpp"
 #include "Evolution/DgSubcell/Tags/CellCenteredFlux.hpp"
 #include "Evolution/DgSubcell/Tags/Coordinates.hpp"
@@ -301,6 +303,286 @@ struct Initialize {
                        << dg_mesh.number_of_grid_points() << ") but got "
                        << dt_vars_ptr->number_of_grid_points());
             dt_vars_ptr->initialize(subcell_mesh.number_of_grid_points(), 0.0);
+          },
+          make_not_null(&box));
+    }
+    return {Parallel::AlgorithmExecution::Continue, std::nullopt};
+  }
+};
+
+/*!
+ * \brief Initialize the subcell grid, including the size of the evolved
+ * `Variables` and, if present, primitive `Variables`.
+ *
+ * By default sets the element to `subcell::ActiveGrid::Subcell` unless it
+ * is not allowed to use subcell either because it is at an external boundary
+ * or because it or one of its neighbors has been mark as DG-only.
+ *
+ * GlobalCache:
+ * - Uses:
+ *   - `subcell::Tags::SubcellOptions`
+ *
+ * DataBox:
+ * - Uses:
+ *   - `domain::Tags::Mesh<Dim>`
+ *   - `domain::Tags::Element<Dim>`
+ *   - `System::variables_tag`
+ * - Adds:
+ *   - `subcell::Tags::Mesh<Dim>`
+ *   - `subcell::Tags::ActiveGrid`
+ *   - `subcell::Tags::DidRollback`
+ *   - `subcell::Tags::TciGridHistory`
+ *   - `subcell::Tags::GhostDataForReconstruction<Dim>`
+ *   - `subcell::Tags::TciDecision`
+ *   - `subcell::Tags::DataForRdmpTci`
+ *   - `subcell::fd::Tags::InverseJacobianLogicalToGrid<Dim>`
+ *   - `subcell::fd::Tags::DetInverseJacobianLogicalToGrid`
+ *   - `subcell::Tags::LogicalCoordinates<Dim>`
+ *   - `subcell::Tags::ReconstructionOrder<Dim>` (set as `std::nullopt`)
+ *   - `subcell::Tags::Coordinates<Dim, Frame::Grid>` (as compute tag)
+ *   - `subcell::Tags::Coordinates<Dim, Frame::Inertial>` (as compute tag)
+ * - Removes: nothing
+ * - Modifies:
+ *   - `System::variables_tag` and `System::primitive_variables_tag` if the cell
+ *     is troubled
+ *   - `Tags::dt<System::variables_tag>` if the cell is troubled
+ */
+template <size_t Dim, typename System, bool UseNumericInitialData>
+struct SetSubcellGrid {
+  using const_global_cache_tags = tmpl::list<Tags::SubcellOptions<Dim>>;
+
+  using simple_tags = tmpl::list<
+      Tags::ActiveGrid, Tags::DidRollback, Tags::TciGridHistory,
+      Tags::GhostDataForReconstruction<Dim>, Tags::TciDecision,
+      Tags::NeighborTciDecisions<Dim>, Tags::DataForRdmpTci,
+      fd::Tags::InverseJacobianLogicalToGrid<Dim>,
+      fd::Tags::DetInverseJacobianLogicalToGrid,
+      subcell::Tags::CellCenteredFlux<typename System::flux_variables, Dim>,
+      subcell::Tags::ReconstructionOrder<Dim>>;
+  using compute_tags =
+      tmpl::list<Tags::MeshCompute<Dim>, Tags::LogicalCoordinatesCompute<Dim>,
+                 ::domain::Tags::MappedCoordinates<
+                     ::domain::Tags::ElementMap<Dim, Frame::Grid>,
+                     subcell::Tags::Coordinates<Dim, Frame::ElementLogical>,
+                     subcell::Tags::Coordinates>,
+                 Tags::InertialCoordinatesCompute<
+                     ::domain::CoordinateMaps::Tags::CoordinateMap<
+                         Dim, Frame::Grid, Frame::Inertial>>>;
+
+  template <typename DbTagsList, typename... InboxTags, typename ArrayIndex,
+            typename ActionList, typename ParallelComponent,
+            typename Metavariables>
+  static Parallel::iterable_action_return_t apply(
+      db::DataBox<DbTagsList>& box,
+      [[maybe_unused]] const tuples::TaggedTuple<InboxTags...>& inboxes,
+      [[maybe_unused]] const Parallel::GlobalCache<Metavariables>& cache,
+      [[maybe_unused]] const ArrayIndex& array_index, ActionList /*meta*/,
+      const ParallelComponent* const /*meta*/) {
+    const SubcellOptions& subcell_options =
+        db::get<Tags::SubcellOptions<Dim>>(box);
+    const Mesh<Dim>& dg_mesh = db::get<::domain::Tags::Mesh<Dim>>(box);
+    const Mesh<Dim>& subcell_mesh = db::get<subcell::Tags::Mesh<Dim>>(box);
+    const Element<Dim>& element = db::get<::domain::Tags::Element<Dim>>(box);
+
+    // Loop over block neighbors and if neighbor id is inside of
+    // subcell_options.only_dg_block_ids(), then bordering DG-only block
+    const bool bordering_dg_block = alg::any_of(
+        element.neighbors(),
+        [&subcell_options](const auto& direction_and_neighbor) {
+          const size_t first_block_id =
+              direction_and_neighbor.second.ids().begin()->block_id();
+          return std::binary_search(subcell_options.only_dg_block_ids().begin(),
+                                    subcell_options.only_dg_block_ids().end(),
+                                    first_block_id);
+        });
+
+    const bool subcell_allowed_in_element =
+        not std::binary_search(subcell_options.only_dg_block_ids().begin(),
+                               subcell_options.only_dg_block_ids().end(),
+                               element.id().block_id()) and
+        not bordering_dg_block;
+    const bool cell_is_not_on_external_boundary =
+        db::get<::domain::Tags::Element<Dim>>(box)
+            .external_boundaries()
+            .empty();
+
+    constexpr bool subcell_enabled_at_external_boundary =
+        Metavariables::SubcellOptions::subcell_enabled_at_external_boundary;
+
+    db::mutate<Tags::NeighborTciDecisions<Dim>>(
+        [&element](const auto neighbor_decisions_ptr) {
+          neighbor_decisions_ptr->clear();
+          for (const auto& [direction, neighbors_in_direction] :
+               element.neighbors()) {
+            for (const auto& neighbor : neighbors_in_direction.ids()) {
+              neighbor_decisions_ptr->insert(
+                  std::pair{std::pair{direction, neighbor}, 0});
+            }
+          }
+        },
+        make_not_null(&box));
+
+    db::mutate_apply<
+        tmpl::list<Tags::ActiveGrid, Tags::DidRollback,
+                   typename System::variables_tag, subcell::Tags::TciDecision>,
+        tmpl::list<>>(
+        [&cell_is_not_on_external_boundary, &dg_mesh,
+         subcell_allowed_in_element, &subcell_mesh  // ,
+                                                    // &subcell_options
+    ](const gsl::not_null<ActiveGrid*> active_grid_ptr,
+        const gsl::not_null<bool*> did_rollback_ptr, const auto active_vars_ptr,
+        const gsl::not_null<int*> tci_decision_ptr) {
+          // We don't consider setting the initial grid to subcell as rolling
+          // back. Since no time step is undone, we just continue on the
+          // subcells as a normal solve.
+          *did_rollback_ptr = false;
+
+          if ((cell_is_not_on_external_boundary or
+               subcell_enabled_at_external_boundary) and
+              subcell_allowed_in_element) {
+            *active_grid_ptr = ActiveGrid::Subcell;
+            active_vars_ptr->initialize(subcell_mesh.number_of_grid_points());
+          } else {
+            *active_grid_ptr = ActiveGrid::Dg;
+            active_vars_ptr->initialize(dg_mesh.number_of_grid_points());
+          }
+
+          *tci_decision_ptr = 0;
+        },
+        make_not_null(&box));
+    if constexpr (System::has_primitive_and_conservative_vars) {
+      db::mutate<typename System::primitive_variables_tag>(
+          [&dg_mesh, &subcell_mesh](const auto prim_vars_ptr,
+                                    const auto active_grid) {
+            if (active_grid == ActiveGrid::Dg) {
+              prim_vars_ptr->initialize(dg_mesh.number_of_grid_points());
+            } else {
+              prim_vars_ptr->initialize(subcell_mesh.number_of_grid_points());
+            }
+          },
+          make_not_null(&box), db::get<Tags::ActiveGrid>(box));
+    }
+    if constexpr (not UseNumericInitialData) {
+      if (db::get<Tags::ActiveGrid>(box) ==
+          evolution::dg::subcell::ActiveGrid::Dg) {
+        evolution::Initialization::Actions::SetVariables<
+            ::domain::Tags::Coordinates<Dim, Frame::ElementLogical>>::
+            apply(box, inboxes, cache, array_index, ActionList{},
+                  std::add_pointer_t<ParallelComponent>{nullptr});
+      } else {
+        evolution::Initialization::Actions::
+            SetVariables<Tags::Coordinates<Dim, Frame::ElementLogical>>::apply(
+                box, inboxes, cache, array_index, ActionList{},
+                std::add_pointer_t<ParallelComponent>{nullptr});
+      }
+    }
+    return {Parallel::AlgorithmExecution::Continue, std::nullopt};
+  }
+};
+
+/*!
+ * \brief Run \tparam TciOnFdGridMutator and reconstruct/prolongate the FD
+ * solution to the DG grid if the DG solution passes the TCI.
+ *
+ * In the future we should communicate the RDMP data before running the TCI and
+ * should also communicate our TCI result to neighboring elements, iterating
+ * until all halos are set up.
+ */
+template <size_t Dim, typename System, typename TciOnFdGridMutator>
+struct InitialDataTci {
+  template <typename DbTagsList, typename... InboxTags, typename ArrayIndex,
+            typename ActionList, typename ParallelComponent,
+            typename Metavariables>
+  static Parallel::iterable_action_return_t apply(
+      db::DataBox<DbTagsList>& box,
+      const tuples::TaggedTuple<InboxTags...>& /*inboxes*/,
+      const Parallel::GlobalCache<Metavariables>& /*cache*/,
+      const ArrayIndex& /*array_index*/, ActionList /*meta*/,
+      const ParallelComponent* const /*meta*/) {
+    const SubcellOptions& subcell_options =
+        db::get<Tags::SubcellOptions<Dim>>(box);
+
+    // Get the RDMP data on this element and then initialize it.
+    //
+    // Really we should do a communication with neighboring elements to set
+    // the RDMP data, but that can be added later.
+    db::mutate<Tags::DataForRdmpTci>(
+        [](const auto rdmp_data_ptr,
+           evolution::dg::subcell::RdmpTciData&& rdmp_data) {
+          *rdmp_data_ptr = std::move(rdmp_data);
+        },
+        make_not_null(&box),
+        std::move(std::get<1>(db::mutate_apply<TciOnFdGridMutator>(
+            make_not_null(&box), subcell_options.persson_exponent() + 1.0,
+            true))));
+
+    if (subcell_options.always_use_subcells() or
+        get<Tags::ActiveGrid>(box) == ActiveGrid::Dg) {
+      return {Parallel::AlgorithmExecution::Continue, std::nullopt};
+    }
+
+    // Now run the TCI to see if we could switch back to DG.
+    const std::tuple<int, evolution::dg::subcell::RdmpTciData> tci_result =
+        db::mutate_apply<TciOnFdGridMutator>(
+            make_not_null(&box), subcell_options.persson_exponent() + 1.0,
+            false);
+
+    const int tci_decision = std::get<0>(tci_result);
+    // We  to communicate our TCI decision to our neighbors so that
+    // we can set up a halo around elements.
+    const bool cell_is_troubled = tci_decision != 0;
+
+    db::mutate<Tags::TciDecision>(
+        [&tci_decision](const gsl::not_null<int*> tci_decision_ptr) {
+          *tci_decision_ptr = tci_decision;
+        },
+        make_not_null(&box));
+
+    if (not cell_is_troubled) {
+      using variables_tag = typename System::variables_tag;
+      using flux_variables = typename System::flux_variables;
+
+      const Mesh<Dim>& dg_mesh = db::get<::domain::Tags::Mesh<Dim>>(box);
+      const Mesh<Dim>& subcell_mesh = db::get<subcell::Tags::Mesh<Dim>>(box);
+      db::mutate<
+          variables_tag, ::Tags::HistoryEvolvedVariables<variables_tag>,
+          Tags::ActiveGrid, subcell::Tags::GhostDataForReconstruction<Dim>,
+          evolution::dg::subcell::Tags::TciGridHistory,
+          evolution::dg::subcell::Tags::CellCenteredFlux<flux_variables, Dim>>(
+          [&dg_mesh, &subcell_mesh, &subcell_options](
+              const auto active_vars_ptr, const auto active_history_ptr,
+              const gsl::not_null<ActiveGrid*> active_grid_ptr,
+              const auto subcell_ghost_data_ptr,
+              const gsl::not_null<
+                  std::deque<evolution::dg::subcell::ActiveGrid>*>
+                  tci_grid_history_ptr,
+              const auto subcell_cell_centered_fluxes) {
+            // Note: strictly speaking, to be conservative this should
+            // reconstruct uJ instead of u.
+            *active_vars_ptr = fd::reconstruct(
+                *active_vars_ptr, dg_mesh, subcell_mesh.extents(),
+                subcell_options.reconstruction_method());
+
+            // Reconstruct the DG solution for each time in the time stepper
+            // history
+            active_history_ptr->map_entries(
+                [&dg_mesh, &subcell_mesh, &subcell_options](const auto entry) {
+                  *entry =
+                      fd::reconstruct(*entry, dg_mesh, subcell_mesh.extents(),
+                                      subcell_options.reconstruction_method());
+                });
+            *active_grid_ptr = ActiveGrid::Dg;
+
+            // Clear the neighbor data needed for subcell reconstruction since
+            // we have now completed the time step.
+            subcell_ghost_data_ptr->clear();
+
+            // Clear the TCI grid history since we don't need to use it when on
+            // the DG grid.
+            tci_grid_history_ptr->clear();
+
+            // Clear the allocation for the cell-centered fluxes.
+            *subcell_cell_centered_fluxes = std::nullopt;
           },
           make_not_null(&box));
     }
