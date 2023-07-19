@@ -36,12 +36,14 @@
 #include "Evolution/DgSubcell/Actions/TakeTimeStep.hpp"
 #include "Evolution/DgSubcell/Actions/TciAndRollback.hpp"
 #include "Evolution/DgSubcell/Actions/TciAndSwitchToDg.hpp"
+#include "Evolution/DgSubcell/ActiveGrid.hpp"
 #include "Evolution/DgSubcell/CartesianFluxDivergence.hpp"
 #include "Evolution/DgSubcell/ComputeBoundaryTerms.hpp"
 #include "Evolution/DgSubcell/CorrectPackagedData.hpp"
 #include "Evolution/DgSubcell/NeighborReconstructedFaceSolution.hpp"
 #include "Evolution/DgSubcell/PerssonTci.hpp"
 #include "Evolution/DgSubcell/PrepareNeighborData.hpp"
+#include "Evolution/DgSubcell/Tags/ActiveGrid.hpp"
 #include "Evolution/DgSubcell/Tags/ObserverCoordinates.hpp"
 #include "Evolution/DgSubcell/Tags/ObserverMesh.hpp"
 #include "Evolution/DgSubcell/Tags/TciStatus.hpp"
@@ -250,6 +252,43 @@ class CProxy_GlobalCache;
 }  // namespace Parallel
 /// \endcond
 
+struct RegisterWithElementDataReader {
+  template <typename DbTagsList, typename... InboxTags, typename Metavariables,
+            size_t Dim, typename ActionList, typename ParallelComponent>
+  static Parallel::iterable_action_return_t apply(
+      db::DataBox<DbTagsList>& box,
+      const tuples::TaggedTuple<InboxTags...>& /*inboxes*/,
+      Parallel::GlobalCache<Metavariables>& cache,
+      const ElementId<Dim>& array_index, const ActionList /*meta*/,
+      const ParallelComponent* const /*meta*/) {
+    auto& local_reader_component = *Parallel::local_branch(
+        Parallel::get_parallel_component<
+            importers::ElementDataReader<Metavariables>>(cache));
+    if (db::get<evolution::dg::subcell::Tags::ActiveGrid>(box) ==
+        evolution::dg::subcell::ActiveGrid::Dg) {
+      Parallel::simple_action<importers::Actions::RegisterElementWithSelf>(
+          local_reader_component,
+          observers::ArrayComponentId(
+              std::add_pointer_t<ParallelComponent>{nullptr},
+              Parallel::ArrayIndex<ElementId<Dim>>(array_index)),
+          db::get<domain::Tags::Coordinates<Dim, Frame::Inertial>>(box));
+    } else {
+      Parallel::simple_action<importers::Actions::RegisterElementWithSelf>(
+          local_reader_component,
+          observers::ArrayComponentId(
+              std::add_pointer_t<ParallelComponent>{nullptr},
+              Parallel::ArrayIndex<ElementId<Dim>>(array_index)),
+          db::get<
+              evolution::dg::subcell::Tags::Coordinates<Dim, Frame::Inertial>>(
+              box));
+    }
+    return {Parallel::AlgorithmExecution::Continue, std::nullopt};
+  }
+};
+
+
+
+
 namespace detail {
 template <typename InitialData,
           bool IsNumericInitialData =
@@ -302,28 +341,30 @@ struct GhValenciaDivCleanDefaults {
 
   using initialize_initial_data_dependent_quantities_actions = tmpl::list<
       gh::Actions::InitializeGhAnd3Plus1Variables<volume_dim>,
-      Actions::MutateApply<tmpl::conditional_t<
-          UseDgSubcell, grmhd::GhValenciaDivClean::SetPiFromGauge,
-          gh::gauges::SetPiFromGauge<3>>>,
       Initialization::Actions::AddComputeTags<
           tmpl::list<gr::Tags::SqrtDetSpatialMetricCompute<
               DataVector, volume_dim, domain_frame>>>,
+      Actions::MutateApply<tmpl::conditional_t<
+          UseDgSubcell, grmhd::GhValenciaDivClean::SetPiFromGauge,
+          gh::gauges::SetPiFromGauge<3>>>,
       VariableFixing::Actions::FixVariables<
           VariableFixing::FixToAtmosphere<volume_dim>>,
       Actions::UpdateConservatives,
       tmpl::conditional_t<
           UseDgSubcell,
           tmpl::list<
-              evolution::dg::subcell::Actions::Initialize<
+              evolution::dg::subcell::Actions::InitialDataTci<
                   volume_dim, system,
-                  grmhd::GhValenciaDivClean::subcell::DgInitialDataTci>,
+                  grmhd::GhValenciaDivClean::subcell::TciOnFdGrid,
+                  grmhd::ValenciaDivClean::subcell::SetInitialRdmpData>,
               Initialization::Actions::AddSimpleTags<
                   grmhd::ValenciaDivClean::SetVariablesNeededFixingToFalse>,
+              Actions::MutateApply<
+                  grmhd::GhValenciaDivClean::subcell::ResizeAndComputePrims<
+                      ordered_list_of_primitive_recovery_schemes>>,
               VariableFixing::Actions::FixVariables<
                   VariableFixing::FixToAtmosphere<volume_dim>>,
-              Actions::UpdateConservatives,
-              Actions::MutateApply<
-                  grmhd::ValenciaDivClean::subcell::SetInitialRdmpData>>,
+              Actions::UpdateConservatives>,
           tmpl::list<>>,
       Parallel::Actions::TerminatePhase>;
 
@@ -756,10 +797,8 @@ struct GhValenciaDivCleanTemplateBase<
           evolution::dg::Initialization::Domain<3, use_control_systems>,
           Initialization::TimeStepperHistory<derived_metavars>>,
       Initialization::Actions::ConservativeSystem<system>,
-      std::conditional_t<
-          use_numeric_initial_data, tmpl::list<>,
-          evolution::Initialization::Actions::SetVariables<
-              ::domain::Tags::Coordinates<volume_dim, Frame::ElementLogical>>>,
+      evolution::dg::subcell::Actions::SetSubcellGrid<volume_dim, system,
+                                                      use_numeric_initial_data>,
       Initialization::Actions::AddComputeTags<
           tmpl::append<StepChoosers::step_chooser_compute_tags<
                            GhValenciaDivCleanTemplateBase, local_time_stepping>,
@@ -778,7 +817,7 @@ struct GhValenciaDivCleanTemplateBase<
   using import_initial_data_action_lists = tmpl::list<
       Parallel::PhaseActions<
           Parallel::Phase::RegisterWithElementDataReader,
-          tmpl::list<importers::Actions::RegisterWithElementDataReader,
+          tmpl::list<::RegisterWithElementDataReader,
                      Parallel::Actions::TerminatePhase>>,
       Parallel::PhaseActions<
           Parallel::Phase::ImportInitialData,

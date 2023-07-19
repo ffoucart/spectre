@@ -12,6 +12,11 @@
 #include "DataStructures/Tensor/EagerMath/DeterminantAndInverse.hpp"
 #include "DataStructures/Tensor/Tensor.hpp"
 #include "Domain/Structure/ElementId.hpp"
+#include "Evolution/DgSubcell/ActiveGrid.hpp"
+#include "Evolution/DgSubcell/Tags/ActiveGrid.hpp"
+#include "Evolution/DgSubcell/Tags/Coordinates.hpp"
+#include "Evolution/DgSubcell/Tags/Jacobians.hpp"
+#include "Evolution/DgSubcell/Tags/Mesh.hpp"
 #include "Evolution/Systems/GeneralizedHarmonic/Actions/SetInitialData.hpp"
 #include "Evolution/Systems/GeneralizedHarmonic/Tags.hpp"
 #include "Evolution/Systems/GrMhd/ValenciaDivClean/Actions/NumericInitialData.hpp"
@@ -227,10 +232,30 @@ struct SetInitialData {
       Parallel::GlobalCache<Metavariables>& /*cache*/,
       const ParallelComponent* const /*meta*/) {
     // Get ADM + hydro variables from analytic data / solution
-    const auto& x =
-        db::get<domain::Tags::Coordinates<Dim, Frame::Inertial>>(*box);
+    const auto& [coords, mesh, inv_jacobian] = [&box]() {
+      if constexpr (db::tag_is_retrievable_v<
+                        evolution::dg::subcell::Tags::ActiveGrid,
+                        db::DataBox<DbTagsList>>) {
+        const bool on_subcell =
+            db::get<evolution::dg::subcell::Tags::ActiveGrid>(*box) ==
+            evolution::dg::subcell::ActiveGrid::Subcell;
+        if (on_subcell) {
+          return std::forward_as_tuple(
+              db::get<evolution::dg::subcell::Tags::Coordinates<
+                  Dim, Frame::Inertial>>(*box),
+              db::get<evolution::dg::subcell::Tags::Mesh<Dim>>(*box),
+              db::get<evolution::dg::subcell::fd::Tags::
+                          InverseJacobianLogicalToInertial<Dim>>(*box));
+        }
+      }
+      return std::forward_as_tuple(
+          db::get<domain::Tags::Coordinates<Dim, Frame::Inertial>>(*box),
+          db::get<domain::Tags::Mesh<Dim>>(*box),
+          db::get<domain::Tags::InverseJacobian<Dim, Frame::ElementLogical,
+                                                Frame::Inertial>>(*box));
+    }();
     auto vars = evolution::Initialization::initial_data(
-        initial_data, x, db::get<::Tags::Time>(*box),
+        initial_data, coords, db::get<::Tags::Time>(*box),
         tmpl::append<tmpl::list<gr::Tags::SpatialMetric<DataVector, 3>,
                                 gr::Tags::Lapse<DataVector>,
                                 gr::Tags::Shift<DataVector, 3>,
@@ -244,10 +269,6 @@ struct SetInitialData {
         get<gr::Tags::ExtrinsicCurvature<DataVector, 3>>(vars);
 
     // Compute GH vars from ADM vars
-    const auto& mesh = db::get<domain::Tags::Mesh<Dim>>(*box);
-    const auto& inv_jacobian =
-        db::get<domain::Tags::InverseJacobian<Dim, Frame::ElementLogical,
-                                              Frame::Inertial>>(*box);
     db::mutate<gr::Tags::SpacetimeMetric<DataVector, 3>,
                gh::Tags::Pi<DataVector, 3>, gh::Tags::Phi<DataVector, 3>>(
         &gh::initial_gh_variables_from_adm<3>, box, spatial_metric, lapse,

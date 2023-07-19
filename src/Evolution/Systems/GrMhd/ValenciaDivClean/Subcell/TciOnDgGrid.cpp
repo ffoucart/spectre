@@ -104,6 +104,10 @@ TciOnDgGrid<RecoveryScheme>::apply(
                  min(min(get(subcell_tilde_tau)), min(get(tilde_tau))),
                  min(min(get(subcell_mag_tilde_b)), min(get(mag_tilde_b)))};
 
+  if (past_rdmp_tci_data.max_variables_values.size() == 0) {
+    return {0, std::move(rdmp_tci_data)};
+  }
+
   const double average_sqrt_det_spatial_metric =
       l1Norm(get(sqrt_det_spatial_metric));
 

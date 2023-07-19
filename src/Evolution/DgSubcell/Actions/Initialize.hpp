@@ -355,8 +355,6 @@ struct SetSubcellGrid {
       Tags::ActiveGrid, Tags::DidRollback, Tags::TciGridHistory,
       Tags::GhostDataForReconstruction<Dim>, Tags::TciDecision,
       Tags::NeighborTciDecisions<Dim>, Tags::DataForRdmpTci,
-      fd::Tags::InverseJacobianLogicalToGrid<Dim>,
-      fd::Tags::DetInverseJacobianLogicalToGrid,
       subcell::Tags::CellCenteredFlux<typename System::flux_variables, Dim>,
       subcell::Tags::ReconstructionOrder<Dim>>;
   using compute_tags =
@@ -367,7 +365,16 @@ struct SetSubcellGrid {
                      subcell::Tags::Coordinates>,
                  Tags::InertialCoordinatesCompute<
                      ::domain::CoordinateMaps::Tags::CoordinateMap<
-                         Dim, Frame::Grid, Frame::Inertial>>>;
+                         Dim, Frame::Grid, Frame::Inertial>>,
+                 fd::Tags::InverseJacobianLogicalToGridCompute<
+                   ::domain::Tags::ElementMap<Dim, Frame::Grid>,
+                   Dim>,
+                 fd::Tags::DetInverseJacobianLogicalToGridCompute<
+                   Dim>,
+                 fd::Tags::InverseJacobianLogicalToInertialCompute<
+                     ::domain::CoordinateMaps::Tags::CoordinateMap<
+                         Dim, Frame::Grid, Frame::Inertial>,
+                     Dim>>;
 
   template <typename DbTagsList, typename... InboxTags, typename ArrayIndex,
             typename ActionList, typename ParallelComponent,
@@ -488,7 +495,8 @@ struct SetSubcellGrid {
  * should also communicate our TCI result to neighboring elements, iterating
  * until all halos are set up.
  */
-template <size_t Dim, typename System, typename TciOnFdGridMutator>
+template <size_t Dim, typename System, typename TciOnFdGridMutator,
+          typename SetInitialRdmpData>
 struct InitialDataTci {
   template <typename DbTagsList, typename... InboxTags, typename ArrayIndex,
             typename ActionList, typename ParallelComponent,
@@ -506,15 +514,7 @@ struct InitialDataTci {
     //
     // Really we should do a communication with neighboring elements to set
     // the RDMP data, but that can be added later.
-    db::mutate<Tags::DataForRdmpTci>(
-        [](const auto rdmp_data_ptr,
-           evolution::dg::subcell::RdmpTciData&& rdmp_data) {
-          *rdmp_data_ptr = std::move(rdmp_data);
-        },
-        make_not_null(&box),
-        std::move(std::get<1>(db::mutate_apply<TciOnFdGridMutator>(
-            make_not_null(&box), subcell_options.persson_exponent() + 1.0,
-            true))));
+    db::mutate_apply<SetInitialRdmpData>(make_not_null(&box));
 
     if (subcell_options.always_use_subcells() or
         get<Tags::ActiveGrid>(box) == ActiveGrid::Dg) {

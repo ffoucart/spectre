@@ -472,9 +472,6 @@ struct EvolutionMetavars {
           tmpl::list<
               evolution::dg::subcell::Actions::SetSubcellGrid<volume_dim,
                                                               system, false>,
-              evolution::Initialization::Actions::SetVariables<
-                  evolution::dg::subcell::Tags::Coordinates<
-                      volume_dim, Frame::ElementLogical>>,
               Initialization::Actions::AddSimpleTags<
                   Initialization::subcell::GrTagsForHydro<system, volume_dim>,
                   grmhd::ValenciaDivClean::SetVariablesNeededFixingToFalse>,
