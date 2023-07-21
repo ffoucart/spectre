@@ -7,6 +7,7 @@ spectre_target_sources(
   Derivatives.cpp
   FilterOptions.cpp
   Filters.cpp
+  MonotonicityPreserving5.cpp
   MonotonisedCentral.cpp
   Reconstructor.cpp
   RegisterDerivedWithCharm.cpp
@@ -22,6 +23,7 @@ spectre_target_headers(
   FilterOptions.hpp
   Filters.hpp
   FiniteDifference.hpp
+  MonotonicityPreserving5.hpp
   MonotonisedCentral.hpp
   ReconstructWork.hpp
   ReconstructWork.tpp
