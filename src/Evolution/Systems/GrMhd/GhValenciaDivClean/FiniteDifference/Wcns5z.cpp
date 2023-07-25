@@ -1,13 +1,14 @@
 // Distributed under the MIT License.
 // See LICENSE.txt for details.
 
-#include "Evolution/Systems/GrMhd/GhValenciaDivClean/FiniteDifference/MonotonisedCentral.hpp"
+#include "Evolution/Systems/GrMhd/GhValenciaDivClean/FiniteDifference/Wcns5z.hpp"
 
 #include <array>
 #include <boost/functional/hash.hpp>
 #include <cstddef>
 #include <memory>
 #include <pup.h>
+#include <tuple>
 #include <utility>
 
 #include "DataStructures/DataBox/Prefixes.hpp"
@@ -31,6 +32,7 @@
 #include "Evolution/Systems/GrMhd/ValenciaDivClean/Tags.hpp"
 #include "NumericalAlgorithms/FiniteDifference/MonotonisedCentral.hpp"
 #include "NumericalAlgorithms/FiniteDifference/NeighborDataAsVariables.hpp"
+#include "NumericalAlgorithms/FiniteDifference/Reconstruct.tpp"
 #include "NumericalAlgorithms/FiniteDifference/Unlimited.hpp"
 #include "NumericalAlgorithms/FiniteDifference/Wcns5z.hpp"
 #include "NumericalAlgorithms/Spectral/Mesh.hpp"
@@ -42,23 +44,48 @@
 #include "PointwiseFunctions/Hydro/Tags.hpp"
 #include "Utilities/GenerateInstantiations.hpp"
 #include "Utilities/Gsl.hpp"
-#include "Utilities/TMPL.hpp"
 
 namespace grmhd::GhValenciaDivClean::fd {
-MonotonisedCentralPrim::MonotonisedCentralPrim(CkMigrateMessage* const msg)
-    : Reconstructor(msg) {}
+Wcns5zPrim::Wcns5zPrim(CkMigrateMessage* const msg) : Reconstructor(msg) {}
 
-std::unique_ptr<Reconstructor> MonotonisedCentralPrim::get_clone() const {
-  return std::make_unique<MonotonisedCentralPrim>(*this);
+Wcns5zPrim::Wcns5zPrim(const size_t nonlinear_weight_exponent,
+                       const double epsilon,
+                       const ::fd::reconstruction::FallbackReconstructorType
+                           fallback_reconstructor,
+                       const size_t max_number_of_extrema)
+    : nonlinear_weight_exponent_(nonlinear_weight_exponent),
+      epsilon_(epsilon),
+      fallback_reconstructor_(fallback_reconstructor),
+      max_number_of_extrema_(max_number_of_extrema) {
+  std::tie(reconstruct_, reconstruct_lower_neighbor_,
+           reconstruct_upper_neighbor_) =
+      ::fd::reconstruction::wcns5z_function_pointers<3>(
+          nonlinear_weight_exponent_, fallback_reconstructor_);
 }
 
-void MonotonisedCentralPrim::pup(PUP::er& p) { Reconstructor::pup(p); }
+std::unique_ptr<Reconstructor> Wcns5zPrim::get_clone() const {
+  return std::make_unique<Wcns5zPrim>(*this);
+}
+
+void Wcns5zPrim::pup(PUP::er& p) {
+  Reconstructor::pup(p);
+  p | nonlinear_weight_exponent_;
+  p | epsilon_;
+  p | fallback_reconstructor_;
+  p | max_number_of_extrema_;
+  if (p.isUnpacking()) {
+    std::tie(reconstruct_, reconstruct_lower_neighbor_,
+             reconstruct_upper_neighbor_) =
+        ::fd::reconstruction::wcns5z_function_pointers<3>(
+            nonlinear_weight_exponent_, fallback_reconstructor_);
+  }
+}
 
 // NOLINTNEXTLINE
-PUP::able::PUP_ID MonotonisedCentralPrim::my_PUP_ID = 0;
+PUP::able::PUP_ID Wcns5zPrim::my_PUP_ID = 0;
 
 template <size_t ThermodynamicDim, typename TagsList>
-void MonotonisedCentralPrim::reconstruct(
+void Wcns5zPrim::reconstruct(
     const gsl::not_null<std::array<Variables<TagsList>, dim>*>
         vars_on_lower_face,
     const gsl::not_null<std::array<Variables<TagsList>, dim>*>
@@ -91,12 +118,12 @@ void MonotonisedCentralPrim::reconstruct(
   reconstruct_prims_work<tmpl::list<gr::Tags::SpacetimeMetric<DataVector, 3>>,
                          prim_tags_for_reconstruction>(
       vars_on_lower_face, vars_on_upper_face,
-      [](auto upper_face_vars_ptr, auto lower_face_vars_ptr,
-         const auto& volume_vars, const auto& ghost_cell_vars,
-         const auto& subcell_extents, const size_t number_of_variables) {
-        ::fd::reconstruction::monotonised_central(
-            upper_face_vars_ptr, lower_face_vars_ptr, volume_vars,
-            ghost_cell_vars, subcell_extents, number_of_variables);
+      [this](auto upper_face_vars_ptr, auto lower_face_vars_ptr,
+             const auto& volume_vars, const auto& ghost_cell_vars,
+             const auto& subcell_extents, const size_t number_of_variables) {
+        reconstruct_(upper_face_vars_ptr, lower_face_vars_ptr, volume_vars,
+                     ghost_cell_vars, subcell_extents, number_of_variables,
+                     epsilon_, max_number_of_extrema_);
       },
       [](auto upper_face_vars_ptr, auto lower_face_vars_ptr,
          const auto& volume_vars, const auto& ghost_cell_vars,
@@ -134,7 +161,7 @@ void MonotonisedCentralPrim::reconstruct(
 }
 
 template <size_t ThermodynamicDim, typename TagsList>
-void MonotonisedCentralPrim::reconstruct_fd_neighbor(
+void Wcns5zPrim::reconstruct_fd_neighbor(
     const gsl::not_null<Variables<TagsList>*> vars_on_face,
     const Variables<hydro::grmhd_tags<DataVector>>& subcell_volume_prims,
     const Variables<
@@ -157,18 +184,16 @@ void MonotonisedCentralPrim::reconstruct_fd_neighbor(
                                prim_tags_for_reconstruction,
                                all_tags_for_reconstruction>(
       vars_on_face,
-      [](const auto tensor_component_on_face_ptr,
-         const auto& tensor_component_volume,
-         const auto& tensor_component_neighbor,
-         const Index<dim>& subcell_extents,
-         const Index<dim>& ghost_data_extents,
-         const Direction<dim>& local_direction_to_reconstruct) {
-        ::fd::reconstruction::reconstruct_neighbor<
-            Side::Lower,
-            ::fd::reconstruction::detail::MonotonisedCentralReconstructor>(
+      [this](const auto tensor_component_on_face_ptr,
+             const auto& tensor_component_volume,
+             const auto& tensor_component_neighbor,
+             const Index<dim>& subcell_extents,
+             const Index<dim>& ghost_data_extents,
+             const Direction<dim>& local_direction_to_reconstruct) {
+        reconstruct_lower_neighbor_(
             tensor_component_on_face_ptr, tensor_component_volume,
             tensor_component_neighbor, subcell_extents, ghost_data_extents,
-            local_direction_to_reconstruct);
+            local_direction_to_reconstruct, epsilon_, max_number_of_extrema_);
       },
       [](const auto tensor_component_on_face_ptr,
          const auto& tensor_component_volume,
@@ -182,19 +207,29 @@ void MonotonisedCentralPrim::reconstruct_fd_neighbor(
             tensor_component_on_face_ptr, tensor_component_volume,
             tensor_component_neighbor, subcell_extents, ghost_data_extents,
             local_direction_to_reconstruct);
+        //::fd::reconstruction::reconstruct_neighbor<
+        //    Side::Lower,
+        //    ::fd::reconstruction::detail::Wcns5zReconstructor<2, void>, false,
+        //    2>(tensor_component_on_face_ptr, tensor_component_volume,
+        //       tensor_component_neighbor, subcell_extents, ghost_data_extents,
+        //       local_direction_to_reconstruct, 1.0e-17, 0_st);
       },
-      [](const auto tensor_component_on_face_ptr,
-         const auto& tensor_component_volume,
-         const auto& tensor_component_neighbor,
-         const Index<dim>& subcell_extents,
-         const Index<dim>& ghost_data_extents,
-         const Direction<dim>& local_direction_to_reconstruct) {
-        ::fd::reconstruction::reconstruct_neighbor<
-            Side::Upper,
-            ::fd::reconstruction::detail::MonotonisedCentralReconstructor>(
+      [this](const auto tensor_component_on_face_ptr,
+             const auto& tensor_component_volume,
+             const auto& tensor_component_neighbor,
+             const Index<dim>& subcell_extents,
+             const Index<dim>& ghost_data_extents,
+             const Direction<dim>& local_direction_to_reconstruct) {
+        //::fd::reconstruction::reconstruct_neighbor<
+        //    Side::Upper,
+        //    ::fd::reconstruction::detail::MonotonisedCentralReconstructor>(
+        //    tensor_component_on_face_ptr, tensor_component_volume,
+        //    tensor_component_neighbor, subcell_extents, ghost_data_extents,
+        //    local_direction_to_reconstruct);
+        reconstruct_upper_neighbor_(
             tensor_component_on_face_ptr, tensor_component_volume,
             tensor_component_neighbor, subcell_extents, ghost_data_extents,
-            local_direction_to_reconstruct);
+            local_direction_to_reconstruct, epsilon_, max_number_of_extrema_);
       },
       [](const auto tensor_component_on_face_ptr,
          const auto& tensor_component_volume,
@@ -208,6 +243,12 @@ void MonotonisedCentralPrim::reconstruct_fd_neighbor(
             tensor_component_on_face_ptr, tensor_component_volume,
             tensor_component_neighbor, subcell_extents, ghost_data_extents,
             local_direction_to_reconstruct);
+        //::fd::reconstruction::reconstruct_neighbor<
+        //    Side::Upper,
+        //    ::fd::reconstruction::detail::Wcns5zReconstructor<2, void>, false,
+        //    2>(tensor_component_on_face_ptr, tensor_component_volume,
+        //       tensor_component_neighbor, subcell_extents, ghost_data_extents,
+        //       local_direction_to_reconstruct, 1.0e-17, 0_st);
       },
       [](const auto vars_on_face_ptr) {
         const auto& spacetime_metric =
@@ -238,13 +279,16 @@ void MonotonisedCentralPrim::reconstruct_fd_neighbor(
       true);
 }
 
-bool operator==(const MonotonisedCentralPrim& /*lhs*/,
-                const MonotonisedCentralPrim& /*rhs*/) {
-  return true;
+bool operator==(const Wcns5zPrim& lhs, const Wcns5zPrim& rhs) {
+  // Don't check function pointers since they are set from
+  // nonlinear_weight_exponent_ and fallback_reconstructor_
+  return lhs.nonlinear_weight_exponent_ == rhs.nonlinear_weight_exponent_ and
+         lhs.epsilon_ == rhs.epsilon_ and
+         lhs.fallback_reconstructor_ == rhs.fallback_reconstructor_ and
+         lhs.max_number_of_extrema_ == rhs.max_number_of_extrema_;
 }
 
-bool operator!=(const MonotonisedCentralPrim& lhs,
-                const MonotonisedCentralPrim& rhs) {
+bool operator!=(const Wcns5zPrim& lhs, const Wcns5zPrim& rhs) {
   return not(lhs == rhs);
 }
 
@@ -324,7 +368,7 @@ bool operator!=(const MonotonisedCentralPrim& lhs,
              evolution::dg::Actions::detail::NormalVector<3>>
 
 #define INSTANTIATION(r, data)                                                 \
-  template void MonotonisedCentralPrim::reconstruct(                           \
+  template void Wcns5zPrim::reconstruct(                                       \
       gsl::not_null<std::array<Variables<TAGS_LIST_FD(data)>, 3>*>             \
           vars_on_lower_face,                                                  \
       gsl::not_null<std::array<Variables<TAGS_LIST_FD(data)>, 3>*>             \
@@ -340,7 +384,7 @@ bool operator!=(const MonotonisedCentralPrim& lhs,
                          boost::hash<std::pair<Direction<3>, ElementId<3>>>>&  \
           ghost_data,                                                          \
       const Mesh<3>& subcell_mesh) const;                                      \
-  template void MonotonisedCentralPrim::reconstruct_fd_neighbor(               \
+  template void Wcns5zPrim::reconstruct_fd_neighbor(                           \
       gsl::not_null<Variables<TAGS_LIST_DG_FD_INTERFACE(data)>*> vars_on_face, \
       const Variables<hydro::grmhd_tags<DataVector>>& subcell_volume_prims,    \
       const Variables<                                                         \
