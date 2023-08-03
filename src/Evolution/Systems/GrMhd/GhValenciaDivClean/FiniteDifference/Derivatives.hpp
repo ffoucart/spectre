@@ -56,6 +56,7 @@ void spacetime_derivatives(
         maximum_number_of_neighbors(3), std::pair<Direction<3>, ElementId<3>>,
         evolution::dg::subcell::GhostData,
         boost::hash<std::pair<Direction<3>, ElementId<3>>>>& all_ghost_data,
+    const size_t& ghost_zone_size,
     const Mesh<3>& volume_mesh,
     const InverseJacobian<DataVector, 3, Frame::ElementLogical,
                           Frame::Inertial>&

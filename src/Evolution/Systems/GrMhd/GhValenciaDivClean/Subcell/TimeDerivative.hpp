@@ -535,7 +535,7 @@ struct TimeDerivative {
     grmhd::GhValenciaDivClean::fd::spacetime_derivatives(
         make_not_null(&cell_centered_gh_derivs), evolved_vars,
         db::get<evolution::dg::subcell::Tags::GhostDataForReconstruction<3>>(
-            *box),
+          *box), recons.ghost_zone_size(),
         subcell_mesh, cell_centered_logical_to_inertial_inv_jacobian);
 
     // Now package the data and compute the correction
@@ -580,15 +580,26 @@ struct TimeDerivative {
               &recons,
               [&box, &package_data_argvars_lower_face,
                &package_data_argvars_upper_face](const auto& reconstructor) {
-                db::apply<typename std::decay_t<decltype(
-                    *reconstructor)>::reconstruction_argument_tags>(
+                using ReconstructorType =
+                  std::decay_t<decltype(*reconstructor)>;
+                db::apply<
+                    typename ReconstructorType::reconstruction_argument_tags>(
                     [&package_data_argvars_lower_face,
                      &package_data_argvars_upper_face,
                      &reconstructor](const auto&... args) {
-                      reconstructor->reconstruct(
-                          make_not_null(&package_data_argvars_lower_face),
-                          make_not_null(&package_data_argvars_upper_face),
-                          args...);
+                      if constexpr (ReconstructorType::use_adaptive_order) {
+                        std::optional<std::array<gsl::span<std::uint8_t>, 3>>
+                          reconstruction_order{};
+                        reconstructor->reconstruct(
+                            make_not_null(&package_data_argvars_lower_face),
+                            make_not_null(&package_data_argvars_upper_face),
+                            make_not_null(&reconstruction_order), args...);
+                      } else {
+                        reconstructor->reconstruct(
+                            make_not_null(&package_data_argvars_lower_face),
+                            make_not_null(&package_data_argvars_upper_face),
+                            args...);
+                      }
                     },
                     *box);
               });
