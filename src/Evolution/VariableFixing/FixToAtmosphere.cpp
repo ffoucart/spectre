@@ -19,14 +19,17 @@
 namespace VariableFixing {
 
 template <size_t Dim>
-FixToAtmosphere<Dim>::FixToAtmosphere(
-    const double density_of_atmosphere, const double density_cutoff,
-    const double transition_density_cutoff, const double max_velocity_magnitude,
-    const Options::Context& context)
+FixToAtmosphere<Dim>::FixToAtmosphere(const double density_of_atmosphere,
+                                      const double density_cutoff,
+                                      const double transition_density_cutoff,
+                                      const double max_velocity_magnitude,
+                                      const double max_thermal_specific_energy,
+                                      const Options::Context& context)
     : density_of_atmosphere_(density_of_atmosphere),
       density_cutoff_(density_cutoff),
       transition_density_cutoff_(transition_density_cutoff),
-      max_velocity_magnitude_(max_velocity_magnitude) {
+      max_velocity_magnitude_(max_velocity_magnitude),
+      max_thermal_specific_energy_(max_thermal_specific_energy) {
   if (density_of_atmosphere_ > density_cutoff_) {
     PARSE_ERROR(context, "The cutoff density ("
                              << density_cutoff_
@@ -56,6 +59,7 @@ void FixToAtmosphere<Dim>::pup(PUP::er& p) {
   p | density_cutoff_;
   p | transition_density_cutoff_;
   p | max_velocity_magnitude_;
+  p | max_thermal_specific_energy_;
 }
 
 template <size_t Dim>
@@ -95,9 +99,20 @@ void FixToAtmosphere<Dim>::operator()(
           get(equation_of_state.temperature_from_density_and_energy(
               Scalar<double>{rest_mass_density->get()[i]},
               Scalar<double>{specific_internal_energy->get()[i]}));
+      const double max_specific_energy =
+          get(equation_of_state
+                  .specific_internal_energy_from_density_and_temperature(
+                      Scalar<double>{rest_mass_density->get()[i]},
+                      Scalar<double>{0.0})) *
+          +max_thermal_specific_energy_;
+      const double max_temperature =
+          get(equation_of_state.temperature_from_density_and_energy(
+              Scalar<double>{rest_mass_density->get()[i]},
+              Scalar<double>{max_specific_energy}));
 
-      if (temperature < min_temperature) {
-        temperature = min_temperature;
+      if (temperature < min_temperature || temperature > max_temperature) {
+        temperature =
+            (temperature < min_temperature) ? min_temperature : max_temperature;
         specific_internal_energy->get()[i] =
             get(equation_of_state
                     .specific_internal_energy_from_density_and_temperature(
@@ -112,8 +127,6 @@ void FixToAtmosphere<Dim>::operator()(
             Scalar<double>{specific_internal_energy->get()[i]},
             Scalar<double>{pressure->get()[i]}));
       }
-      // We probably need a maximum temperature as well, but this is not as
-      // well defined. To be discussed once implementation becomes necessary.
     }
   }
 }
